@@ -2,7 +2,7 @@
 The project implements a *user management backend* component that uses 
 Amazon API Gateway, AWS Lambda and Amazon DynamoDB to provide basic 
 CRUD operations for managing users. The project also includes a continuous 
-delivery pipeline.
+deployment pipeline.
 
 ![diagram](https://user-images.githubusercontent.com/4362270/128628347-355923de-09af-4e82-bf2c-64f9496cfe95.png)
 \* Diagram generated using https://github.com/pistazie/cdk-dia

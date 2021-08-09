@@ -7,14 +7,11 @@
       "lambda_functions": {
         "api_handler": {
           "manage_iam_role": false,
-          "iam_role_arn": "${Token[TOKEN.96]}",
+          "iam_role_arn": "${Token[TOKEN.104]}",
           "environment_variables": {
-            "TABLE_NAME": "${Token[TOKEN.87]}"
+            "TABLE_NAME": "${Token[TOKEN.95]}"
           },
-          "lambda_memory_size": 128,
-          "lambda_timeout": 10,
-          "reserved_concurrency": 1,
-          "xray": true
+          "reserved_concurrency": 1
         }
       }
     },
@@ -23,14 +20,11 @@
       "lambda_functions": {
         "api_handler": {
           "manage_iam_role": false,
-          "iam_role_arn": "${Token[TOKEN.173]}",
+          "iam_role_arn": "${Token[TOKEN.181]}",
           "environment_variables": {
-            "TABLE_NAME": "${Token[TOKEN.164]}"
+            "TABLE_NAME": "${Token[TOKEN.172]}"
           },
-          "lambda_memory_size": 128,
-          "lambda_timeout": 10,
-          "reserved_concurrency": 10,
-          "xray": true
+          "reserved_concurrency": 10
         }
       }
     }
