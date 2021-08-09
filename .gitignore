@@ -32,6 +32,9 @@ node_modules/
 # macOS
 .DS_Store
 
+# mypy
+.mypy_cache/
+
 # PyCharm
 .idea/
 
