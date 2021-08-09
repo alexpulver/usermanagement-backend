@@ -1,9 +1,4 @@
-# Example project for working with AWS CDK, AWS SAM and AWS Chalice
-This project shows how AWS CDK and AWS Chalice can be used together to build 
-a workload component (as [defined](https://docs.aws.amazon.com/wellarchitected/latest/framework/welcome.html#introduction)
-by the AWS Well-Architected Framework). AWS CDK is used to build the broader 
-infrastructure, while using AWS Chalice as developer-friendly Python serverless microframework.
-
+# Example for using AWS CDK and AWS Chalice in the same project
 The project implements a *user management backend* component that uses 
 Amazon API Gateway, AWS Lambda and Amazon DynamoDB to provide basic 
 CRUD operations for managing users. The project also includes a continuous 
@@ -12,11 +7,11 @@ delivery pipeline.
 ![diagram](https://user-images.githubusercontent.com/4362270/128628347-355923de-09af-4e82-bf2c-64f9496cfe95.png)
 \* Diagram generated using https://github.com/pistazie/cdk-dia
 
-## Create a new repository from aws-cdk-sam-chalice *future* branch
+## Create a new repository from usermanagement-backend
 This is optional for deploying the component to the development environment, but 
 **required** for deploying the pipeline.
 
-The instructions below use the aws-cdk-sam-chalice repository.
+The instructions below use the usermanagement-backend repository.
 
 ## Create development environment
 See [Getting Started With the AWS CDK](https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html)
@@ -24,8 +19,8 @@ for additional details and prerequisites
 
 ### Clone the code
 ```bash
-git clone -b future https://github.com/alexpulver/aws-cdk-sam-chalice
-cd aws-cdk-sam-chalice
+git clone https://github.com/alexpulver/usermanagement-backend
+cd usermanagement-backend
 ```
 
 ### Create Python virtual environment and install the dependencies
@@ -93,8 +88,7 @@ UserManagementBackendDevStateless0E5B7E4B.RestAPIId = zx5s6bum21
 **Note:** The pipeline will deploy continuous build for pull requests
 
 **Prerequisites**
-- Create a new repository from aws-cdk-sam-chalice *future* branch, if you haven't done 
-  this already
+- Create a new repository from usermanagement-backend, if you haven't done this already
 - Create AWS CodeStar Connections [connection](https://docs.aws.amazon.com/dtconsole/latest/userguide/welcome-connections.html)
   for the pipeline
 - Authorize AWS CodeBuild access for the continuous build
