@@ -3,13 +3,13 @@ from unittest import mock
 
 import chalice.test
 
-from api.runtime.app import app
+from api.runtime.app import app  # type: ignore
 
 
 class AppTestCase(unittest.TestCase):
     @mock.patch.dict("chalicelib.helpers.os.environ", {"TABLE_NAME": "AppTestCase"})
     @mock.patch("chalicelib.users.DynamoDBDatabase.get_user")
-    def test_get_user_exists(self, mock_get_user):
+    def test_get_user_exists(self, mock_get_user: mock.Mock) -> None:
         username = "john"
         user = {"username": username, "email": f"{username}@example.com"}
         mock_get_user.return_value = user
@@ -21,5 +21,5 @@ class AppTestCase(unittest.TestCase):
         self.assertEqual(response.json_body, user)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     unittest.main()
