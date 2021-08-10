@@ -22,7 +22,7 @@ diagram.png*
 coverage.xml
 htmlcov/
 
-# Dependencies
+# Environment
 .venv/
 node_modules/
 
