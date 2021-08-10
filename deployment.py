@@ -70,7 +70,9 @@ class ContinuousBuild(cdk.Stage):
             {
                 "phases": {
                     "install": {
-                        "runtime-versions": constants.CODEBUILD_INSTALL_RUNTIME_VERSIONS,
+                        "runtime-versions": {
+                            "python": constants.CDK_APP_PYTHON_VERSION
+                        },
                         "commands": constants.CODEBUILD_INSTALL_COMMANDS,
                     },
                     "build": {"commands": constants.CODEBUILD_BUILD_COMMANDS},

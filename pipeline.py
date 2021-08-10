@@ -23,7 +23,7 @@ class Pipeline(cdk.Stack):
         synth_python_version = {
             "phases": {
                 "install": {
-                    "runtime-versions": constants.CODEBUILD_INSTALL_RUNTIME_VERSIONS
+                    "runtime-versions": {"python": constants.CDK_APP_PYTHON_VERSION}
                 }
             }
         }
