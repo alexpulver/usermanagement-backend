@@ -32,10 +32,10 @@ class APITestCase(unittest.TestCase):
             template["Outputs"]["EndpointURL"]["Value"]["Fn::Sub"],
             "https://${RestAPI}.execute-api.${AWS::Region}.${AWS::URLSuffix}/v1/",
         )
-        self.cleanup_chalice_config_file(f"{stack.stack_name}/API")
+        self._cleanup_chalice_config_file(f"{stack.stack_name}/API")
 
     @staticmethod
-    def cleanup_chalice_config_file(stage_name: str) -> None:
+    def _cleanup_chalice_config_file(stage_name: str) -> None:
         chalice_config_path = (
             pathlib.Path(__file__)
             .resolve()
