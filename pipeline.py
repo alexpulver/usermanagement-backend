@@ -39,6 +39,7 @@ class Pipeline(cdk.Stack):
             self,
             "CodePipeline",
             cli_version=Pipeline._get_cdk_cli_version(),
+            docker_enabled_for_synth=True,
             synth=synth_codebuild_step,
         )
 
@@ -76,7 +77,7 @@ class Pipeline(cdk.Stack):
         smoke_test_shell_step = pipelines.ShellStep(
             "SmokeTest",
             env_from_cfn_outputs={
-                api_endpoint_url_env_var: prod_stage.api_endpoint_url
+                api_endpoint_url_env_var: prod_stage.api_endpoint_url_cfn_output
             },
             commands=smoke_test_commands,
         )
