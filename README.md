@@ -1,10 +1,10 @@
-# Example for using AWS CDK and AWS Chalice in the same project
+# User management backend
 The project implements a *user management backend* component that uses 
 Amazon API Gateway, AWS Lambda and Amazon DynamoDB to provide basic 
 CRUD operations for managing users. The project also includes a continuous 
 deployment pipeline.
 
-![diagram](https://user-images.githubusercontent.com/4362270/128628347-355923de-09af-4e82-bf2c-64f9496cfe95.png)
+![diagram](https://user-images.githubusercontent.com/4362270/129941071-263c1d8f-0357-4dec-80e1-e308048abaff.png)
 \* Diagram generated using https://github.com/pistazie/cdk-dia
 
 ## Create a new repository from usermanagement-backend
@@ -68,20 +68,17 @@ npx cdk deploy "UserManagementBackend-Dev/*"
 
 Example outputs for `npx cdk deploy "UserManagementBackend-Dev/*"`:
 ```text
- ✅  UserManagementBackendDevStateful7B33C11B (UserManagementBackend-Dev-Stateful)
+ ✅  UserManagementBackendDevStatefulB4115ED0 (UserManagementBackend-Dev-Stateful) (no changes)
 
 Outputs:
-UserManagementBackendDevStateful7B33C11B.ExportsOutputFnGetAttDatabaseTableF104A135ArnDAC15A6A = arn:aws:dynamodb:eu-west-1:807650736403:table/UserManagementBackend-Dev-Stateful-DatabaseTableF104A135-1LVXRPCPOKVZQ
-UserManagementBackendDevStateful7B33C11B.ExportsOutputRefDatabaseTableF104A1356B7D7D8A = UserManagementBackend-Dev-Stateful-DatabaseTableF104A135-1LVXRPCPOKVZQ
+UserManagementBackendDevStatefulB4115ED0.ExportsOutputFnGetAttDatabaseTableF104A135ArnDAC15A6A = arn:aws:dynamodb:eu-west-1:807650736403:table/UserManagementBackend-Dev-Stateful-DatabaseTableF104A135-1JZ4KML3DEAMJ
+UserManagementBackendDevStatefulB4115ED0.ExportsOutputRefDatabaseTableF104A1356B7D7D8A = UserManagementBackend-Dev-Stateful-DatabaseTableF104A135-1JZ4KML3DEAMJ
 ```
 ```text
- ✅  UserManagementBackendDevStateless0E5B7E4B (UserManagementBackend-Dev-Stateless)
+ ✅  UserManagementBackendDevStatelessAD73535F (UserManagementBackend-Dev-Stateless)
 
 Outputs:
-UserManagementBackendDevStateless0E5B7E4B.APIHandlerArn = arn:aws:lambda:eu-west-1:807650736403:function:UserManagementBackend-Dev-Stateless-APIHandler-PJjw0Jn7Waq0
-UserManagementBackendDevStateless0E5B7E4B.APIHandlerName = UserManagementBackend-Dev-Stateless-APIHandler-PJjw0Jn7Waq0
-UserManagementBackendDevStateless0E5B7E4B.EndpointURL = https://zx5s6bum21.execute-api.eu-west-1.amazonaws.com/v1/
-UserManagementBackendDevStateless0E5B7E4B.RestAPIId = zx5s6bum21
+UserManagementBackendDevStatelessAD73535F.APIEndpointURL = https://ctixe0v786.execute-api.eu-west-1.amazonaws.com/
 ```
 
 ## Deploy the pipeline
@@ -120,7 +117,7 @@ Below are examples that show the available resources and how to use them.
 ```bash
 endpoint_url=$(aws cloudformation describe-stacks \
   --stack-name UserManagementBackend-Dev-Stateless \
-  --query 'Stacks[*].Outputs[?OutputKey==`EndpointURL`].OutputValue' \
+  --query 'Stacks[*].Outputs[?OutputKey==`APIEndpointURL`].OutputValue' \
   --output text)
 
 curl \

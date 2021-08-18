@@ -76,7 +76,7 @@ class Pipeline(cdk.Stack):
         smoke_test_shell_step = pipelines.ShellStep(
             "SmokeTest",
             env_from_cfn_outputs={
-                api_endpoint_url_env_var: prod_stage.api_endpoint_url
+                api_endpoint_url_env_var: prod_stage.api_endpoint_url_cfn_output
             },
             commands=smoke_test_commands,
         )

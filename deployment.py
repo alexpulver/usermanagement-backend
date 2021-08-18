@@ -1,7 +1,8 @@
-from typing import Any
+from typing import Any, cast
 
 from aws_cdk import aws_codebuild as codebuild
 from aws_cdk import aws_dynamodb as dynamodb
+from aws_cdk import aws_iam as iam
 from aws_cdk import core as cdk
 
 import constants
@@ -30,12 +31,19 @@ class UserManagementBackend(cdk.Stage):
         api = API(
             stateless,
             "API",
-            dynamodb_table=database.table,
+            database_dynamodb_table_name=database.dynamodb_table.table_name,
             lambda_reserved_concurrency=api_lambda_reserved_concurrency,
         )
+        database.dynamodb_table.grant_read_write_data(
+            cast(iam.IGrantable, api.lambda_function.role)
+        )
+        self.api_endpoint_url_cfn_output = cdk.CfnOutput(
+            # API doesn't disable create_default_stage, hence URL will be defined
+            stateless,
+            "APIEndpointURL",
+            value=api.http_api.url,  # type: ignore
+        )
         Monitoring(stateless, "Monitoring", database=database, api=api)
-
-        self.api_endpoint_url = api.endpoint_url
 
 
 class ContinuousBuild(cdk.Stage):
