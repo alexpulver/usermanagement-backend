@@ -65,6 +65,7 @@ class ContinuousBuild(cdk.Stage):
         build_environment = codebuild.BuildEnvironment(
             build_image=codebuild.LinuxBuildImage.STANDARD_5_0,
             compute_type=codebuild.ComputeType.SMALL,
+            privileged=True,
         )
         build_spec = codebuild.BuildSpec.from_object(
             {
