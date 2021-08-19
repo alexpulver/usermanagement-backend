@@ -27,6 +27,7 @@ class API(cdk.Construct):
             entry=str(pathlib.Path(__file__).resolve().parent.joinpath("runtime")),
             index="lambda_function.py",
             handler="lambda_handler",
+            profiling=True,
         )
 
         lambda_integration = apigatewayv2_integrations.LambdaProxyIntegration(

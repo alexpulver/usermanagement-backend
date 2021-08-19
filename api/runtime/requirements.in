@@ -1,2 +1,3 @@
 aws-lambda-powertools
 boto3
+codeguru_profiler_agent

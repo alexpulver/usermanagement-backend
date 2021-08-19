@@ -2,6 +2,7 @@ from typing import Any, Dict, Optional
 
 from aws_lambda_powertools.event_handler import api_gateway
 from aws_lambda_powertools.event_handler import exceptions
+from codeguru_profiler_agent import with_lambda_profiler
 
 import helpers  # isort: skip
 
@@ -10,6 +11,7 @@ app = api_gateway.ApiGatewayResolver(
 )
 
 
+@with_lambda_profiler()  # type: ignore
 def lambda_handler(event: Dict[str, Any], context: object) -> Dict[str, Any]:
     return app.resolve(event, context)
 
