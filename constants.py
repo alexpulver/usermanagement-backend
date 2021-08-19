@@ -12,18 +12,13 @@ GITHUB_OWNER = "alexpulver"
 GITHUB_REPO = "usermanagement-backend"
 GITHUB_TRUNK_BRANCH = "main"
 
-CODEBUILD_INSTALL_COMMANDS = ["./scripts/install-deps.sh"]
-CODEBUILD_BUILD_COMMANDS = ["./scripts/run-tests.sh", "npx cdk synth"]
+TOOLCHAIN_ENV = cdk.Environment(account="807650736403", region="eu-west-1")
 
 DEV_ENV = cdk.Environment(
     account=os.environ["CDK_DEFAULT_ACCOUNT"], region=os.environ["CDK_DEFAULT_REGION"]
 )
 DEV_API_LAMBDA_RESERVED_CONCURRENCY = 1
 DEV_DATABASE_DYNAMODB_BILLING_MODE = dynamodb.BillingMode.PAY_PER_REQUEST
-
-PIPELINE_ENV = cdk.Environment(account="807650736403", region="eu-west-1")
-
-CONTINUOUS_BUILD_ENV = cdk.Environment(account="807650736403", region="eu-west-1")
 
 PROD_ENV = cdk.Environment(account="807650736403", region="eu-west-1")
 PROD_API_LAMBDA_RESERVED_CONCURRENCY = 10
