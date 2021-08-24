@@ -86,7 +86,7 @@ class Toolchain(cdk.Stack):
     @staticmethod
     def _get_cdk_cli_version() -> str:
         package_json_path = (
-            pathlib.Path(__file__).resolve().parent.joinpath("package.json")
+            pathlib.Path(__file__).parent.joinpath("package.json").resolve()
         )
         with open(package_json_path) as package_json_file:
             package_json = json.load(package_json_file)

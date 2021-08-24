@@ -24,7 +24,7 @@ class API(cdk.Construct):
             runtime=lambda_.Runtime.PYTHON_3_7,
             environment={"DATABASE_DYNAMODB_TABLE_NAME": database_dynamodb_table_name},
             reserved_concurrent_executions=lambda_reserved_concurrency,
-            entry=str(pathlib.Path(__file__).resolve().parent.joinpath("runtime")),
+            entry=str(pathlib.Path(__file__).parent.joinpath("runtime").resolve()),
             index="lambda_function.py",
             handler="lambda_handler",
             profiling=True,
