@@ -1,6 +1,6 @@
 import json
 import pathlib
-from typing import Any, Sequence
+from typing import Any
 
 from aws_cdk import aws_codebuild as codebuild
 from aws_cdk import core as cdk
@@ -16,7 +16,6 @@ class Toolchain(cdk.Stack):
     ):
         super().__init__(scope, id_, **kwargs)
 
-        build_commands = ["./scripts/run-tests.sh", "npx cdk synth"]
         build_spec = codebuild.BuildSpec.from_object(
             {
                 "phases": {
@@ -26,18 +25,17 @@ class Toolchain(cdk.Stack):
                         },
                         "commands": ["./scripts/install-deps.sh"],
                     },
-                    "build": {"commands": build_commands},
+                    "build": {"commands": ["./scripts/run-tests.sh", "npx cdk synth"]},
                 },
                 "version": "0.2",
             }
         )
-        self._add_pipeline(build_spec, build_commands, app_scope)
+        self._add_pipeline(build_spec, app_scope)
         self._add_pull_request_build(build_spec)
 
     def _add_pipeline(
         self,
         build_spec: codebuild.BuildSpec,
-        build_commands: Sequence[str],
         app_scope: cdk.Construct,
     ) -> None:
         source = pipelines.CodePipelineSource.connection(
@@ -49,7 +47,8 @@ class Toolchain(cdk.Stack):
             "Synth",
             input=source,
             partial_build_spec=build_spec,
-            commands=build_commands,
+            # The build_spec argument includes build commands.
+            commands=[],
             primary_output_directory="cdk.out",
         )
         pipeline = pipelines.CodePipeline(
