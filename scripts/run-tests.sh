@@ -3,7 +3,7 @@
 set -o errexit
 set -o verbose
 
-targets=(api database monitoring tests app.py constants.py deployment.py toolchain.py)
+targets=(api database monitoring tests app.py constants.py deployment.py pipeline.py)
 
 # Find common security issues (https://bandit.readthedocs.io)
 bandit --recursive "${targets[@]}"

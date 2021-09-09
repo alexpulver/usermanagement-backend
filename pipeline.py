@@ -10,10 +10,8 @@ import constants
 from deployment import UserManagementBackend
 
 
-class Toolchain(cdk.Stack):
-    def __init__(
-        self, scope: cdk.Construct, id_: str, app_scope: cdk.Construct, **kwargs: Any
-    ):
+class Pipeline(cdk.Stack):
+    def __init__(self, scope: cdk.Construct, id_: str, **kwargs: Any):
         super().__init__(scope, id_, **kwargs)
 
         build_spec = codebuild.BuildSpec.from_object(
@@ -30,13 +28,12 @@ class Toolchain(cdk.Stack):
                 "version": "0.2",
             }
         )
-        self._add_pipeline(build_spec, app_scope)
+        self._add_continuous_deployment(build_spec)
         self._add_pull_request_build(build_spec)
 
-    def _add_pipeline(
+    def _add_continuous_deployment(
         self,
         build_spec: codebuild.BuildSpec,
-        app_scope: cdk.Construct,
     ) -> None:
         source = pipelines.CodePipelineSource.connection(
             f"{constants.GITHUB_OWNER}/{constants.GITHUB_REPO}",
@@ -53,12 +50,31 @@ class Toolchain(cdk.Stack):
         )
         pipeline = pipelines.CodePipeline(
             self,
-            "Pipeline",
-            cli_version=Toolchain._get_cdk_cli_version(),
+            "ContinuousDeployment",
+            cli_version=Pipeline._get_cdk_cli_version(),
             docker_enabled_for_synth=True,
             synth=synth,
         )
-        self._add_prod_stage(pipeline, app_scope)
+        self._add_prod_stage(pipeline)
+
+    def _add_prod_stage(self, pipeline: pipelines.CodePipeline) -> None:
+        prod_stage = UserManagementBackend(
+            self,
+            f"{constants.CDK_APP_NAME}-Prod",
+            env=constants.PROD_ENV,
+            api_lambda_reserved_concurrency=constants.PROD_API_LAMBDA_RESERVED_CONCURRENCY,
+            database_dynamodb_billing_mode=constants.PROD_DATABASE_DYNAMODB_BILLING_MODE,
+        )
+        api_endpoint_url_env_var = f"{constants.CDK_APP_NAME.upper()}_API_ENDPOINT_URL"
+        smoke_test_commands = [f"curl ${api_endpoint_url_env_var}"]
+        smoke_test_shell_step = pipelines.ShellStep(
+            "SmokeTest",
+            env_from_cfn_outputs={
+                api_endpoint_url_env_var: prod_stage.api_endpoint_url_cfn_output
+            },
+            commands=smoke_test_commands,
+        )
+        pipeline.add_stage(prod_stage, post=[smoke_test_shell_step])
 
     def _add_pull_request_build(self, build_spec: codebuild.BuildSpec) -> None:
         webhook_filters = [
@@ -91,25 +107,3 @@ class Toolchain(cdk.Stack):
             package_json = json.load(package_json_file)
         cdk_cli_version = str(package_json["devDependencies"]["aws-cdk"])
         return cdk_cli_version
-
-    @staticmethod
-    def _add_prod_stage(
-        pipeline: pipelines.CodePipeline, app_scope: cdk.Construct
-    ) -> None:
-        prod_stage = UserManagementBackend(
-            app_scope,
-            f"{constants.CDK_APP_NAME}-Prod",
-            env=constants.PROD_ENV,
-            api_lambda_reserved_concurrency=constants.PROD_API_LAMBDA_RESERVED_CONCURRENCY,
-            database_dynamodb_billing_mode=constants.PROD_DATABASE_DYNAMODB_BILLING_MODE,
-        )
-        api_endpoint_url_env_var = f"{constants.CDK_APP_NAME.upper()}_API_ENDPOINT_URL"
-        smoke_test_commands = [f"curl ${api_endpoint_url_env_var}"]
-        smoke_test_shell_step = pipelines.ShellStep(
-            "SmokeTest",
-            env_from_cfn_outputs={
-                api_endpoint_url_env_var: prod_stage.api_endpoint_url_cfn_output
-            },
-            commands=smoke_test_commands,
-        )
-        pipeline.add_stage(prod_stage, post=[smoke_test_shell_step])

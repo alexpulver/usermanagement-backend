@@ -1,15 +1,15 @@
 # User management backend
 The project implements a *user management backend* component that uses 
 Amazon API Gateway, AWS Lambda and Amazon DynamoDB to provide basic 
-CRUD operations for managing users. The project includes a [toolchain](https://en.wikipedia.org/wiki/Toolchain)
-with a pipeline and a pull request build.
+CRUD operations for managing users. The project includes a pipeline
+with continuous deployment and pull request build.
 
 ![diagram](https://user-images.githubusercontent.com/4362270/130135294-b4e2f63a-699b-4330-9462-1b5d0611f9e1.png)
 \* Diagram generated using https://github.com/pistazie/cdk-dia
 
 ## Create a new repository from usermanagement-backend
 This is optional for deploying the development stage, but **required** for deploying 
-the toolchain.
+the pipeline.
 
 The instructions below use the usermanagement-backend repository.
 
@@ -81,12 +81,12 @@ Outputs:
 UserManagementBackendDevStatelessAD73535F.APIEndpointURL = https://ctixe0v786.execute-api.eu-west-1.amazonaws.com/
 ```
 
-## Deploy the toolchain
+## Deploy the pipeline
 
 **Prerequisites**
 - Create a new repository from usermanagement-backend, if you haven't done this already
 - Create AWS CodeStar Connections [connection](https://docs.aws.amazon.com/dtconsole/latest/userguide/welcome-connections.html)
-  for the pipeline
+  for the continuous deployment
 - Authorize AWS CodeBuild access for the pull request build
   - Start creating a new project manually
   - Select GitHub as Source provider
@@ -96,14 +96,14 @@ UserManagementBackendDevStatelessAD73535F.APIEndpointURL = https://ctixe0v786.ex
 - Commit and push the changes: `git commit -a -m 'Update constants' && git push`
 
 ```bash
-npx cdk deploy UserManagementBackend-Toolchain
+npx cdk deploy UserManagementBackend-Pipeline
 ```
 
 ## Delete all stacks
 **Do not forget to delete the stacks to avoid unexpected charges**
 ```bash
 npx cdk destroy "UserManagementBackend-Dev/*"
-npx cdk destroy UserManagementBackend-Toolchain
+npx cdk destroy UserManagementBackend-Pipeline
 npx cdk destroy "UserManagementBackend-Prod/*"
 ```
 

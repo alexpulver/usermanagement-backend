@@ -12,7 +12,7 @@ GITHUB_OWNER = "alexpulver"
 GITHUB_REPO = "usermanagement-backend"
 GITHUB_TRUNK_BRANCH = "main"
 
-TOOLCHAIN_ENV = cdk.Environment(account="807650736403", region="eu-west-1")
+PIPELINE_ENV = cdk.Environment(account="807650736403", region="eu-west-1")
 
 DEV_ENV = cdk.Environment(
     account=os.environ["CDK_DEFAULT_ACCOUNT"], region=os.environ["CDK_DEFAULT_REGION"]
