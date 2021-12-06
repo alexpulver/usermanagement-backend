@@ -1,15 +1,15 @@
 # User management backend
 The project implements a *user management backend* component that uses 
 Amazon API Gateway, AWS Lambda and Amazon DynamoDB to provide basic 
-CRUD operations for managing users. The project includes a pipeline
-with continuous deployment and pull request build.
+CRUD operations for managing users. The project includes continuous 
+deployment and pull request validation.
 
-![diagram](https://user-images.githubusercontent.com/4362270/132720458-35b39091-61ed-413e-a9d5-28967053d64d.png)
+![diagram](https://user-images.githubusercontent.com/4362270/144895542-6b8f3777-c0c7-4cc7-9399-43f222e35a0c.png)
 \* Diagram generated using https://github.com/pistazie/cdk-dia
 
 ## Create a new repository from usermanagement-backend
-This is optional for deploying the development stage, but **required** for deploying 
-the pipeline.
+This is optional for deploying the development stage, but **required** for 
+continuous deployment and pull request validation.
 
 The instructions below use the usermanagement-backend repository.
 
@@ -69,26 +69,26 @@ npx cdk deploy "UserManagementBackend-Dev/*"
 
 Example outputs for `npx cdk deploy "UserManagementBackend-Dev/*"`:
 ```text
- ✅  UserManagementBackendDevStatefulB4115ED0 (UserManagementBackend-Dev-Stateful) (no changes)
+ ✅  UserManagementBackendDevStatefulB4115ED0 (UserManagementBackend-Dev-Stateful)
 
 Outputs:
-UserManagementBackendDevStatefulB4115ED0.ExportsOutputFnGetAttDatabaseTableF104A135ArnDAC15A6A = arn:aws:dynamodb:eu-west-1:807650736403:table/UserManagementBackend-Dev-Stateful-DatabaseTableF104A135-1JZ4KML3DEAMJ
-UserManagementBackendDevStatefulB4115ED0.ExportsOutputRefDatabaseTableF104A1356B7D7D8A = UserManagementBackend-Dev-Stateful-DatabaseTableF104A135-1JZ4KML3DEAMJ
+UserManagementBackendDevStatefulB4115ED0.ExportsOutputFnGetAttDatabaseDynamoDbTableB13A2BF6ArnA67170C6 = arn:aws:dynamodb:eu-west-1:807650736403:table/UserManagementBackend-Dev-Stateful-DatabaseDynamoDbTableB13A2BF6-AKTEOTYGW3A
+UserManagementBackendDevStatefulB4115ED0.ExportsOutputRefDatabaseDynamoDbTableB13A2BF6AB01B0C4 = UserManagementBackend-Dev-Stateful-DatabaseDynamoDbTableB13A2BF6-AKTEOTYGW3A
 ```
 ```text
  ✅  UserManagementBackendDevStatelessAD73535F (UserManagementBackend-Dev-Stateless)
 
 Outputs:
-UserManagementBackendDevStatelessAD73535F.APIEndpointURL = https://ctixe0v786.execute-api.eu-west-1.amazonaws.com/
+UserManagementBackendDevStatelessAD73535F.ApiEndpoint = https://ctixe0v786.execute-api.eu-west-1.amazonaws.com/
 ```
 
-## Deploy the pipeline
+## Deploy the toolchain
 
 **Prerequisites**
 - Create a new repository from usermanagement-backend, if you haven't done this already
 - Create AWS CodeStar Connections [connection](https://docs.aws.amazon.com/dtconsole/latest/userguide/welcome-connections.html)
-  for the continuous deployment
-- Authorize AWS CodeBuild access for the pull request build
+  for continuous deployment
+- Authorize AWS CodeBuild access for the pull request validation
   - Start creating a new project manually
   - Select GitHub as Source provider
   - Choose **Connect using OAuth**
@@ -97,14 +97,14 @@ UserManagementBackendDevStatelessAD73535F.APIEndpointURL = https://ctixe0v786.ex
 - Commit and push the changes: `git commit -a -m 'Update constants' && git push`
 
 ```bash
-npx cdk deploy UserManagementBackend-Pipeline
+npx cdk deploy UserManagementBackend-Toolchain
 ```
 
 ## Delete all stacks
 **Do not forget to delete the stacks to avoid unexpected charges**
 ```bash
 npx cdk destroy "UserManagementBackend-Dev/*"
-npx cdk destroy UserManagementBackend-Pipeline
+npx cdk destroy UserManagementBackend-Toolchain
 npx cdk destroy "UserManagementBackend-Prod/*"
 ```
 
@@ -117,7 +117,7 @@ Below are examples that show the available resources and how to use them.
 ```bash
 endpoint_url=$(aws cloudformation describe-stacks \
   --stack-name UserManagementBackend-Dev-Stateless \
-  --query 'Stacks[*].Outputs[?OutputKey==`APIEndpointURL`].OutputValue' \
+  --query 'Stacks[*].Outputs[?OutputKey==`ApiEndpoint`].OutputValue' \
   --output text)
 
 curl \

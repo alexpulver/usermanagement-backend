@@ -17,7 +17,7 @@ class Database(cdk.Construct):
         )
         self.dynamodb_table = dynamodb.Table(
             self,
-            "Table",
+            "DynamoDbTable",
             billing_mode=dynamodb_billing_mode,
             partition_key=partition_key,
             removal_policy=cdk.RemovalPolicy.DESTROY,

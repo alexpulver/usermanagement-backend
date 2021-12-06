@@ -10,7 +10,7 @@ __pycache__/
 *.so
 
 # CDK-Dia
-diagram.png*
+/diagram.*
 
 # Coverage.py
 .coverage

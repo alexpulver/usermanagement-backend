@@ -7,7 +7,7 @@ from aws_cdk import aws_lambda_python as lambda_python
 from aws_cdk import core as cdk
 
 
-class API(cdk.Construct):
+class Api(cdk.Construct):
     def __init__(
         self,
         scope: cdk.Construct,
@@ -33,6 +33,6 @@ class API(cdk.Construct):
         lambda_integration = apigatewayv2_integrations.LambdaProxyIntegration(
             handler=self.lambda_function
         )
-        self.http_api = apigatewayv2.HttpApi(
-            self, "HttpApi", default_integration=lambda_integration
+        self.api_gateway_http_api = apigatewayv2.HttpApi(
+            self, "ApiGatewayHttpApi", default_integration=lambda_integration
         )

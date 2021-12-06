@@ -2,7 +2,7 @@ from aws_cdk import core as cdk
 
 import constants
 from deployment import UserManagementBackend
-from pipeline import Pipeline
+from toolchain import Toolchain
 
 app = cdk.App()
 
@@ -15,11 +15,11 @@ UserManagementBackend(
     database_dynamodb_billing_mode=constants.DEV_DATABASE_DYNAMODB_BILLING_MODE,
 )
 
-# Continuous deployment and pull request build
-Pipeline(
+# Continuous deployment and pull request validation
+Toolchain(
     app,
-    f"{constants.CDK_APP_NAME}-Pipeline",
-    env=constants.PIPELINE_ENV,
+    f"{constants.CDK_APP_NAME}-Toolchain",
+    env=constants.TOOLCHAIN_ENV,
 )
 
 app.synth()
