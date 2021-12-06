@@ -28,7 +28,8 @@ cd usermanagement-backend
 python3.7 -m venv .venv
 source .venv/bin/activate
 # [Optional] Needed to upgrade dependencies and cleanup unused packages
-pip install pip-tools==6.1.0
+pip install pip==21.2.4  # See https://github.com/jazzband/pip-tools/issues/1503
+pip install pip-tools==6.4.0
 ./scripts/install-deps.sh
 ./scripts/run-tests.sh
 ```
