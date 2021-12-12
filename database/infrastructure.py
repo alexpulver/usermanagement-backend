@@ -1,14 +1,11 @@
+import aws_cdk as cdk
 from aws_cdk import aws_dynamodb as dynamodb
-from aws_cdk import core as cdk
+from constructs import Construct
 
 
-class Database(cdk.Construct):
+class Database(Construct):
     def __init__(
-        self,
-        scope: cdk.Construct,
-        id_: str,
-        *,
-        dynamodb_billing_mode: dynamodb.BillingMode
+        self, scope: Construct, id_: str, *, dynamodb_billing_mode: dynamodb.BillingMode
     ):
         super().__init__(scope, id_)
 

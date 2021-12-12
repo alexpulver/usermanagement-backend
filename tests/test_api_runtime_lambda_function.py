@@ -21,6 +21,7 @@ class AppTestCase(unittest.TestCase):
                     "method": "GET",
                     "path": f"/users/{username}",
                 },
+                "stage": "$default",
             },
         }
         response = lambda_function.lambda_handler(apigatewayv2_proxy_event, None)

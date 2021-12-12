@@ -1,8 +1,9 @@
 from typing import Any, cast
 
+import aws_cdk as cdk
 from aws_cdk import aws_dynamodb as dynamodb
 from aws_cdk import aws_iam as iam
-from aws_cdk import core as cdk
+from constructs import Construct
 
 from api.infrastructure import Api
 from database.infrastructure import Database
@@ -12,7 +13,7 @@ from monitoring.infrastructure import Monitoring
 class UserManagementBackend(cdk.Stage):
     def __init__(
         self,
-        scope: cdk.Construct,
+        scope: Construct,
         id_: str,
         *,
         database_dynamodb_billing_mode: dynamodb.BillingMode,

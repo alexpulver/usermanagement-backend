@@ -1,5 +1,5 @@
 -c requirements.txt
-aws-cdk.assertions
+aws-cdk-lib
 bandit
 black
 coverage

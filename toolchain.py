@@ -2,16 +2,17 @@ import json
 import pathlib
 from typing import Any
 
+import aws_cdk as cdk
 from aws_cdk import aws_codebuild as codebuild
-from aws_cdk import core as cdk
 from aws_cdk import pipelines
+from constructs import Construct
 
 import constants
 from deployment import UserManagementBackend
 
 
 class Toolchain(cdk.Stack):
-    def __init__(self, scope: cdk.Construct, id_: str, **kwargs: Any):
+    def __init__(self, scope: Construct, id_: str, **kwargs: Any):
         super().__init__(scope, id_, **kwargs)
 
         build_spec = codebuild.BuildSpec.from_object(
@@ -32,10 +33,8 @@ class Toolchain(cdk.Stack):
         PullRequestValidation(self, "PullRequestValidation", build_spec=build_spec)
 
 
-class ContinuousDeployment(cdk.Construct):
-    def __init__(
-        self, scope: cdk.Construct, id_: str, *, build_spec: codebuild.BuildSpec
-    ):
+class ContinuousDeployment(Construct):
+    def __init__(self, scope: Construct, id_: str, *, build_spec: codebuild.BuildSpec):
         super().__init__(scope, id_)
 
         codepipeline_source = pipelines.CodePipelineSource.connection(
@@ -84,14 +83,14 @@ class ContinuousDeployment(cdk.Construct):
         package_json_path = (
             pathlib.Path(__file__).parent.joinpath("package.json").resolve()
         )
-        with open(package_json_path) as package_json_file:
+        with open(package_json_path, encoding="utf_8") as package_json_file:
             package_json = json.load(package_json_file)
         cdk_cli_version = str(package_json["devDependencies"]["aws-cdk"])
         return cdk_cli_version
 
 
-class ApiSmokeTest(cdk.Construct):
-    def __init__(self, scope: cdk.Construct, id_: str, *, api_endpoint: cdk.CfnOutput):
+class ApiSmokeTest(Construct):
+    def __init__(self, scope: Construct, id_: str, *, api_endpoint: cdk.CfnOutput):
         super().__init__(scope, id_)
 
         api_endpoint_env_var_name = f"{constants.CDK_APP_NAME.upper()}_API_ENDPOINT"
@@ -103,10 +102,8 @@ class ApiSmokeTest(cdk.Construct):
         )
 
 
-class PullRequestValidation(cdk.Construct):
-    def __init__(
-        self, scope: cdk.Construct, id_: str, *, build_spec: codebuild.BuildSpec
-    ):
+class PullRequestValidation(Construct):
+    def __init__(self, scope: Construct, id_: str, *, build_spec: codebuild.BuildSpec):
         super().__init__(scope, id_)
 
         webhook_filters = [
