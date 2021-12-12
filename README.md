@@ -111,7 +111,7 @@ npx cdk destroy "UserManagementBackend-Prod/*"
 Delete AWS CodeStar Connections connection if it is no longer needed. Follow the instructions
 in [Delete a connection](https://docs.aws.amazon.com/dtconsole/latest/userguide/connections-delete.html).
 
-## Testing the web API
+## Testing the API
 Below are examples that show the available resources and how to use them.
 
 ```bash
