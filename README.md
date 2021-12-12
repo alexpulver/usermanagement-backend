@@ -115,7 +115,7 @@ in [Delete a connection](https://docs.aws.amazon.com/dtconsole/latest/userguide/
 Below are examples that show the available resources and how to use them.
 
 ```bash
-endpoint_url=$(aws cloudformation describe-stacks \
+api_endpoint=$(aws cloudformation describe-stacks \
   --stack-name UserManagementBackend-Dev-Stateless \
   --query 'Stacks[*].Outputs[?OutputKey==`ApiEndpoint`].OutputValue' \
   --output text)
@@ -124,21 +124,21 @@ curl \
     -H "Content-Type: application/json" \
     -X POST \
     -d '{"username":"john", "email":"john@example.com"}' \
-    "${endpoint_url}/users"
+    "${api_endpoint}/users"
 
 curl \
     -H "Content-Type: application/json" \
     -X GET \
-    "${endpoint_url}/users/john"
+    "${api_endpoint}/users/john"
 
 curl \
     -H "Content-Type: application/json" \
     -X PUT \
     -d '{"country":"US", "state":"WA"}' \
-    "${endpoint_url}/users/john"
+    "${api_endpoint}/users/john"
 
 curl \
     -H "Content-Type: application/json" \
     -X DELETE \
-    "${endpoint_url}/users/john"
+    "${api_endpoint}/users/john"
 ```
