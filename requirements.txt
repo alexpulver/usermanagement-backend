@@ -26,6 +26,7 @@ cattrs==1.8.0
     # via jsii
 constructs==10.0.12
     # via
+    #   -r requirements.in
     #   aws-cdk-lib
     #   aws-cdk.aws-apigatewayv2-alpha
     #   aws-cdk.aws-apigatewayv2-integrations-alpha
