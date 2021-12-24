@@ -39,7 +39,7 @@ class UserManagementBackend(cdk.Stage):
         self.api_endpoint = cdk.CfnOutput(
             stateless,
             "ApiEndpoint",
-            # API doesn't disable create_default_stage, hence URL will be defined
+            # Api doesn't disable create_default_stage, hence URL will be defined
             value=api.api_gateway_http_api.url,  # type: ignore
         )
         Monitoring(stateless, "Monitoring", database=database, api=api)
