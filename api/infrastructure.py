@@ -32,9 +32,13 @@ class Api(Construct):
             profiling=True,
         )
 
-        lambda_integration = apigatewayv2_integrations_alpha.HttpLambdaIntegration(
-            "ApiGatewayHttpLambdaIntegration", handler=self.lambda_function
+        api_gateway_http_lambda_integration = (
+            apigatewayv2_integrations_alpha.HttpLambdaIntegration(
+                "ApiGatewayHttpLambdaIntegration", handler=self.lambda_function
+            )
         )
         self.api_gateway_http_api = apigatewayv2_alpha.HttpApi(
-            self, "ApiGatewayHttpApi", default_integration=lambda_integration
+            self,
+            "ApiGatewayHttpApi",
+            default_integration=api_gateway_http_lambda_integration,
         )
