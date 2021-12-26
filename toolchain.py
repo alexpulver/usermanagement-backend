@@ -20,7 +20,7 @@ class Toolchain(cdk.Stack):
                 "phases": {
                     "install": {
                         "runtime-versions": {
-                            "python": constants.CDK_APP_PYTHON_VERSION
+                            "python": constants.APP_PYTHON_VERSION
                         },
                         "commands": ["./scripts/install-deps.sh"],
                     },
@@ -66,7 +66,7 @@ class ContinuousDeployment(Construct):
     ) -> None:
         usermanagement_backend_prod = UserManagementBackend(
             self,
-            f"{constants.CDK_APP_NAME}-Prod",
+            f"{constants.APP_NAME}-Prod",
             env=constants.PROD_ENV,
             api_lambda_reserved_concurrency=constants.PROD_API_LAMBDA_RESERVED_CONCURRENCY,
             database_dynamodb_billing_mode=constants.PROD_DATABASE_DYNAMODB_BILLING_MODE,
@@ -93,7 +93,7 @@ class ApiSmokeTest(Construct):
     def __init__(self, scope: Construct, id_: str, *, api_endpoint: cdk.CfnOutput):
         super().__init__(scope, id_)
 
-        api_endpoint_env_var_name = f"{constants.CDK_APP_NAME.upper()}_API_ENDPOINT"
+        api_endpoint_env_var_name = f"{constants.APP_NAME.upper()}_API_ENDPOINT"
         smoke_test_commands = [f"curl ${api_endpoint_env_var_name}"]
         self.shell_step = pipelines.ShellStep(
             "ShellStep",

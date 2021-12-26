@@ -9,7 +9,7 @@ app = cdk.App()
 # Development stage
 UserManagementBackend(
     app,
-    f"{constants.CDK_APP_NAME}-Dev",
+    f"{constants.APP_NAME}-Dev",
     env=constants.DEV_ENV,
     api_lambda_reserved_concurrency=constants.DEV_API_LAMBDA_RESERVED_CONCURRENCY,
     database_dynamodb_billing_mode=constants.DEV_DATABASE_DYNAMODB_BILLING_MODE,
@@ -18,7 +18,7 @@ UserManagementBackend(
 # Continuous deployment and pull request validation
 Toolchain(
     app,
-    f"{constants.CDK_APP_NAME}-Toolchain",
+    f"{constants.APP_NAME}-Toolchain",
     env=constants.TOOLCHAIN_ENV,
 )
 
