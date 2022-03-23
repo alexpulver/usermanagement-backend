@@ -19,9 +19,7 @@ class Toolchain(cdk.Stack):
             {
                 "phases": {
                     "install": {
-                        "runtime-versions": {
-                            "python": constants.APP_PYTHON_VERSION
-                        },
+                        "runtime-versions": {"python": constants.APP_PYTHON_VERSION},
                         "commands": ["./scripts/install-deps.sh"],
                     },
                     "build": {"commands": ["./scripts/run-tests.sh", "npx cdk synth"]},
@@ -37,14 +35,14 @@ class ContinuousDeployment(Construct):
     def __init__(self, scope: Construct, id_: str, *, build_spec: codebuild.BuildSpec):
         super().__init__(scope, id_)
 
-        codepipeline_source = pipelines.CodePipelineSource.connection(
+        codepipeline_source_connection = pipelines.CodePipelineSource.connection(
             f"{constants.GITHUB_OWNER}/{constants.GITHUB_REPO}",
             constants.GITHUB_TRUNK_BRANCH,
             connection_arn=constants.GITHUB_CONNECTION_ARN,
         )
         codebuild_step = pipelines.CodeBuildStep(
             "CodeBuildStep",
-            input=codepipeline_source,
+            input=codepipeline_source_connection,
             partial_build_spec=build_spec,
             # The build_spec argument includes build commands.
             commands=[],
