@@ -57,27 +57,9 @@ class ContinuousDeployment(Construct):
             publish_assets_in_parallel=False,
             synth=codebuild_step,
         )
-        # self._add_usermanagement_backend_prod_onebox_stage(codepipeline)
-        self._add_usermanagement_backend_prod_fleet_stage(codepipeline)
+        self._add_usermanagement_backend_prod_stage(codepipeline)
 
-    # def _add_usermanagement_backend_prod_onebox_stage(
-    #     self, codepipeline: pipelines.CodePipeline
-    # ) -> None:
-    #     usermanagement_backend_prod = UserManagementBackend(
-    #         self,
-    #         f"{constants.APP_NAME}-Prod",
-    #         env=constants.PROD_ENV,
-    #         api_lambda_reserved_concurrency=constants.PROD_API_LAMBDA_RESERVED_CONCURRENCY,
-    #         database_dynamodb_billing_mode=constants.PROD_DATABASE_DYNAMODB_BILLING_MODE,
-    #     )
-    #     api_smoke_test = ApiSmokeTest(
-    #         self, "ApiSmokeTest", api_endpoint=usermanagement_backend_prod.api_endpoint
-    #     )
-    #     codepipeline.add_stage(
-    #         usermanagement_backend_prod, post=[api_smoke_test.shell_step]
-    #     )
-
-    def _add_usermanagement_backend_prod_fleet_stage(
+    def _add_usermanagement_backend_prod_stage(
         self, codepipeline: pipelines.CodePipeline
     ) -> None:
         usermanagement_backend_prod = UserManagementBackend(
