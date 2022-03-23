@@ -20,7 +20,7 @@ class Toolchain(cdk.Stack):
                 "phases": {
                     "install": {
                         "runtime-versions": {"python": constants.APP_PYTHON_VERSION},
-                        "commands": ["./scripts/install-deps.sh"],
+                        "commands": ["env", "./scripts/install-deps.sh"],
                     },
                     "build": {"commands": ["./scripts/run-tests.sh", "npx cdk synth"]},
                 },
