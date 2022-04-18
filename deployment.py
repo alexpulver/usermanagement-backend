@@ -33,9 +33,8 @@ class UserManagementBackend(cdk.Stage):
             database_dynamodb_table_name=database.dynamodb_table.table_name,
             lambda_reserved_concurrency=api_lambda_reserved_concurrency,
         )
-        database.dynamodb_table.grant_read_write_data(
-            cast(iam.IGrantable, api.lambda_function.role)
-        )
+        database.dynamodb_table.grant_read_write_data(api.lambda_function)
+
         self.api_endpoint = cdk.CfnOutput(
             stateless,
             "ApiEndpoint",
