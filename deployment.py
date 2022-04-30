@@ -1,8 +1,7 @@
-from typing import Any, cast
+from typing import Any
 
 import aws_cdk as cdk
 from aws_cdk import aws_dynamodb as dynamodb
-from aws_cdk import aws_iam as iam
 from constructs import Construct
 
 from api.infrastructure import Api
