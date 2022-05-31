@@ -64,13 +64,15 @@ class ContinuousDeployment(Construct):
     ) -> None:
         usermanagement_backend_prod = UserManagementBackend(
             self,
-            f"{constants.APP_NAME}-Prod",
+            f"{constants.APP_NAME}Prod",
             env=constants.PROD_ENV,
             api_lambda_reserved_concurrency=constants.PROD_API_LAMBDA_RESERVED_CONCURRENCY,
             database_dynamodb_billing_mode=constants.PROD_DATABASE_DYNAMODB_BILLING_MODE,
         )
         api_smoke_test = ApiSmokeTest(
-            self, "ApiSmokeTest", api_endpoint=usermanagement_backend_prod.api_endpoint
+            self,
+            "ApiSmokeTestProd",
+            api_endpoint=usermanagement_backend_prod.api_endpoint,
         )
         codepipeline.add_stage(
             usermanagement_backend_prod, post=[api_smoke_test.shell_step]
