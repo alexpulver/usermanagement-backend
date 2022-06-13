@@ -4,7 +4,7 @@ import aws_cdk as cdk
 from aws_cdk import aws_dynamodb as dynamodb
 from constructs import Construct
 
-from api.infrastructure import Api
+from api.infrastructure import API
 from database.infrastructure import Database
 from monitoring.infrastructure import Monitoring
 
@@ -26,9 +26,9 @@ class UserManagementBackend(cdk.Stage):
             stateful, "Database", dynamodb_billing_mode=database_dynamodb_billing_mode
         )
         stateless = cdk.Stack(self, "Stateless")
-        api = Api(
+        api = API(
             stateless,
-            "Api",
+            "API",
             database_dynamodb_table_name=database.dynamodb_table.table_name,
             lambda_reserved_concurrency=api_lambda_reserved_concurrency,
         )
@@ -36,7 +36,7 @@ class UserManagementBackend(cdk.Stage):
 
         self.api_endpoint = cdk.CfnOutput(
             stateless,
-            "ApiEndpoint",
+            "APIEndpoint",
             # Api doesn't disable create_default_stage, hence URL will be defined
             value=api.api_gateway_http_api.url,  # type: ignore
         )

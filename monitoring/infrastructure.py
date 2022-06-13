@@ -1,12 +1,12 @@
 from aws_cdk import aws_cloudwatch as cloudwatch
 from constructs import Construct
 
-from api.infrastructure import Api
+from api.infrastructure import API
 from database.infrastructure import Database
 
 
 class Monitoring(Construct):
-    def __init__(self, scope: Construct, id_: str, *, database: Database, api: Api):
+    def __init__(self, scope: Construct, id_: str, *, database: Database, api: API):
         super().__init__(scope, id_)
 
         widgets = [

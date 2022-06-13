@@ -69,9 +69,9 @@ class ContinuousDeployment(Construct):
             api_lambda_reserved_concurrency=constants.PROD_API_LAMBDA_RESERVED_CONCURRENCY,
             database_dynamodb_billing_mode=constants.PROD_DATABASE_DYNAMODB_BILLING_MODE,
         )
-        api_smoke_test = ApiSmokeTest(
+        api_smoke_test = APISmokeTest(
             self,
-            "ApiSmokeTestProd",
+            "APISmokeTestProd",
             api_endpoint=usermanagement_backend_prod.api_endpoint,
         )
         codepipeline.add_stage(
@@ -89,7 +89,7 @@ class ContinuousDeployment(Construct):
         return cdk_cli_version
 
 
-class ApiSmokeTest(Construct):
+class APISmokeTest(Construct):
     def __init__(self, scope: Construct, id_: str, *, api_endpoint: cdk.CfnOutput):
         super().__init__(scope, id_)
 

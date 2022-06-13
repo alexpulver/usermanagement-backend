@@ -9,7 +9,7 @@ from aws_cdk import aws_lambda_python_alpha as lambda_python_alpha
 from constructs import Construct
 
 
-class Api(Construct):
+class API(Construct):
     def __init__(
         self,
         scope: Construct,
@@ -34,11 +34,11 @@ class Api(Construct):
 
         api_gateway_http_lambda_integration = (
             apigatewayv2_integrations_alpha.HttpLambdaIntegration(
-                "ApiGatewayHttpLambdaIntegration", handler=self.lambda_function
+                "APIGatewayHTTPLambdaIntegration", handler=self.lambda_function
             )
         )
         self.api_gateway_http_api = apigatewayv2_alpha.HttpApi(
             self,
-            "ApiGatewayHttpApi",
+            "APIGatewayHTTPAPI",
             default_integration=api_gateway_http_lambda_integration,
         )
