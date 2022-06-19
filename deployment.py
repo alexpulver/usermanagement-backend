@@ -1,7 +1,7 @@
 from typing import Any
 
 import aws_cdk as cdk
-from aws_cdk import aws_dynamodb as dynamodb
+import aws_cdk.aws_dynamodb as dynamodb
 from constructs import Construct
 
 from api.infrastructure import API

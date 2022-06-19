@@ -1,7 +1,7 @@
 import os
 
 import aws_cdk as cdk
-from aws_cdk import aws_dynamodb as dynamodb
+import aws_cdk.aws_dynamodb as dynamodb
 
 APP_NAME = "UserManagementBackend"
 APP_PYTHON_VERSION = "3.7"

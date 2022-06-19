@@ -3,7 +3,7 @@ import pathlib
 from typing import Any
 
 import aws_cdk as cdk
-from aws_cdk import aws_codebuild as codebuild
+import aws_cdk.aws_codebuild as codebuild
 from aws_cdk import pipelines
 from constructs import Construct
 

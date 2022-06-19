@@ -1,8 +1,8 @@
 import unittest
 
 import aws_cdk as cdk
+import aws_cdk.aws_dynamodb as dynamodb
 from aws_cdk import assertions
-from aws_cdk import aws_dynamodb as dynamodb
 
 from api.infrastructure import API
 from database.infrastructure import Database

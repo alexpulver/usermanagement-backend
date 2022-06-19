@@ -1,11 +1,9 @@
 import pathlib
 
-from aws_cdk import aws_apigatewayv2_alpha as apigatewayv2_alpha
-from aws_cdk import (
-    aws_apigatewayv2_integrations_alpha as apigatewayv2_integrations_alpha,
-)
-from aws_cdk import aws_lambda as lambda_
-from aws_cdk import aws_lambda_python_alpha as lambda_python_alpha
+import aws_cdk.aws_apigatewayv2_alpha as apigatewayv2_alpha
+import aws_cdk.aws_apigatewayv2_integrations_alpha as apigatewayv2_integrations_alpha
+import aws_cdk.aws_lambda as lambda_
+import aws_cdk.aws_lambda_python_alpha as lambda_python_alpha
 from constructs import Construct
 
 

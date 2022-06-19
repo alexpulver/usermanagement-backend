@@ -1,4 +1,4 @@
-from aws_cdk import aws_cloudwatch as cloudwatch
+import aws_cdk.aws_cloudwatch as cloudwatch
 from constructs import Construct
 
 from api.infrastructure import API
