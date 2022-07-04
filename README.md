@@ -64,26 +64,26 @@ pip-sync api/runtime/requirements.txt requirements.txt requirements-dev.txt
 ```
 
 ## Deploy the development stage
-The `UserManagementBackend-Dev` stage uses your default AWS account and region.
+The `UserManagementBackendDev` stage uses your default AWS account and region.
 It consists of two stacks - stateful (database) and stateless (API and monitoring) 
 
 ```bash
-npx cdk deploy "UserManagementBackend-Dev/*"
+npx cdk deploy "UserManagementBackendDev/*"
 ```
 
-Example outputs for `npx cdk deploy "UserManagementBackend-Dev/*"`:
+Example outputs for `npx cdk deploy "UserManagementBackendDev/*"`:
 ```text
- ✅  UserManagementBackendDevStatefulB4115ED0 (UserManagementBackend-Dev-Stateful)
+ ✅  UserManagementBackendDevStatefulB4115ED0 (UserManagementBackendDev-Stateful)
 
 Outputs:
-UserManagementBackendDevStatefulB4115ED0.ExportsOutputFnGetAttDatabaseDynamoDbTableB13A2BF6ArnA67170C6 = arn:aws:dynamodb:eu-west-1:807650736403:table/UserManagementBackend-Dev-Stateful-DatabaseDynamoDbTableB13A2BF6-AKTEOTYGW3A
-UserManagementBackendDevStatefulB4115ED0.ExportsOutputRefDatabaseDynamoDbTableB13A2BF6AB01B0C4 = UserManagementBackend-Dev-Stateful-DatabaseDynamoDbTableB13A2BF6-AKTEOTYGW3A
+UserManagementBackendDevStatefulB4115ED0.ExportsOutputFnGetAttDatabaseDynamoDbTableB13A2BF6ArnA67170C6 = arn:aws:dynamodb:eu-west-1:807650736403:table/UserManagementBackendDev-Stateful-DatabaseDynamoDbTableB13A2BF6-AKTEOTYGW3A
+UserManagementBackendDevStatefulB4115ED0.ExportsOutputRefDatabaseDynamoDbTableB13A2BF6AB01B0C4 = UserManagementBackendDev-Stateful-DatabaseDynamoDbTableB13A2BF6-AKTEOTYGW3A
 ```
 ```text
- ✅  UserManagementBackendDevStatelessAD73535F (UserManagementBackend-Dev-Stateless)
+ ✅  UserManagementBackendDevStatelessAD73535F (UserManagementBackendDev-Stateless)
 
 Outputs:
-UserManagementBackendDevStatelessAD73535F.ApiEndpoint = https://ctixe0v786.execute-api.eu-west-1.amazonaws.com/
+UserManagementBackendDevStatelessAD73535F.APIEndpoint = https://ctixe0v786.execute-api.eu-west-1.amazonaws.com/
 ```
 
 ## Deploy the toolchain
@@ -107,7 +107,7 @@ npx cdk deploy UserManagementBackend-Toolchain
 ## Delete all stacks
 **Do not forget to delete the stacks to avoid unexpected charges**
 ```bash
-npx cdk destroy "UserManagementBackend-Dev/*"
+npx cdk destroy "UserManagementBackendDev/*"
 npx cdk destroy UserManagementBackend-Toolchain
 npx cdk destroy "UserManagementBackend-Prod/*"
 ```
@@ -120,8 +120,8 @@ Below are examples that show the available resources and how to use them.
 
 ```bash
 api_endpoint=$(aws cloudformation describe-stacks \
-  --stack-name UserManagementBackend-Dev-Stateless \
-  --query 'Stacks[*].Outputs[?OutputKey==`ApiEndpoint`].OutputValue' \
+  --stack-name UserManagementBackendDev-Stateless \
+  --query 'Stacks[*].Outputs[?OutputKey==`APIEndpoint`].OutputValue' \
   --output text)
 
 curl \
