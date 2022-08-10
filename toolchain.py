@@ -57,26 +57,25 @@ class ContinuousDeployment(Construct):
             publish_assets_in_parallel=False,
             synth=codebuild_step,
         )
-        self._add_usermanagement_backend_prod_stage(codepipeline)
+        self._add_stages_to_codepipeline(codepipeline)
 
-    def _add_usermanagement_backend_prod_stage(
-        self, codepipeline: pipelines.CodePipeline
-    ) -> None:
-        usermanagement_backend_prod = UserManagementBackend(
-            self,
-            f"{constants.APP_NAME}Prod",
-            env=constants.PROD_ENV,
-            api_lambda_reserved_concurrency=constants.PROD_API_LAMBDA_RESERVED_CONCURRENCY,
-            database_dynamodb_billing_mode=constants.PROD_DATABASE_DYNAMODB_BILLING_MODE,
-        )
-        api_smoke_test = APISmokeTest(
-            self,
-            "APISmokeTestProd",
-            api_endpoint=usermanagement_backend_prod.api_endpoint,
-        )
-        codepipeline.add_stage(
-            usermanagement_backend_prod, post=[api_smoke_test.shell_step]
-        )
+    def _add_stages_to_codepipeline(self, codepipeline: pipelines.CodePipeline) -> None:
+        for (
+            usermanagement_backend_stage_parameters
+        ) in constants.USERMANAGEMENT_BACKEND_PIPELINE_STAGES_PARAMETERS:
+            usermanagement_backend = UserManagementBackend(
+                self,
+                usermanagement_backend_stage_parameters.id,
+                **usermanagement_backend_stage_parameters.props,
+            )
+            api_smoke_test = APISmokeTest(
+                self,
+                f"APISmokeTest{usermanagement_backend_stage_parameters.id}",
+                api_endpoint=usermanagement_backend.api_endpoint,
+            )
+            codepipeline.add_stage(
+                usermanagement_backend, post=[api_smoke_test.shell_step]
+            )
 
     @staticmethod
     def _get_cdk_cli_version() -> str:

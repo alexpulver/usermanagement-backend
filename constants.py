@@ -1,4 +1,6 @@
 import os
+from dataclasses import dataclass
+from typing import Any, Dict
 
 import aws_cdk as cdk
 import aws_cdk.aws_dynamodb as dynamodb
@@ -12,14 +14,40 @@ GITHUB_OWNER = "alexpulver"
 GITHUB_REPO = "usermanagement-backend"
 GITHUB_TRUNK_BRANCH = "main"
 
-TOOLCHAIN_ENV = cdk.Environment(account="807650736403", region="eu-west-1")
 
-DEV_ENV = cdk.Environment(
-    account=os.environ["CDK_DEFAULT_ACCOUNT"], region=os.environ["CDK_DEFAULT_REGION"]
+@dataclass
+class ConstructParameters:
+    # pylint: disable=invalid-name
+    id: str
+    props: Dict[str, Any]
+
+
+TOOLCHAIN_STACK_PARAMETERS = ConstructParameters(
+    id=f"{APP_NAME}Toolchain",
+    props={
+        "env": cdk.Environment(account="807650736403", region="eu-west-1"),
+    },
 )
-DEV_API_LAMBDA_RESERVED_CONCURRENCY = 1
-DEV_DATABASE_DYNAMODB_BILLING_MODE = dynamodb.BillingMode.PAY_PER_REQUEST
 
-PROD_ENV = cdk.Environment(account="807650736403", region="eu-west-1")
-PROD_API_LAMBDA_RESERVED_CONCURRENCY = 10
-PROD_DATABASE_DYNAMODB_BILLING_MODE = dynamodb.BillingMode.PROVISIONED
+USERMANAGEMENT_BACKEND_DEV_STAGE_PARAMETERS = ConstructParameters(
+    id=f"{APP_NAME}Dev",
+    props={
+        "env": cdk.Environment(
+            account=os.environ["CDK_DEFAULT_ACCOUNT"],
+            region=os.environ["CDK_DEFAULT_REGION"],
+        ),
+        "api_lambda_reserved_concurrency": 1,
+        "database_dynamodb_billing_mode": dynamodb.BillingMode.PAY_PER_REQUEST,
+    },
+)
+
+USERMANAGEMENT_BACKEND_PIPELINE_STAGES_PARAMETERS = [
+    ConstructParameters(
+        id=f"{APP_NAME}Prod",
+        props={
+            "env": cdk.Environment(account="807650736403", region="eu-west-1"),
+            "api_lambda_reserved_concurrency": 10,
+            "database_dynamodb_billing_mode": dynamodb.BillingMode.PROVISIONED,
+        },
+    )
+]
