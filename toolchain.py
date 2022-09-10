@@ -4,11 +4,18 @@ from typing import Any
 
 import aws_cdk as cdk
 import aws_cdk.aws_codebuild as codebuild
-from aws_cdk import pipelines
+import aws_cdk.aws_dynamodb as dynamodb
+import aws_cdk.pipelines as pipelines
 from constructs import Construct
 
 import constants
-from deployment import UserManagementBackend
+from component import Component
+
+# pylint: disable=line-too-long
+GITHUB_CONNECTION_ARN = "arn:aws:codestar-connections:eu-west-1:807650736403:connection/1f244295-871f-411f-afb1-e6ca987858b6"
+GITHUB_OWNER = "alexpulver"
+GITHUB_REPO = "usermanagement-backend"
+GITHUB_TRUNK_BRANCH = "main"
 
 
 class Toolchain(cdk.Stack):
@@ -19,7 +26,7 @@ class Toolchain(cdk.Stack):
             {
                 "phases": {
                     "install": {
-                        "runtime-versions": {"python": constants.APP_PYTHON_VERSION},
+                        "runtime-versions": {"python": "3.7"},
                         "commands": ["env", "./scripts/install-deps.sh"],
                     },
                     "build": {"commands": ["./scripts/run-tests.sh", "npx cdk synth"]},
@@ -36,9 +43,9 @@ class ContinuousDeployment(Construct):
         super().__init__(scope, id_)
 
         codepipeline_source_connection = pipelines.CodePipelineSource.connection(
-            f"{constants.GITHUB_OWNER}/{constants.GITHUB_REPO}",
-            constants.GITHUB_TRUNK_BRANCH,
-            connection_arn=constants.GITHUB_CONNECTION_ARN,
+            f"{GITHUB_OWNER}/{GITHUB_REPO}",
+            GITHUB_TRUNK_BRANCH,
+            connection_arn=GITHUB_CONNECTION_ARN,
         )
         codebuild_step = pipelines.CodeBuildStep(
             "CodeBuildStep",
@@ -57,25 +64,24 @@ class ContinuousDeployment(Construct):
             publish_assets_in_parallel=False,
             synth=codebuild_step,
         )
-        self._add_stages_to_codepipeline(codepipeline)
+        self._add_prod_stage(codepipeline)
 
-    def _add_stages_to_codepipeline(self, codepipeline: pipelines.CodePipeline) -> None:
-        for (
-            usermanagement_backend_stage_parameters
-        ) in constants.USERMANAGEMENT_BACKEND_PIPELINE_STAGES_PARAMETERS:
-            usermanagement_backend = UserManagementBackend(
-                self,
-                usermanagement_backend_stage_parameters.id,
-                **usermanagement_backend_stage_parameters.props,
-            )
-            api_smoke_test = APISmokeTest(
-                self,
-                f"APISmokeTest{usermanagement_backend_stage_parameters.id}",
-                api_endpoint=usermanagement_backend.api_endpoint,
-            )
-            codepipeline.add_stage(
-                usermanagement_backend, post=[api_smoke_test.shell_step]
-            )
+    def _add_prod_stage(self, codepipeline: pipelines.CodePipeline) -> None:
+        usermanagement_backend = Component(
+            self,
+            f"{constants.APP_NAME}Production",
+            env=cdk.Environment(account="807650736403", region="eu-west-1"),
+            api_lambda_reserved_concurrency=10,
+            database_dynamodb_billing_mode=dynamodb.BillingMode.PROVISIONED,
+        )
+        api_smoke_test = APISmokeTest(
+            self,
+            f"APISmokeTest{usermanagement_backend.stage_name}",
+            api_endpoint=usermanagement_backend.api_endpoint,
+        )
+        codepipeline.add_stage(
+            usermanagement_backend, post=[api_smoke_test.shell_step]
+        )
 
     @staticmethod
     def _get_cdk_cli_version() -> str:
@@ -108,14 +114,14 @@ class PullRequestValidation(Construct):
         webhook_filters = [
             codebuild.FilterGroup.in_event_of(
                 codebuild.EventAction.PULL_REQUEST_CREATED
-            ).and_base_branch_is(constants.GITHUB_TRUNK_BRANCH),
+            ).and_base_branch_is(GITHUB_TRUNK_BRANCH),
             codebuild.FilterGroup.in_event_of(
                 codebuild.EventAction.PULL_REQUEST_UPDATED
-            ).and_base_branch_is(constants.GITHUB_TRUNK_BRANCH),
+            ).and_base_branch_is(GITHUB_TRUNK_BRANCH),
         ]
         source = codebuild.Source.git_hub(
-            owner=constants.GITHUB_OWNER,
-            repo=constants.GITHUB_REPO,
+            owner=GITHUB_OWNER,
+            repo=GITHUB_REPO,
             webhook_filters=webhook_filters,
         )
         codebuild.Project(

@@ -9,7 +9,7 @@ from database.infrastructure import Database
 from monitoring.infrastructure import Monitoring
 
 
-class UserManagementBackend(cdk.Stage):
+class Component(cdk.Stage):
     def __init__(
         self,
         scope: Construct,
@@ -21,23 +21,21 @@ class UserManagementBackend(cdk.Stage):
     ):
         super().__init__(scope, id_, **kwargs)
 
-        stateful = cdk.Stack(self, "Stateful")
+        component = cdk.Stack(self, "Component")
         database = Database(
-            stateful, "Database", dynamodb_billing_mode=database_dynamodb_billing_mode
+            component, "Database", dynamodb_billing_mode=database_dynamodb_billing_mode
         )
-        stateless = cdk.Stack(self, "Stateless")
         api = API(
-            stateless,
+            component,
             "API",
             database_dynamodb_table_name=database.dynamodb_table.table_name,
             lambda_reserved_concurrency=api_lambda_reserved_concurrency,
         )
         database.dynamodb_table.grant_read_write_data(api.lambda_function)
-
         self.api_endpoint = cdk.CfnOutput(
-            stateless,
+            component,
             "APIEndpoint",
             # Api doesn't disable create_default_stage, hence URL will be defined
             value=api.api_gateway_http_api.url,  # type: ignore
         )
-        Monitoring(stateless, "Monitoring", database=database, api=api)
+        Monitoring(component, "Monitoring", database=database, api=api)
