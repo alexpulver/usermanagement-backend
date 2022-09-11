@@ -3,7 +3,7 @@
 set -o errexit
 set -o verbose
 
-targets=(api database monitoring tests app.py constants.py deployment.py toolchain.py)
+targets=(api database monitoring tests app.py component.py constants.py toolchain.py)
 
 # Find common security issues (https://bandit.readthedocs.io)
 bandit --recursive "${targets[@]}"
@@ -24,9 +24,7 @@ mypy --config-file .mypy.ini "${targets[@]}"
 pylint --rcfile .pylintrc "${targets[@]}"
 
 # Check dependencies for security issues (https://pyup.io/safety)
-# Ignore coverage 5.5 (41002) report, no issues per Snyk: https://snyk.io/vuln/pip:coverage@5.5
 safety check \
-  -i 41002 \
   -r api/runtime/requirements.txt \
   -r requirements.txt \
   -r requirements-dev.txt

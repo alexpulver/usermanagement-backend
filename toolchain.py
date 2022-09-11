@@ -5,7 +5,7 @@ from typing import Any
 import aws_cdk as cdk
 import aws_cdk.aws_codebuild as codebuild
 import aws_cdk.aws_dynamodb as dynamodb
-import aws_cdk.pipelines as pipelines
+from aws_cdk import pipelines
 from constructs import Construct
 
 import constants
