@@ -67,21 +67,22 @@ class ContinuousDeployment(Construct):
         self._add_production_stage(codepipeline)
 
     def _add_production_stage(self, codepipeline: pipelines.CodePipeline) -> None:
-        production_stage = cdk.Stage(self, f"{constants.APP_NAME}Component")
+        env_name = "Production"
         usermanagement_backend_component = UserManagementBackendComponent(
-            production_stage,
-            "Production",
+            self,
+            f"{constants.APP_NAME}Component",
             env=cdk.Environment(account="807650736403", region="eu-west-1"),
+            env_name=env_name,
             api_lambda_reserved_concurrency=10,
             database_dynamodb_billing_mode=dynamodb.BillingMode.PROVISIONED,
         )
         api_smoke_test = APISmokeTest(
             self,
-            f"APISmokeTestProduction",
+            f"APISmokeTest{env_name}",
             api_endpoint=usermanagement_backend_component.api_endpoint,
         )
         codepipeline.add_stage(
-            production_stage, post=[api_smoke_test.shell_step]
+            usermanagement_backend_component, post=[api_smoke_test.shell_step]
         )
 
     @staticmethod

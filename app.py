@@ -9,14 +9,14 @@ from toolchain import UserManagementBackendToolchain
 
 app = cdk.App()
 
-# Sandbox environment
 UserManagementBackendComponent(
     app,
-    f"{constants.APP_NAME}ComponentSandbox",
+    f"{constants.APP_NAME}Component",
     env=cdk.Environment(
         account=os.environ["CDK_DEFAULT_ACCOUNT"],
         region=os.environ["CDK_DEFAULT_REGION"],
     ),
+    env_name="Sandbox",
     api_lambda_reserved_concurrency=1,
     database_dynamodb_billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
 )
