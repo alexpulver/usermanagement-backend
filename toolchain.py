@@ -9,7 +9,7 @@ import aws_cdk.pipelines as pipelines
 from constructs import Construct
 
 import constants
-from component import Component
+from component import UserManagementBackendComponent
 
 # pylint: disable=line-too-long
 GITHUB_CONNECTION_ARN = "arn:aws:codestar-connections:eu-west-1:807650736403:connection/1f244295-871f-411f-afb1-e6ca987858b6"
@@ -18,7 +18,7 @@ GITHUB_REPO = "usermanagement-backend"
 GITHUB_TRUNK_BRANCH = "main"
 
 
-class Toolchain(cdk.Stack):
+class UserManagementBackendToolchain(cdk.Stack):
     def __init__(self, scope: Construct, id_: str, **kwargs: Any):
         super().__init__(scope, id_, **kwargs)
 
@@ -64,23 +64,24 @@ class ContinuousDeployment(Construct):
             publish_assets_in_parallel=False,
             synth=codebuild_step,
         )
-        self._add_prod_stage(codepipeline)
+        self._add_production_stage(codepipeline)
 
-    def _add_prod_stage(self, codepipeline: pipelines.CodePipeline) -> None:
-        usermanagement_backend = Component(
-            self,
-            f"{constants.APP_NAME}Production",
+    def _add_production_stage(self, codepipeline: pipelines.CodePipeline) -> None:
+        production_stage = cdk.Stage(self, f"{constants.APP_NAME}Component")
+        usermanagement_backend_component = UserManagementBackendComponent(
+            production_stage,
+            "Production",
             env=cdk.Environment(account="807650736403", region="eu-west-1"),
             api_lambda_reserved_concurrency=10,
             database_dynamodb_billing_mode=dynamodb.BillingMode.PROVISIONED,
         )
         api_smoke_test = APISmokeTest(
             self,
-            f"APISmokeTest{usermanagement_backend.stage_name}",
-            api_endpoint=usermanagement_backend.api_endpoint,
+            f"APISmokeTestProduction",
+            api_endpoint=usermanagement_backend_component.api_endpoint,
         )
         codepipeline.add_stage(
-            usermanagement_backend, post=[api_smoke_test.shell_step]
+            production_stage, post=[api_smoke_test.shell_step]
         )
 
     @staticmethod
