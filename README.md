@@ -4,7 +4,7 @@ Amazon API Gateway, AWS Lambda and Amazon DynamoDB to provide basic
 CRUD operations for managing users. The project includes continuous 
 deployment and pull request validation.
 
-![diagram](https://user-images.githubusercontent.com/4362270/189765672-3505758d-6e67-4e7b-a4ee-402592c6a31e.png)
+![diagram](https://user-images.githubusercontent.com/4362270/189766610-632a9f61-01bb-41aa-84fb-cd01743bb20f.png)
 \* Diagram generated using https://github.com/pistazie/cdk-dia
 
 ## Create a new repository from usermanagement-backend
@@ -100,7 +100,7 @@ npx cdk deploy UserManagementBackendToolchain
 **Do not forget to delete the stacks to avoid unexpected charges**
 ```bash
 npx cdk destroy UserManagementBackendSandbox
-npx cdk destroy UserManagementBackendToolchain/ContinuousDeployment/DeployProduction/UserManagementBackend
+npx cdk destroy UserManagementBackendToolchain/ContinuousDeployment/CodePipeline/DeployProduction/UserManagementBackend
 npx cdk destroy UserManagementBackendToolchain
 ```
 
