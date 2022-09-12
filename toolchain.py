@@ -73,7 +73,7 @@ class ContinuousDeployment(Construct):
     def _add_production_stage(codepipeline: pipelines.CodePipeline) -> None:
         stage = cdk.Stage(
             codepipeline,
-            "Deploy" + PRODUCTION_ENV_NAME,
+            PRODUCTION_ENV_NAME,
             env=cdk.Environment(
                 account=PRODUCTION_ENV_ACCOUNT, region=PRODUCTION_ENV_REGION
             ),

@@ -7,13 +7,11 @@ import constants
 from component import UserManagementBackend
 from toolchain import UserManagementBackendToolchain
 
-SANDBOX_ENV_NAME = "Sandbox"
-
 app = cdk.App()
 
 UserManagementBackend(
     app,
-    constants.APP_NAME + SANDBOX_ENV_NAME,
+    constants.APP_NAME + "Sandbox",
     env=cdk.Environment(
         account=os.environ["CDK_DEFAULT_ACCOUNT"],
         region=os.environ["CDK_DEFAULT_REGION"],
