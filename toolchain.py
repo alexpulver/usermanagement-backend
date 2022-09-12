@@ -16,6 +16,9 @@ GITHUB_CONNECTION_ARN = "arn:aws:codestar-connections:eu-west-1:807650736403:con
 GITHUB_OWNER = "alexpulver"
 GITHUB_REPO = "usermanagement-backend"
 GITHUB_TRUNK_BRANCH = "main"
+PRODUCTION_ENV_NAME = "Production"
+PRODUCTION_ENV_ACCOUNT = "807650736403"
+PRODUCTION_ENV_REGION = "eu-west-1"
 
 
 class UserManagementBackendToolchain(cdk.Stack):
@@ -67,18 +70,19 @@ class ContinuousDeployment(Construct):
         self._add_production_stage(codepipeline)
 
     def _add_production_stage(self, codepipeline: pipelines.CodePipeline) -> None:
-        env_name = "Production"
         usermanagement_backend = UserManagementBackend(
             self,
-            constants.APP_NAME + env_name,
-            env=cdk.Environment(account="807650736403", region="eu-west-1"),
-            env_name=env_name,
+            constants.APP_NAME + PRODUCTION_ENV_NAME,
+            env=cdk.Environment(
+                account=PRODUCTION_ENV_ACCOUNT, region=PRODUCTION_ENV_REGION
+            ),
+            env_name=PRODUCTION_ENV_NAME,
             api_lambda_reserved_concurrency=10,
             database_dynamodb_billing_mode=dynamodb.BillingMode.PROVISIONED,
         )
         api_smoke_test = APISmokeTest(
             self,
-            "APISmokeTest" + env_name,
+            "APISmokeTest" + PRODUCTION_ENV_NAME,
             api_endpoint=usermanagement_backend.api_endpoint,
         )
         codepipeline.add_stage(usermanagement_backend, post=[api_smoke_test.shell_step])

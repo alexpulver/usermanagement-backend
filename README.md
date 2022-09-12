@@ -44,7 +44,7 @@ See [(pipelines): Fail synth if pinned CDK CLI version is older than CDK library
 for more details.
 
 ```bash
-vi package.json  # Update "aws-cdk" package version
+vi package.json  # Update the "aws-cdk" package version
 ./scripts/install-deps.sh
 ./scripts/run-tests.sh
 ```
@@ -64,26 +64,18 @@ pip-sync api/runtime/requirements.txt requirements.txt requirements-dev.txt
 ```
 
 ## Deploy the development stage
-The `UserManagementBackendDev` stage uses your default AWS account and region.
-It consists of two stacks - stateful (database) and stateless (API and monitoring) 
+The `UserManagementBackendSandbox` stage uses your default AWS account and region. 
 
 ```bash
-npx cdk deploy "UserManagementBackendDev/*"
+npx cdk deploy UserManagementBackendSandbox/UserManagementBackend
 ```
 
-Example outputs for `npx cdk deploy "UserManagementBackendDev/*"`:
+Example output for `npx cdk deploy UserManagementBackendSandbox/UserManagementBackend`:
 ```text
- ✅  UserManagementBackendDevStatefulB4115ED0 (UserManagementBackendDev-Stateful)
+ ✅  UserManagementBackendSandbox/UserManagementBackend (UserManagementBackendSandbox)
 
 Outputs:
-UserManagementBackendDevStatefulB4115ED0.ExportsOutputFnGetAttDatabaseDynamoDbTableB13A2BF6ArnA67170C6 = arn:aws:dynamodb:eu-west-1:807650736403:table/UserManagementBackendDev-Stateful-DatabaseDynamoDbTableB13A2BF6-AKTEOTYGW3A
-UserManagementBackendDevStatefulB4115ED0.ExportsOutputRefDatabaseDynamoDbTableB13A2BF6AB01B0C4 = UserManagementBackendDev-Stateful-DatabaseDynamoDbTableB13A2BF6-AKTEOTYGW3A
-```
-```text
- ✅  UserManagementBackendDevStatelessAD73535F (UserManagementBackendDev-Stateless)
-
-Outputs:
-UserManagementBackendDevStatelessAD73535F.APIEndpoint = https://ctixe0v786.execute-api.eu-west-1.amazonaws.com/
+UserManagementBackendSandboxUserManagementBackend1C0B3261.APIEndpoint = https://bsc9goldsa.execute-api.eu-west-1.amazonaws.com/
 ```
 
 ## Deploy the toolchain
@@ -97,19 +89,19 @@ UserManagementBackendDevStatelessAD73535F.APIEndpoint = https://ctixe0v786.execu
   - Select GitHub as Source provider
   - Choose **Connect using OAuth**
   - Authorize access and cancel the project creation
-- Update the values in [constants.py](constants.py)
+- Update the constants' values in [toolchain.py](toolchain.py)
 - Commit and push the changes: `git commit -a -m 'Update constants' && git push`
 
 ```bash
-npx cdk deploy UserManagementBackend-Toolchain
+npx cdk deploy UserManagementBackendToolchain
 ```
 
 ## Delete all stacks
 **Do not forget to delete the stacks to avoid unexpected charges**
 ```bash
-npx cdk destroy "UserManagementBackendDev/*"
-npx cdk destroy UserManagementBackend-Toolchain
-npx cdk destroy "UserManagementBackend-Prod/*"
+npx cdk destroy UserManagementBackendSandbox/UserManagementBackend
+npx cdk destroy UserManagementBackendToolchain/ContinuousDeployment/UserManagementBackendProduction/UserManagementBackend
+npx cdk destroy UserManagementBackendToolchain
 ```
 
 Delete AWS CodeStar Connections connection if it is no longer needed. Follow the instructions
@@ -120,7 +112,7 @@ Below are examples that show the available resources and how to use them.
 
 ```bash
 api_endpoint=$(aws cloudformation describe-stacks \
-  --stack-name UserManagementBackendDev-Stateless \
+  --stack-name UserManagementBackendSandbox \
   --query 'Stacks[*].Outputs[?OutputKey==`APIEndpoint`].OutputValue' \
   --output text)
 
