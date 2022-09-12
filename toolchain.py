@@ -9,7 +9,7 @@ from aws_cdk import pipelines
 from constructs import Construct
 
 import constants
-from component import UserManagementBackendComponent
+from component import UserManagementBackend
 
 # pylint: disable=line-too-long
 GITHUB_CONNECTION_ARN = "arn:aws:codestar-connections:eu-west-1:807650736403:connection/1f244295-871f-411f-afb1-e6ca987858b6"
@@ -68,9 +68,9 @@ class ContinuousDeployment(Construct):
 
     def _add_production_stage(self, codepipeline: pipelines.CodePipeline) -> None:
         env_name = "Production"
-        usermanagement_backend_component = UserManagementBackendComponent(
+        usermanagement_backend = UserManagementBackend(
             self,
-            f"{constants.APP_NAME}Component",
+            constants.APP_NAME + env_name,
             env=cdk.Environment(account="807650736403", region="eu-west-1"),
             env_name=env_name,
             api_lambda_reserved_concurrency=10,
@@ -78,11 +78,11 @@ class ContinuousDeployment(Construct):
         )
         api_smoke_test = APISmokeTest(
             self,
-            f"APISmokeTest{env_name}",
-            api_endpoint=usermanagement_backend_component.api_endpoint,
+            "APISmokeTest" + env_name,
+            api_endpoint=usermanagement_backend.api_endpoint,
         )
         codepipeline.add_stage(
-            usermanagement_backend_component, post=[api_smoke_test.shell_step]
+            usermanagement_backend, post=[api_smoke_test.shell_step]
         )
 
     @staticmethod
