@@ -81,9 +81,7 @@ class ContinuousDeployment(Construct):
             "APISmokeTest" + env_name,
             api_endpoint=usermanagement_backend.api_endpoint,
         )
-        codepipeline.add_stage(
-            usermanagement_backend, post=[api_smoke_test.shell_step]
-        )
+        codepipeline.add_stage(usermanagement_backend, post=[api_smoke_test.shell_step])
 
     @staticmethod
     def _get_cdk_cli_version() -> str:

@@ -11,7 +11,7 @@ attrs==22.1.0
     #   -c requirements.txt
     #   cattrs
     #   jsii
-aws-cdk-lib==2.26.0
+aws-cdk-lib==2.41.0
     # via
     #   -c requirements.txt
     #   -r requirements-dev.in
@@ -33,7 +33,7 @@ click==8.1.3
     #   safety
 colorama==0.4.5
     # via radon
-constructs==10.1.99
+constructs==10.1.100
     # via
     #   -c requirements.txt
     #   aws-cdk-lib
@@ -159,6 +159,7 @@ typed-ast==1.5.4
 typeguard==2.13.3
     # via
     #   -c requirements.txt
+    #   aws-cdk-lib
     #   constructs
     #   jsii
 typing-extensions==4.3.0
