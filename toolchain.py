@@ -70,13 +70,17 @@ class ContinuousDeployment(Construct):
         self._add_production_stage(codepipeline)
 
     def _add_production_stage(self, codepipeline: pipelines.CodePipeline) -> None:
-        usermanagement_backend = UserManagementBackend(
+        stage = cdk.Stage(
             self,
-            constants.APP_NAME + PRODUCTION_ENV_NAME,
+            "Deploy" + PRODUCTION_ENV_NAME,
             env=cdk.Environment(
                 account=PRODUCTION_ENV_ACCOUNT, region=PRODUCTION_ENV_REGION
             ),
-            env_name=PRODUCTION_ENV_NAME,
+        )
+        usermanagement_backend = UserManagementBackend(
+            stage,
+            constants.APP_NAME,
+            stack_name=constants.APP_NAME + PRODUCTION_ENV_NAME,
             api_lambda_reserved_concurrency=10,
             database_dynamodb_billing_mode=dynamodb.BillingMode.PROVISIONED,
         )
@@ -85,7 +89,7 @@ class ContinuousDeployment(Construct):
             "APISmokeTest" + PRODUCTION_ENV_NAME,
             api_endpoint=usermanagement_backend.api_endpoint,
         )
-        codepipeline.add_stage(usermanagement_backend, post=[api_smoke_test.shell_step])
+        codepipeline.add_stage(stage, post=[api_smoke_test.shell_step])
 
     @staticmethod
     def _get_cdk_cli_version() -> str:
