@@ -63,19 +63,19 @@ pip-sync api/runtime/requirements.txt requirements.txt requirements-dev.txt
 ./scripts/run-tests.sh
 ```
 
-## Deploy the development stage
-The `UserManagementBackendSandbox` stage uses your default AWS account and region. 
+## Deploy the sandbox stack
+The `UserManagementBackendSandbox` stack uses your default AWS account and region. 
 
 ```bash
-npx cdk deploy UserManagementBackendSandbox/UserManagementBackend
+npx cdk deploy UserManagementBackendSandbox
 ```
 
-Example output for `npx cdk deploy UserManagementBackendSandbox/UserManagementBackend`:
+Example output for `npx cdk deploy UserManagementBackendSandbox`:
 ```text
- ✅  UserManagementBackendSandbox/UserManagementBackend (UserManagementBackendSandbox)
+ ✅  UserManagementBackendSandbox
 
 Outputs:
-UserManagementBackendSandboxUserManagementBackend1C0B3261.APIEndpoint = https://bsc9goldsa.execute-api.eu-west-1.amazonaws.com/
+UserManagementBackendSandbox.APIEndpoint = https://bsc9goldsa.execute-api.eu-west-1.amazonaws.com/
 ```
 
 ## Deploy the toolchain
@@ -99,8 +99,8 @@ npx cdk deploy UserManagementBackendToolchain
 ## Delete all stacks
 **Do not forget to delete the stacks to avoid unexpected charges**
 ```bash
-npx cdk destroy UserManagementBackendSandbox/UserManagementBackend
-npx cdk destroy UserManagementBackendToolchain/ContinuousDeployment/UserManagementBackendProduction/UserManagementBackend
+npx cdk destroy UserManagementBackendSandbox
+npx cdk destroy UserManagementBackendToolchain/ContinuousDeployment/DeployProduction/UserManagementBackend
 npx cdk destroy UserManagementBackendToolchain
 ```
 
