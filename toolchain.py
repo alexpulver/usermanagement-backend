@@ -45,34 +45,34 @@ class ContinuousDeployment(Construct):
     def __init__(self, scope: Construct, id_: str, *, build_spec: codebuild.BuildSpec):
         super().__init__(scope, id_)
 
-        codepipeline_source_connection = pipelines.CodePipelineSource.connection(
-            f"{GITHUB_OWNER}/{GITHUB_REPO}",
+        source = pipelines.CodePipelineSource.connection(
+            GITHUB_OWNER + "/" + GITHUB_REPO,
             GITHUB_TRUNK_BRANCH,
             connection_arn=GITHUB_CONNECTION_ARN,
         )
-        codebuild_step = pipelines.CodeBuildStep(
-            "CodeBuildStep",
-            input=codepipeline_source_connection,
+        synth = pipelines.CodeBuildStep(
+            "Synth",
+            input=source,
             partial_build_spec=build_spec,
-            # The build_spec argument includes build commands.
+            # The build_spec argument includes build and synth commands.
             commands=[],
             primary_output_directory="cdk.out",
         )
-        codepipeline = pipelines.CodePipeline(
+        pipeline = pipelines.CodePipeline(
             self,
-            "CodePipeline",
+            "Pipeline",
             cli_version=ContinuousDeployment._get_cdk_cli_version(),
             cross_account_keys=True,
             docker_enabled_for_synth=True,
             publish_assets_in_parallel=False,
-            synth=codebuild_step,
+            synth=synth,
         )
-        self._add_production_stage(codepipeline)
+        self._add_production_stage(pipeline)
 
     @staticmethod
-    def _add_production_stage(codepipeline: pipelines.CodePipeline) -> None:
+    def _add_production_stage(pipeline: pipelines.CodePipeline) -> None:
         stage = cdk.Stage(
-            codepipeline,
+            pipeline,
             PRODUCTION_ENV_NAME,
             env=cdk.Environment(
                 account=PRODUCTION_ENV_ACCOUNT, region=PRODUCTION_ENV_REGION
@@ -85,12 +85,16 @@ class ContinuousDeployment(Construct):
             api_lambda_reserved_concurrency=10,
             database_dynamodb_billing_mode=dynamodb.BillingMode.PROVISIONED,
         )
-        api_smoke_test = APISmokeTest(
-            stage,
-            "APISmokeTest" + PRODUCTION_ENV_NAME,
-            api_endpoint=usermanagement_backend.api_endpoint,
+        api_endpoint_env_var_name = constants.APP_NAME.upper() + "_API_ENDPOINT"
+        smoke_test_commands = [f"curl ${api_endpoint_env_var_name}"]
+        smoke_test = pipelines.ShellStep(
+            "SmokeTest",
+            env_from_cfn_outputs={
+                api_endpoint_env_var_name: usermanagement_backend.api_endpoint
+            },
+            commands=smoke_test_commands,
         )
-        codepipeline.add_stage(stage, post=[api_smoke_test.shell_step])
+        pipeline.add_stage(stage, post=[smoke_test])
 
     @staticmethod
     def _get_cdk_cli_version() -> str:
@@ -101,19 +105,6 @@ class ContinuousDeployment(Construct):
             package_json = json.load(package_json_file)
         cdk_cli_version = str(package_json["devDependencies"]["aws-cdk"])
         return cdk_cli_version
-
-
-class APISmokeTest(Construct):
-    def __init__(self, scope: Construct, id_: str, *, api_endpoint: cdk.CfnOutput):
-        super().__init__(scope, id_)
-
-        api_endpoint_env_var_name = f"{constants.APP_NAME.upper()}_API_ENDPOINT"
-        smoke_test_commands = [f"curl ${api_endpoint_env_var_name}"]
-        self.shell_step = pipelines.ShellStep(
-            "ShellStep",
-            env_from_cfn_outputs={api_endpoint_env_var_name: api_endpoint},
-            commands=smoke_test_commands,
-        )
 
 
 class PullRequestValidation(Construct):
