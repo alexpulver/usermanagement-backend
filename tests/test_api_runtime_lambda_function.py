@@ -6,9 +6,7 @@ from api.runtime import lambda_function  # type: ignore
 
 
 class AppTestCase(unittest.TestCase):
-    @mock.patch.dict(
-        "helpers.os.environ", {"DATABASE_DYNAMODB_TABLE_NAME": "AppTestCase"}
-    )
+    @mock.patch.dict("helpers.os.environ", {"DYNAMODB_TABLE_NAME": "AppTestCase"})
     @mock.patch("users.DynamoDBDatabase.get_user")
     def test_get_user_exists(self, mock_get_user: mock.Mock) -> None:
         username = "john"

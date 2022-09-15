@@ -29,7 +29,7 @@ class UserManagementBackend(cdk.Stack):
         api = API(
             self,
             "API",
-            database_dynamodb_table_name=database.dynamodb_table.table_name,
+            dynamodb_table_name=database.dynamodb_table.table_name,
             lambda_reserved_concurrency=api_lambda_reserved_concurrency,
         )
         database.dynamodb_table.grant_read_write_data(api.lambda_function)

@@ -13,7 +13,7 @@ class API(Construct):
         scope: Construct,
         id_: str,
         *,
-        database_dynamodb_table_name: str,
+        dynamodb_table_name: str,
         lambda_reserved_concurrency: int,
     ):
         super().__init__(scope, id_)
@@ -22,7 +22,7 @@ class API(Construct):
             self,
             "LambdaFunction",
             runtime=lambda_.Runtime.PYTHON_3_7,
-            environment={"DATABASE_DYNAMODB_TABLE_NAME": database_dynamodb_table_name},
+            environment={"DYNAMODB_TABLE_NAME": dynamodb_table_name},
             reserved_concurrent_executions=lambda_reserved_concurrency,
             entry=str(pathlib.Path(__file__).parent.joinpath("runtime").resolve()),
             index="lambda_function.py",

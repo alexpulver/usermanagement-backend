@@ -19,7 +19,7 @@ class APITestCase(unittest.TestCase):
         API(
             stack,
             "API",
-            database_dynamodb_table_name=database.dynamodb_table.table_name,
+            dynamodb_table_name=database.dynamodb_table.table_name,
             lambda_reserved_concurrency=1,
         )
         template = assertions.Template.from_stack(stack).to_json()

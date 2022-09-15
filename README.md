@@ -100,8 +100,8 @@ npx cdk deploy UserManagementBackendToolchain
 **Do not forget to delete the stacks to avoid unexpected charges**
 ```bash
 npx cdk destroy UserManagementBackendSandbox
-npx cdk destroy UserManagementBackendToolchain/ContinuousDeployment/Pipeline/Production/UserManagementBackend
 npx cdk destroy UserManagementBackendToolchain
+npx cdk destroy UserManagementBackendToolchain/ContinuousDeployment/Pipeline/Production/UserManagementBackend
 ```
 
 Delete AWS CodeStar Connections connection if it is no longer needed. Follow the instructions
