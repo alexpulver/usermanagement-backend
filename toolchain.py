@@ -67,7 +67,7 @@ class ContinuousDeployment(Construct):
             publish_assets_in_parallel=False,
             synth=synth,
         )
-        self._add_production_stage(pipeline)
+        ContinuousDeployment._add_production_stage(pipeline)
 
     @staticmethod
     def _add_production_stage(pipeline: pipelines.CodePipeline) -> None:

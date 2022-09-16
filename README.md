@@ -4,7 +4,7 @@ Amazon API Gateway, AWS Lambda and Amazon DynamoDB to provide basic
 CRUD operations for managing users. The project includes continuous 
 deployment and pull request validation.
 
-![diagram](https://user-images.githubusercontent.com/4362270/190343912-bd136f42-a59a-43d4-a260-a41dd83793e0.png)
+![diagram](https://user-images.githubusercontent.com/4362270/190571028-b4ae70c8-e3fb-49a6-a55e-56bc78885c2f.png)
 \* Diagram generated using https://github.com/pistazie/cdk-dia
 
 ## Create a new repository from usermanagement-backend

@@ -32,11 +32,13 @@ class UserManagementBackend(cdk.Stack):
             dynamodb_table_name=database.dynamodb_table.table_name,
             lambda_reserved_concurrency=api_lambda_reserved_concurrency,
         )
+        Monitoring(self, "Monitoring", database=database, api=api)
+
         database.dynamodb_table.grant_read_write_data(api.lambda_function)
+
         self.api_endpoint = cdk.CfnOutput(
             self,
             "APIEndpoint",
             # API doesn't disable create_default_stage, hence URL will be defined
             value=api.api_gateway_http_api.url,  # type: ignore
         )
-        Monitoring(self, "Monitoring", database=database, api=api)
