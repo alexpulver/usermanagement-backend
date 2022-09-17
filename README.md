@@ -1,15 +1,15 @@
 # User management backend
 The project implements a *user management backend* component that uses 
 Amazon API Gateway, AWS Lambda and Amazon DynamoDB to provide basic 
-CRUD operations for managing users. The project includes continuous 
-deployment and pull request validation.
+CRUD operations for managing users. The project also includes a toolchain 
+with continuous deployment pipeline and pull request validation build.
 
-![diagram](https://user-images.githubusercontent.com/4362270/190571028-b4ae70c8-e3fb-49a6-a55e-56bc78885c2f.png)
+![diagram](https://user-images.githubusercontent.com/4362270/190898143-387ac323-4241-4cca-96de-8cbdc84d3751.png)
 \* Diagram generated using https://github.com/pistazie/cdk-dia
 
 ## Create a new repository from usermanagement-backend
-This is optional for deploying the development stage, but **required** for 
-continuous deployment and pull request validation.
+This is optional for deploying the component to sandbox environment, but 
+**required** for deploying the toolchain.
 
 The instructions below use the usermanagement-backend repository.
 
@@ -63,7 +63,7 @@ pip-sync api/runtime/requirements.txt requirements.txt requirements-dev.txt
 ./scripts/run-tests.sh
 ```
 
-## Deploy the sandbox stack
+## Deploy the component to sandbox environment
 The `UserManagementBackendSandbox` stack uses your default AWS account and region. 
 
 ```bash
@@ -89,8 +89,9 @@ UserManagementBackendSandbox.APIEndpoint = https://bsc9goldsa.execute-api.eu-wes
   - Select GitHub as Source provider
   - Choose **Connect using OAuth**
   - Authorize access and cancel the project creation
-- Update the constants' values in [toolchain.py](toolchain.py)
-- Commit and push the changes: `git commit -a -m 'Update constants' && git push`
+- Update the toolchain account in [app.py](app.py) 
+- Update the toolchain constants in [toolchain.py](toolchain.py)
+- Commit and push the changes: `git commit -a -m 'Update toolchain account and constants' && git push`
 
 ```bash
 npx cdk deploy UserManagementBackendToolchain
@@ -104,7 +105,7 @@ npx cdk destroy UserManagementBackendToolchain
 npx cdk destroy UserManagementBackendToolchain/ContinuousDeployment/Pipeline/Production/UserManagementBackend
 ```
 
-Delete AWS CodeStar Connections connection if it is no longer needed. Follow the instructions
+Delete the AWS CodeStar Connections connection if it is no longer needed. Follow the instructions
 in [Delete a connection](https://docs.aws.amazon.com/dtconsole/latest/userguide/connections-delete.html).
 
 ## Testing the API

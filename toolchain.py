@@ -70,8 +70,18 @@ class ContinuousDeployment(Construct):
         ContinuousDeployment._add_production_stage(pipeline)
 
     @staticmethod
+    def _get_cdk_cli_version() -> str:
+        package_json_path = (
+            pathlib.Path(__file__).parent.joinpath("package.json").resolve()
+        )
+        with open(package_json_path, encoding="utf_8") as package_json_file:
+            package_json = json.load(package_json_file)
+        cdk_cli_version = str(package_json["devDependencies"]["aws-cdk"])
+        return cdk_cli_version
+
+    @staticmethod
     def _add_production_stage(pipeline: pipelines.CodePipeline) -> None:
-        stage = cdk.Stage(
+        production = cdk.Stage(
             pipeline,
             PRODUCTION_ENV_NAME,
             env=cdk.Environment(
@@ -79,8 +89,8 @@ class ContinuousDeployment(Construct):
             ),
         )
         usermanagement_backend = UserManagementBackend(
-            stage,
-            constants.APP_NAME,
+            production,
+            constants.APP_NAME + PRODUCTION_ENV_NAME,
             stack_name=constants.APP_NAME + PRODUCTION_ENV_NAME,
             api_lambda_reserved_concurrency=10,
             database_dynamodb_billing_mode=dynamodb.BillingMode.PROVISIONED,
@@ -94,17 +104,7 @@ class ContinuousDeployment(Construct):
             },
             commands=smoke_test_commands,
         )
-        pipeline.add_stage(stage, post=[smoke_test])
-
-    @staticmethod
-    def _get_cdk_cli_version() -> str:
-        package_json_path = (
-            pathlib.Path(__file__).parent.joinpath("package.json").resolve()
-        )
-        with open(package_json_path, encoding="utf_8") as package_json_file:
-            package_json = json.load(package_json_file)
-        cdk_cli_version = str(package_json["devDependencies"]["aws-cdk"])
-        return cdk_cli_version
+        pipeline.add_stage(production, post=[smoke_test])
 
 
 class PullRequestValidation(Construct):

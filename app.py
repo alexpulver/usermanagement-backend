@@ -9,6 +9,7 @@ from toolchain import UserManagementBackendToolchain
 
 app = cdk.App()
 
+# Component sandbox stack
 UserManagementBackend(
     app,
     constants.APP_NAME + "Sandbox",
@@ -20,6 +21,7 @@ UserManagementBackend(
     database_dynamodb_billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
 )
 
+# Component toolchain stack (defines the continuous deployment pipeline)
 UserManagementBackendToolchain(
     app,
     constants.APP_NAME + "Toolchain",
