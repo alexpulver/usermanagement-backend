@@ -4,12 +4,12 @@ import aws_cdk as cdk
 import aws_cdk.aws_dynamodb as dynamodb
 from constructs import Construct
 
-from api.infrastructure import API
-from database.infrastructure import Database
-from monitoring.infrastructure import Monitoring
+from backend.api.infrastructure import API
+from backend.database.infrastructure import Database
+from backend.monitoring.infrastructure import Monitoring
 
 
-class UserManagementBackend(cdk.Stack):
+class Backend(cdk.Stack):
     def __init__(
         self,
         scope: Construct,

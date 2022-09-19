@@ -2,7 +2,7 @@ import json
 import unittest
 from unittest import mock
 
-from api.runtime import lambda_function  # type: ignore
+from backend.api.runtime import lambda_function  # type: ignore
 
 
 class AppTestCase(unittest.TestCase):

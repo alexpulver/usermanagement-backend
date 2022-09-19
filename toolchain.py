@@ -9,7 +9,7 @@ from aws_cdk import pipelines
 from constructs import Construct
 
 import constants
-from component import UserManagementBackend
+from backend.component import Backend
 
 # pylint: disable=line-too-long
 GITHUB_CONNECTION_ARN = "arn:aws:codestar-connections:eu-west-1:807650736403:connection/1f244295-871f-411f-afb1-e6ca987858b6"
@@ -21,7 +21,7 @@ PRODUCTION_ENV_ACCOUNT = "807650736403"
 PRODUCTION_ENV_REGION = "eu-west-1"
 
 
-class UserManagementBackendToolchain(cdk.Stack):
+class Toolchain(cdk.Stack):
     def __init__(self, scope: Construct, id_: str, **kwargs: Any):
         super().__init__(scope, id_, **kwargs)
 
@@ -88,7 +88,7 @@ class ContinuousDeployment(Construct):
                 account=PRODUCTION_ENV_ACCOUNT, region=PRODUCTION_ENV_REGION
             ),
         )
-        usermanagement_backend = UserManagementBackend(
+        backend = Backend(
             production,
             constants.APP_NAME + PRODUCTION_ENV_NAME,
             stack_name=constants.APP_NAME + PRODUCTION_ENV_NAME,
@@ -99,9 +99,7 @@ class ContinuousDeployment(Construct):
         smoke_test_commands = [f"curl ${api_endpoint_env_var_name}"]
         smoke_test = pipelines.ShellStep(
             "SmokeTest",
-            env_from_cfn_outputs={
-                api_endpoint_env_var_name: usermanagement_backend.api_endpoint
-            },
+            env_from_cfn_outputs={api_endpoint_env_var_name: backend.api_endpoint},
             commands=smoke_test_commands,
         )
         pipeline.add_stage(production, post=[smoke_test])

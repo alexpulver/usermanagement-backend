@@ -4,8 +4,8 @@ import aws_cdk as cdk
 import aws_cdk.aws_dynamodb as dynamodb
 from aws_cdk import assertions
 
-from api.infrastructure import API
-from database.infrastructure import Database
+from backend.api.infrastructure import API
+from backend.database.infrastructure import Database
 
 
 class APITestCase(unittest.TestCase):
