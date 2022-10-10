@@ -1,3 +1,4 @@
+-c api/runtime/requirements.txt
 -c requirements.txt
 aws-cdk-lib
 bandit
