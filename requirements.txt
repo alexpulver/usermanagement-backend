@@ -8,23 +8,23 @@ attrs==22.1.0
     # via
     #   cattrs
     #   jsii
-aws-cdk-lib==2.41.0
+aws-cdk-lib==2.45.0
     # via
     #   -r requirements.in
     #   aws-cdk.aws-apigatewayv2-alpha
     #   aws-cdk.aws-apigatewayv2-integrations-alpha
     #   aws-cdk.aws-lambda-python-alpha
-aws-cdk.aws-apigatewayv2-alpha==2.41.0.a0
+aws-cdk.aws-apigatewayv2-alpha==2.45.0.a0
     # via
     #   -r requirements.in
     #   aws-cdk.aws-apigatewayv2-integrations-alpha
-aws-cdk.aws-apigatewayv2-integrations-alpha==2.41.0a0
+aws-cdk.aws-apigatewayv2-integrations-alpha==2.45.0a0
     # via -r requirements.in
-aws-cdk.aws-lambda-python-alpha==2.41.0a0
+aws-cdk.aws-lambda-python-alpha==2.45.0a0
     # via -r requirements.in
 cattrs==22.1.0
     # via jsii
-constructs==10.1.100
+constructs==10.1.130
     # via
     #   -r requirements.in
     #   aws-cdk-lib
@@ -33,7 +33,7 @@ constructs==10.1.100
     #   aws-cdk.aws-lambda-python-alpha
 exceptiongroup==1.0.0rc9
     # via cattrs
-jsii==1.67.0
+jsii==1.69.0
     # via
     #   aws-cdk-lib
     #   aws-cdk.aws-apigatewayv2-alpha
@@ -50,11 +50,11 @@ publication==0.0.3
     #   jsii
 python-dateutil==2.8.2
     # via
-    #   -c api/runtime/requirements.txt
+    #   -c backend/api/runtime/requirements.txt
     #   jsii
 six==1.16.0
     # via
-    #   -c api/runtime/requirements.txt
+    #   -c backend/api/runtime/requirements.txt
     #   python-dateutil
 typeguard==2.13.3
     # via
@@ -64,7 +64,7 @@ typeguard==2.13.3
     #   aws-cdk.aws-lambda-python-alpha
     #   constructs
     #   jsii
-typing-extensions==4.3.0
+typing-extensions==4.4.0
     # via
     #   cattrs
     #   jsii

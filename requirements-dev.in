@@ -1,10 +1,10 @@
--c api/runtime/requirements.txt
+-c backend/api/runtime/requirements.txt
 -c requirements.txt
 aws-cdk-lib
 bandit
 black
 coverage
-flake8~=3.9
+flake8
 isort
 mypy
 pylint
