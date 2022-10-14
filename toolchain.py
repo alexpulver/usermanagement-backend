@@ -5,6 +5,7 @@ from typing import Any
 import aws_cdk as cdk
 import aws_cdk.aws_codebuild as codebuild
 import aws_cdk.aws_dynamodb as dynamodb
+import aws_cdk.aws_servicecatalogappregistry_alpha as appregistry_alpha
 from aws_cdk import pipelines
 from constructs import Construct
 
@@ -22,7 +23,14 @@ PRODUCTION_ENV_REGION = "eu-west-1"
 
 
 class Toolchain(cdk.Stack):
-    def __init__(self, scope: Construct, id_: str, **kwargs: Any):
+    def __init__(
+        self,
+        scope: Construct,
+        id_: str,
+        *,
+        appregistry_app_associator: appregistry_alpha.ApplicationAssociator,
+        **kwargs: Any,
+    ):
         super().__init__(scope, id_, **kwargs)
 
         build_spec = codebuild.BuildSpec.from_object(
@@ -37,13 +45,27 @@ class Toolchain(cdk.Stack):
                 "version": "0.2",
             }
         )
-        ContinuousDeployment(self, "ContinuousDeployment", build_spec=build_spec)
+        ContinuousDeployment(
+            self,
+            "ContinuousDeployment",
+            appregistry_app_associator=appregistry_app_associator,
+            build_spec=build_spec,
+        )
         PullRequestValidation(self, "PullRequestValidation", build_spec=build_spec)
 
 
 class ContinuousDeployment(Construct):
-    def __init__(self, scope: Construct, id_: str, *, build_spec: codebuild.BuildSpec):
+    def __init__(
+        self,
+        scope: Construct,
+        id_: str,
+        *,
+        appregistry_app_associator: appregistry_alpha.ApplicationAssociator,
+        build_spec: codebuild.BuildSpec,
+    ):
         super().__init__(scope, id_)
+
+        self._appregistry_app_associator = appregistry_app_associator
 
         source = pipelines.CodePipelineSource.connection(
             GITHUB_OWNER + "/" + GITHUB_REPO,
@@ -58,7 +80,7 @@ class ContinuousDeployment(Construct):
             commands=[],
             primary_output_directory="cdk.out",
         )
-        pipeline = pipelines.CodePipeline(
+        self._pipeline = pipelines.CodePipeline(
             self,
             "Pipeline",
             cli_version=ContinuousDeployment._get_cdk_cli_version(),
@@ -67,7 +89,7 @@ class ContinuousDeployment(Construct):
             publish_assets_in_parallel=False,
             synth=synth,
         )
-        ContinuousDeployment._add_production_stage(pipeline)
+        self._add_production_stage()
 
     @staticmethod
     def _get_cdk_cli_version() -> str:
@@ -79,10 +101,9 @@ class ContinuousDeployment(Construct):
         cdk_cli_version = str(package_json["devDependencies"]["aws-cdk"])
         return cdk_cli_version
 
-    @staticmethod
-    def _add_production_stage(pipeline: pipelines.CodePipeline) -> None:
+    def _add_production_stage(self) -> None:
         production = cdk.Stage(
-            pipeline,
+            self._pipeline,
             PRODUCTION_ENV_NAME,
             env=cdk.Environment(
                 account=PRODUCTION_ENV_ACCOUNT, region=PRODUCTION_ENV_REGION
@@ -102,7 +123,8 @@ class ContinuousDeployment(Construct):
             env_from_cfn_outputs={api_endpoint_env_var_name: backend.api_endpoint},
             commands=smoke_test_commands,
         )
-        pipeline.add_stage(production, post=[smoke_test])
+        self._appregistry_app_associator.associate_stage(production)
+        self._pipeline.add_stage(production, post=[smoke_test])
 
 
 class PullRequestValidation(Construct):
