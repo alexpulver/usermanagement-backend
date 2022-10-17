@@ -1,4 +1,5 @@
 import pathlib
+from typing import cast
 
 import aws_cdk.aws_apigatewayv2_alpha as apigatewayv2_alpha
 import aws_cdk.aws_apigatewayv2_integrations_alpha as apigatewayv2_integrations_alpha
@@ -29,6 +30,11 @@ class API(Construct):
             handler="lambda_handler",
             profiling=True,
         )
+        cfn_lambda_function = cast(
+            lambda_.CfnFunction, self.lambda_function.node.default_child
+        )
+        code = cast(lambda_.CfnFunction.CodeProperty, cfn_lambda_function.code)
+        self.lambda_function_asset = f"s3://{code.s3_bucket}/{code.s3_key}"
 
         api_gateway_http_lambda_integration = (
             apigatewayv2_integrations_alpha.HttpLambdaIntegration(

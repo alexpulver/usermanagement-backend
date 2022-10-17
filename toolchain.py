@@ -11,6 +11,7 @@ from constructs import Construct
 
 import constants
 from backend.component import Backend
+from operations import Operations
 
 # pylint: disable=line-too-long
 GITHUB_CONNECTION_ARN = "arn:aws:codestar-connections:eu-west-1:807650736403:connection/1f244295-871f-411f-afb1-e6ca987858b6"
@@ -109,6 +110,8 @@ class ContinuousDeployment(Construct):
                 account=PRODUCTION_ENV_ACCOUNT, region=PRODUCTION_ENV_REGION
             ),
         )
+        self._appregistry_app_associator.associate_stage(production)
+
         backend = Backend(
             production,
             constants.APP_NAME + PRODUCTION_ENV_NAME,
@@ -116,6 +119,8 @@ class ContinuousDeployment(Construct):
             api_lambda_reserved_concurrency=10,
             database_dynamodb_billing_mode=dynamodb.BillingMode.PROVISIONED,
         )
+        cdk.Aspects.of(backend).add(Operations())
+
         api_endpoint_env_var_name = constants.APP_NAME.upper() + "_API_ENDPOINT"
         smoke_test_commands = [f"curl ${api_endpoint_env_var_name}"]
         smoke_test = pipelines.ShellStep(
@@ -123,7 +128,7 @@ class ContinuousDeployment(Construct):
             env_from_cfn_outputs={api_endpoint_env_var_name: backend.api_endpoint},
             commands=smoke_test_commands,
         )
-        self._appregistry_app_associator.associate_stage(production)
+
         self._pipeline.add_stage(production, post=[smoke_test])
 
 

@@ -6,6 +6,7 @@ import aws_cdk.aws_servicecatalogappregistry_alpha as appregistry_alpha
 
 import constants
 from backend.component import Backend
+from operations import Operations
 from toolchain import Toolchain
 
 app = cdk.App()
@@ -21,7 +22,7 @@ appregistry_app_associator = appregistry_alpha.ApplicationAssociator(
 )
 
 # Component sandbox stack
-Backend(
+backend = Backend(
     app,
     constants.APP_NAME + "Sandbox",
     env=cdk.Environment(
@@ -31,6 +32,7 @@ Backend(
     api_lambda_reserved_concurrency=1,
     database_dynamodb_billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
 )
+cdk.Aspects.of(backend).add(Operations())
 
 # Toolchain stack (defines the continuous deployment pipeline)
 Toolchain(

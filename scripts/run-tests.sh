@@ -3,7 +3,7 @@
 set -o errexit
 set -o verbose
 
-targets=(backend tests app.py constants.py toolchain.py)
+targets=(backend tests app.py constants.py operations.py toolchain.py)
 
 # Find common security issues (https://bandit.readthedocs.io)
 bandit --recursive "${targets[@]}"

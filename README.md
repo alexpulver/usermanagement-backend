@@ -4,7 +4,7 @@ Amazon API Gateway, AWS Lambda and Amazon DynamoDB to provide basic
 CRUD operations for managing users. The project also includes a toolchain 
 with continuous deployment pipeline and pull request validation build.
 
-![diagram](https://user-images.githubusercontent.com/4362270/190898143-387ac323-4241-4cca-96de-8cbdc84d3751.png)
+![diagram](https://user-images.githubusercontent.com/4362270/196608014-f5fbce39-fe02-4ab1-80a0-9f864e2aaded.png)
 \* Diagram generated using https://github.com/pistazie/cdk-dia
 
 ## Create a new repository from usermanagement-backend
@@ -63,6 +63,31 @@ pip-sync backend/api/runtime/requirements.txt requirements.txt requirements-dev.
 ./scripts/run-tests.sh
 ```
 
+## Deploy the AWS Service Catalog AppRegistry application
+[AWS Service Catalog AppRegistry](https://docs.aws.amazon.com/servicecatalog/latest/arguide/intro-app-registry.html)
+allows to store your AWS applications, their associated resource collections, and 
+application attribute groups. Application attribute groups define the context of 
+your applications and resources.
+
+The [operations.py](operations.py) module uses [Aspects](https://docs.aws.amazon.com/cdk/v2/guide/aspects.html) 
+for adding operations capabilities to each stack. The `Metadata` operations capability 
+defines AppRegistry [attribute group](https://docs.aws.amazon.com/servicecatalog/latest/arguide/overview-appreg.html#attr-groups). 
+The aspect needs AppRegistry [Application](https://docs.aws.amazon.com/cdk/api/v2/docs/@aws-cdk_aws-servicecatalogappregistry-alpha.Application.html) 
+class instance to associate the attribute group. Since the aspect gets the node as the 
+only parameter, it should reference the existing application. Currently, the 
+`Application` class supports referencing an existing application using its ARN (using 
+the [from_application_arn()](https://docs.aws.amazon.com/cdk/api/v2/python/aws_cdk.aws_servicecatalogappregistry_alpha/Application.html#aws_cdk.aws_servicecatalogappregistry_alpha.Application.from_application_arn) 
+method). Hence, you should deploy the AppRegistry application first, then store the 
+application ARN value in the source code per instructions below.
+
+```bash
+npx cdk deploy ApplicationAssociatorStack
+```
+- Navigate to AWS Service Catalog AppRegistry console: https://REGION.console.aws.amazon.com/servicecatalog/home#applications/
+- Open the `UserManagementBackend` application and copy the application ARN
+- Update the `APPREGISTRY_APP_ARN` constant in [operations.py](operations.py)
+- Commit and push the changes: `git commit -a -m 'Update AppRegistry app ARN' && git push`
+
 ## Deploy the component to sandbox environment
 The `UserManagementBackendSandbox` stack uses your default AWS account and region. 
 
@@ -103,6 +128,7 @@ npx cdk deploy UserManagementBackendToolchain
 npx cdk destroy UserManagementBackendSandbox
 npx cdk destroy UserManagementBackendToolchain
 npx cdk destroy UserManagementBackendToolchain/ContinuousDeployment/Pipeline/Production/UserManagementBackendProduction
+npx cdk destroy ApplicationAssociatorStack
 ```
 
 Delete the AWS CodeStar Connections connection if it is no longer needed. Follow the instructions
