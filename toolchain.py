@@ -10,8 +10,8 @@ from aws_cdk import pipelines
 from constructs import Construct
 
 import constants
+import operations
 from backend.component import Backend
-from operations import Operations
 
 # pylint: disable=line-too-long
 GITHUB_CONNECTION_ARN = "arn:aws:codestar-connections:eu-west-1:807650736403:connection/1f244295-871f-411f-afb1-e6ca987858b6"
@@ -119,13 +119,16 @@ class ContinuousDeployment(Construct):
             api_lambda_reserved_concurrency=10,
             database_dynamodb_billing_mode=dynamodb.BillingMode.PROVISIONED,
         )
-        cdk.Aspects.of(backend).add(Operations())
+        cdk.Aspects.of(backend).add(operations.Monitoring())
+        cdk.Aspects.of(backend).add(operations.Metadata())
 
         api_endpoint_env_var_name = constants.APP_NAME.upper() + "_API_ENDPOINT"
         smoke_test_commands = [f"curl ${api_endpoint_env_var_name}"]
         smoke_test = pipelines.ShellStep(
             "SmokeTest",
-            env_from_cfn_outputs={api_endpoint_env_var_name: backend.api_endpoint},
+            env_from_cfn_outputs={
+                api_endpoint_env_var_name: backend.api_endpoint_cfn_output
+            },
             commands=smoke_test_commands,
         )
 

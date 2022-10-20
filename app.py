@@ -5,8 +5,8 @@ import aws_cdk.aws_dynamodb as dynamodb
 import aws_cdk.aws_servicecatalogappregistry_alpha as appregistry_alpha
 
 import constants
+import operations
 from backend.component import Backend
-from operations import Operations
 from toolchain import Toolchain
 
 app = cdk.App()
@@ -32,7 +32,8 @@ backend = Backend(
     api_lambda_reserved_concurrency=1,
     database_dynamodb_billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
 )
-cdk.Aspects.of(backend).add(Operations())
+cdk.Aspects.of(backend).add(operations.Metadata())
+cdk.Aspects.of(backend).add(operations.Monitoring())
 
 # Toolchain stack (defines the continuous deployment pipeline)
 Toolchain(

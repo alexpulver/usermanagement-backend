@@ -1,3 +1,5 @@
+from typing import Dict, cast
+
 import aws_cdk as cdk
 import aws_cdk.aws_cloudwatch as cloudwatch
 import aws_cdk.aws_servicecatalogappregistry_alpha as appregistry_alpha
@@ -13,40 +15,44 @@ APPREGISTRY_APP_ARN = "arn:aws:servicecatalog:eu-west-1:807650736403:/applicatio
 
 # pylint: disable=too-few-public-methods
 @jsii.implements(cdk.IAspect)
-class Operations:
+class Metadata:
     def visit(self, node: IConstruct) -> None:
-        if not isinstance(node, Backend):
+        if not cdk.Stack.is_stack(node):
             return
-        backend = node
-        Metadata(backend, "Metadata", backend=backend)
-        Monitoring(backend, "Monitoring", backend=backend)
-
-
-class Metadata(Construct):
-    def __init__(self, scope: Construct, id_: str, *, backend: Backend):
-        super().__init__(scope, id_)
-
+        stack = cast(cdk.Stack, node)
+        metadata = Construct(stack, "Metadata")
+        attributes = Metadata._get_outputs(stack)
+        if not attributes:
+            return
         attribute_group = appregistry_alpha.AttributeGroup(
-            self,
+            metadata,
             "AppRegistryAttributeGroup",
-            attribute_group_name=cdk.Names.unique_resource_name(self),
-            attributes={
-                "account": backend.account,
-                "region": backend.region,
-                "api_endpoint": backend.api_gateway_http_api.url,
-                "api_lambda_function_asset": backend.lambda_function_asset,
-            },
+            attribute_group_name=cdk.Names.unique_resource_name(metadata),
+            attributes=attributes,
         )
         appregistry_app = appregistry_alpha.Application.from_application_arn(
-            self, "AppRegistryApplication", APPREGISTRY_APP_ARN
+            metadata, "AppRegistryApplication", APPREGISTRY_APP_ARN
         )
         appregistry_app.associate_attribute_group(attribute_group)
 
+    @staticmethod
+    def _get_outputs(stack: cdk.Stack) -> Dict[str, str]:
+        outputs = {}
+        for child in stack.node.children:
+            if isinstance(child, cdk.CfnOutput):
+                cfn_output = child
+                outputs[cfn_output.logical_id] = cfn_output.value
+        return outputs
 
-class Monitoring(Construct):
-    def __init__(self, scope: Construct, id_: str, *, backend: Backend):
-        super().__init__(scope, id_)
 
+# pylint: disable=too-few-public-methods
+@jsii.implements(cdk.IAspect)
+class Monitoring:
+    def visit(self, node: IConstruct) -> None:
+        if not cdk.Stack.is_stack(node) and not isinstance(node, Backend):
+            return
+        backend = cast(Backend, node)
+        monitoring = Construct(backend, "Monitoring")
         widgets = [
             cloudwatch.SingleValueWidget(
                 metrics=[backend.api_gateway_http_api.metric_count()]
@@ -55,4 +61,4 @@ class Monitoring(Construct):
                 metrics=[backend.dynamodb_table.metric_consumed_read_capacity_units()]
             ),
         ]
-        cloudwatch.Dashboard(self, "CloudWatchDashboard", widgets=[widgets])
+        cloudwatch.Dashboard(monitoring, "CloudWatchDashboard", widgets=[widgets])
