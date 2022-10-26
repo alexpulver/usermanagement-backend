@@ -1,5 +1,6 @@
 import json
 import pathlib
+from collections import namedtuple
 from typing import Any
 
 import aws_cdk as cdk
@@ -13,14 +14,16 @@ import constants
 import operations
 from backend.component import Backend
 
+Environment = namedtuple("Environment", ["name", "account", "region"])
+
 # pylint: disable=line-too-long
 GITHUB_CONNECTION_ARN = "arn:aws:codestar-connections:eu-west-1:807650736403:connection/1f244295-871f-411f-afb1-e6ca987858b6"
 GITHUB_OWNER = "alexpulver"
 GITHUB_REPO = "usermanagement-backend"
 GITHUB_TRUNK_BRANCH = "main"
-PRODUCTION_ENV_NAME = "Production"
-PRODUCTION_ENV_ACCOUNT = "807650736403"
-PRODUCTION_ENV_REGION = "eu-west-1"
+ENVIRONMENTS = [
+    Environment(name="Production", account="807650736403", region="eu-west-1"),
+]
 
 
 class Toolchain(cdk.Stack):
@@ -29,7 +32,7 @@ class Toolchain(cdk.Stack):
         scope: Construct,
         id_: str,
         *,
-        appregistry_app_associator: appregistry_alpha.ApplicationAssociator,
+        appregistry_application_associator: appregistry_alpha.ApplicationAssociator,
         **kwargs: Any,
     ):
         super().__init__(scope, id_, **kwargs)
@@ -49,7 +52,7 @@ class Toolchain(cdk.Stack):
         ContinuousDeployment(
             self,
             "ContinuousDeployment",
-            appregistry_app_associator=appregistry_app_associator,
+            appregistry_application_associator=appregistry_application_associator,
             build_spec=build_spec,
         )
         PullRequestValidation(self, "PullRequestValidation", build_spec=build_spec)
@@ -61,12 +64,10 @@ class ContinuousDeployment(Construct):
         scope: Construct,
         id_: str,
         *,
-        appregistry_app_associator: appregistry_alpha.ApplicationAssociator,
+        appregistry_application_associator: appregistry_alpha.ApplicationAssociator,
         build_spec: codebuild.BuildSpec,
     ):
         super().__init__(scope, id_)
-
-        self._appregistry_app_associator = appregistry_app_associator
 
         source = pipelines.CodePipelineSource.connection(
             GITHUB_OWNER + "/" + GITHUB_REPO,
@@ -81,7 +82,7 @@ class ContinuousDeployment(Construct):
             commands=[],
             primary_output_directory="cdk.out",
         )
-        self._pipeline = pipelines.CodePipeline(
+        pipeline = pipelines.CodePipeline(
             self,
             "Pipeline",
             cli_version=ContinuousDeployment._get_cdk_cli_version(),
@@ -90,7 +91,7 @@ class ContinuousDeployment(Construct):
             publish_assets_in_parallel=False,
             synth=synth,
         )
-        self._add_production_stage()
+        ContinuousDeployment._add_stages(pipeline, appregistry_application_associator)
 
     @staticmethod
     def _get_cdk_cli_version() -> str:
@@ -102,26 +103,45 @@ class ContinuousDeployment(Construct):
         cdk_cli_version = str(package_json["devDependencies"]["aws-cdk"])
         return cdk_cli_version
 
-    def _add_production_stage(self) -> None:
-        production = cdk.Stage(
-            self._pipeline,
-            PRODUCTION_ENV_NAME,
-            env=cdk.Environment(
-                account=PRODUCTION_ENV_ACCOUNT, region=PRODUCTION_ENV_REGION
-            ),
-        )
-        self._appregistry_app_associator.associate_stage(production)
+    @staticmethod
+    def _add_stages(
+        pipeline: pipelines.CodePipeline,
+        appregistry_application_associator: appregistry_alpha.ApplicationAssociator,
+    ) -> None:
+        for environment in ENVIRONMENTS:
+            stage = cdk.Stage(
+                pipeline,
+                environment.name,
+                env=cdk.Environment(
+                    account=environment.account, region=environment.region
+                ),
+            )
+            appregistry_application_associator.associate_stage(stage)
 
+            # Backend production stack
+            backend = ContinuousDeployment._create_backend(stage)
+            # Operations aspects for backend production stack
+            cdk.Aspects.of(backend).add(operations.Metadata())
+            cdk.Aspects.of(backend).add(operations.Monitoring())
+
+            # Backend production smoke test
+            smoke_test = ContinuousDeployment._create_smoke_test(backend)
+
+            pipeline.add_stage(stage, post=[smoke_test])
+
+    @staticmethod
+    def _create_backend(stage: cdk.Stage) -> Backend:
         backend = Backend(
-            production,
-            constants.APP_NAME + PRODUCTION_ENV_NAME,
-            stack_name=constants.APP_NAME + PRODUCTION_ENV_NAME,
+            stage,
+            constants.APP_NAME + stage.stage_name,
+            stack_name=constants.APP_NAME + stage.stage_name,
             api_lambda_reserved_concurrency=10,
             database_dynamodb_billing_mode=dynamodb.BillingMode.PROVISIONED,
         )
-        cdk.Aspects.of(backend).add(operations.Monitoring())
-        cdk.Aspects.of(backend).add(operations.Metadata())
+        return backend
 
+    @staticmethod
+    def _create_smoke_test(backend: Backend) -> pipelines.ShellStep:
         api_endpoint_env_var_name = constants.APP_NAME.upper() + "_API_ENDPOINT"
         smoke_test_commands = [f"curl ${api_endpoint_env_var_name}"]
         smoke_test = pipelines.ShellStep(
@@ -131,8 +151,7 @@ class ContinuousDeployment(Construct):
             },
             commands=smoke_test_commands,
         )
-
-        self._pipeline.add_stage(production, post=[smoke_test])
+        return smoke_test
 
 
 class PullRequestValidation(Construct):

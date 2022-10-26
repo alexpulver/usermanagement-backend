@@ -20,29 +20,23 @@ class Backend(cdk.Stack):
     ):
         super().__init__(scope, id_, **kwargs)
 
-        database = Database(
+        self.database = Database(
             self,
             "Database",
             dynamodb_billing_mode=database_dynamodb_billing_mode,
         )
-        self.dynamodb_table = database.dynamodb_table
-
-        api = API(
+        self.api = API(
             self,
             "API",
-            dynamodb_table_name=database.dynamodb_table.table_name,
+            dynamodb_table_name=self.database.dynamodb_table.table_name,
             lambda_reserved_concurrency=api_lambda_reserved_concurrency,
         )
-        self.api_gateway_http_api = api.api_gateway_http_api
 
-        database.dynamodb_table.grant_read_write_data(api.lambda_function)
+        self.database.dynamodb_table.grant_read_write_data(self.api.lambda_function)
 
         self.api_endpoint_cfn_output = cdk.CfnOutput(
             self,
             "APIEndpoint",
             # API doesn't disable create_default_stage, hence URL will be defined
-            value=api.api_gateway_http_api.url,  # type: ignore
-        )
-        self.api_lambda_function_asset_cfn_output = cdk.CfnOutput(
-            self, "APILambdaFunctionAsset", value=api.lambda_function_asset
+            value=self.api.api_gateway_http_api.url,  # type: ignore
         )

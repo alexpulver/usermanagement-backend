@@ -63,32 +63,31 @@ pip-sync backend/api/runtime/requirements.txt requirements.txt requirements-dev.
 ./scripts/run-tests.sh
 ```
 
-## Deploy the AWS Service Catalog AppRegistry application
+## Deploy the AWS Service Catalog AppRegistry application stack
 [AWS Service Catalog AppRegistry](https://docs.aws.amazon.com/servicecatalog/latest/arguide/intro-app-registry.html)
 allows to store your AWS applications, their associated resource collections, and 
 application attribute groups. Application attribute groups define the context of 
 your applications and resources.
 
+The [app.py](app.py) module defines the AppRegistry application. It also creates a 
+stack export with the application ARN.
+
 The [operations.py](operations.py) module uses [Aspects](https://docs.aws.amazon.com/cdk/v2/guide/aspects.html) 
-for adding operations capabilities to each stack. The `Metadata` operations capability 
-defines AppRegistry [attribute group](https://docs.aws.amazon.com/servicecatalog/latest/arguide/overview-appreg.html#attr-groups). 
-The aspect needs AppRegistry [Application](https://docs.aws.amazon.com/cdk/api/v2/docs/@aws-cdk_aws-servicecatalogappregistry-alpha.Application.html) 
-class instance to associate the attribute group. Since the aspect gets the node as the 
-only parameter, it should reference the existing application. Currently, the 
-`Application` class supports referencing an existing application using its ARN (using 
-the [from_application_arn()](https://docs.aws.amazon.com/cdk/api/v2/python/aws_cdk.aws_servicecatalogappregistry_alpha/Application.html#aws_cdk.aws_servicecatalogappregistry_alpha.Application.from_application_arn) 
-method). Hence, you should deploy the AppRegistry application first, then store the 
-application ARN value in the source code per instructions below.
+for adding operations capabilities to each stack. The `Metadata` class in `operations.py`
+module defines the AppRegistry [attribute group](https://docs.aws.amazon.com/servicecatalog/latest/arguide/overview-appreg.html#attr-groups).
+The `Metadata` class uses the AppRegistry application ARN from the AppRegistry 
+application stack export to associate the attribute group with the application.
+Hence, you should deploy the AppRegistry application first.
+
+**Prerequisites**
+- Update the AppRegistry application environment in [app.py](app.py)
+- Commit and push the changes: `git commit -a -m 'Update AppRegistry app environment' && git push`
 
 ```bash
 npx cdk deploy ApplicationAssociatorStack
 ```
-- Navigate to AWS Service Catalog AppRegistry console: https://REGION.console.aws.amazon.com/servicecatalog/home#applications/
-- Open the `UserManagementBackend` application and copy the application ARN
-- Update the `APPREGISTRY_APP_ARN` constant in [operations.py](operations.py)
-- Commit and push the changes: `git commit -a -m 'Update AppRegistry app ARN' && git push`
 
-## Deploy the component to sandbox environment
+## Deploy the backend sandbox stack
 The `UserManagementBackendSandbox` stack uses your default AWS account and region. 
 
 ```bash
@@ -114,9 +113,9 @@ UserManagementBackendSandbox.APIEndpoint = https://bsc9goldsa.execute-api.eu-wes
   - Select GitHub as Source provider
   - Choose **Connect using OAuth**
   - Authorize access and cancel the project creation
-- Update the toolchain account in [app.py](app.py) 
-- Update the toolchain constants in [toolchain.py](toolchain.py)
-- Commit and push the changes: `git commit -a -m 'Update toolchain account and constants' && git push`
+- Update the toolchain environment in [app.py](app.py) 
+- Update the toolchain configuration in [toolchain.py](toolchain.py)
+- Commit and push the changes: `git commit -a -m 'Update toolchain environment and configuration' && git push`
 
 ```bash
 npx cdk deploy UserManagementBackendToolchain
