@@ -7,14 +7,16 @@ import jsii
 from constructs import Construct
 from constructs import IConstruct
 
-import constants
 from backend.component import Backend
+
+# pylint: disable=line-too-long
+APPREGISTRY_APPLICATION_ARN = "arn:aws:servicecatalog:eu-west-1:807650736403:/applications/088rctd1yghw2b738o03p1e08w"  # noqa
 
 
 # pylint: disable=too-few-public-methods
 @jsii.implements(cdk.IAspect)
 class Metadata:
-    def visit(self, node: IConstruct) -> None:
+    def visit(self, node: IConstruct) -> None:  # noqa
         if not cdk.Stack.is_stack(node) and not isinstance(node, Backend):
             return
         backend = cast(Backend, node)
@@ -29,11 +31,8 @@ class Metadata:
             attribute_group_name=cdk.Names.unique_resource_name(metadata),
             attributes=attributes,
         )
-        appregistry_app_arn = cdk.Fn.import_value(
-            constants.APPREGISTRY_APPLICATION_ARN_EXPORT_NAME
-        )
         appregistry_app = appregistry_alpha.Application.from_application_arn(
-            metadata, "AppRegistryApplication", appregistry_app_arn
+            metadata, "AppRegistryApplication", APPREGISTRY_APPLICATION_ARN
         )
         appregistry_app.associate_attribute_group(attribute_group)
 
@@ -41,7 +40,7 @@ class Metadata:
 # pylint: disable=too-few-public-methods
 @jsii.implements(cdk.IAspect)
 class Monitoring:
-    def visit(self, node: IConstruct) -> None:
+    def visit(self, node: IConstruct) -> None:  # noqa
         if not cdk.Stack.is_stack(node) and not isinstance(node, Backend):
             return
         backend = cast(Backend, node)

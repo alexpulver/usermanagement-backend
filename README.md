@@ -69,23 +69,26 @@ allows to store your AWS applications, their associated resource collections, an
 application attribute groups. Application attribute groups define the context of 
 your applications and resources.
 
-The [app.py](app.py) module defines the AppRegistry application. It also creates a 
-stack export with the application ARN.
+The [app.py](app.py) module defines the AppRegistry application. The 
+[operations.py](operations.py) module uses [Aspects](https://docs.aws.amazon.com/cdk/v2/guide/aspects.html)
+for adding operations capabilities to each stack. The `Metadata` class in `operations.py` 
+module defines an AppRegistry [attribute group](https://docs.aws.amazon.com/servicecatalog/latest/arguide/overview-appreg.html#attr-groups). 
+The `Metadata` class needs the AppRegistry application ARN to associate the attribute 
+group with the application. Hence, you should deploy the AppRegistry application first, 
+then store the application ARN value in the source code per instructions below.
 
-The [operations.py](operations.py) module uses [Aspects](https://docs.aws.amazon.com/cdk/v2/guide/aspects.html) 
-for adding operations capabilities to each stack. The `Metadata` class in `operations.py`
-module defines the AppRegistry [attribute group](https://docs.aws.amazon.com/servicecatalog/latest/arguide/overview-appreg.html#attr-groups).
-The `Metadata` class uses the AppRegistry application ARN from the AppRegistry 
-application stack export to associate the attribute group with the application.
-Hence, you should deploy the AppRegistry application first.
-
-**Prerequisites**
 - Update the AppRegistry application environment in [app.py](app.py)
-- Commit and push the changes: `git commit -a -m 'Update AppRegistry app environment' && git push`
+- Commit and push the changes: `git commit -a -m 'Update AppRegistry application environment' && git push`
 
 ```bash
 npx cdk deploy ApplicationAssociatorStack
+aws cloudformation describe-stacks \
+  --stack-name UserManagementBackendApplication \
+  --query 'Stacks[*].Outputs[?OutputKey==`AppRegistryApplicationArn`].OutputValue' \
+  --output text
 ```
+- Update the `APPREGISTRY_APPLICATION_ARN` constant in [operations.py](operations.py)
+- Commit and push the changes: `git commit -a -m 'Update AppRegistry application ARN' && git push`
 
 ## Deploy the backend sandbox stack
 The `UserManagementBackendSandbox` stack uses your default AWS account and region. 

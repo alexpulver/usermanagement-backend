@@ -54,7 +54,6 @@ def create_appregistry_application_associator(
     cdk.CfnOutput(
         appregistry_app_stack,
         "AppRegistryApplicationArn",
-        export_name=constants.APPREGISTRY_APPLICATION_ARN_EXPORT_NAME,
         value=appregistry_application_associator.app_registry_application.application_arn,
     )
     return appregistry_application_associator
