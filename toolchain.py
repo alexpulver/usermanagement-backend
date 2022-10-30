@@ -11,18 +11,18 @@ from aws_cdk import pipelines
 from constructs import Construct
 
 import constants
-import operations
 from backend.component import Backend
+from operations import Operations
 
-Environment = namedtuple("Environment", ["name", "account", "region"])
+BackendEnvironment = namedtuple("BackendEnvironment", ["name", "account", "region"])
 
 # pylint: disable=line-too-long
 GITHUB_CONNECTION_ARN = "arn:aws:codestar-connections:eu-west-1:807650736403:connection/1f244295-871f-411f-afb1-e6ca987858b6"
 GITHUB_OWNER = "alexpulver"
 GITHUB_REPO = "usermanagement-backend"
 GITHUB_TRUNK_BRANCH = "main"
-ENVIRONMENTS = [
-    Environment(name="Production", account="807650736403", region="eu-west-1"),
+BACKEND_ENVIRONMENTS = [
+    BackendEnvironment(name="Production", account="807650736403", region="eu-west-1"),
 ]
 
 
@@ -108,25 +108,18 @@ class ContinuousDeployment(Construct):
         pipeline: pipelines.CodePipeline,
         appregistry_application_associator: appregistry_alpha.ApplicationAssociator,
     ) -> None:
-        for environment in ENVIRONMENTS:
+        for backend_environment in BACKEND_ENVIRONMENTS:
             stage = cdk.Stage(
                 pipeline,
-                environment.name,
+                backend_environment.name,
                 env=cdk.Environment(
-                    account=environment.account, region=environment.region
+                    account=backend_environment.account,
+                    region=backend_environment.region,
                 ),
             )
             appregistry_application_associator.associate_stage(stage)
-
-            # Backend production stack
             backend = ContinuousDeployment._create_backend(stage)
-            # Operations aspects for backend production stack
-            cdk.Aspects.of(backend).add(operations.Metadata())
-            cdk.Aspects.of(backend).add(operations.Monitoring())
-
-            # Backend production smoke test
             smoke_test = ContinuousDeployment._create_smoke_test(backend)
-
             pipeline.add_stage(stage, post=[smoke_test])
 
     @staticmethod
@@ -138,6 +131,7 @@ class ContinuousDeployment(Construct):
             api_lambda_reserved_concurrency=10,
             database_dynamodb_billing_mode=dynamodb.BillingMode.PROVISIONED,
         )
+        cdk.Aspects.of(backend).add(Operations())
         return backend
 
     @staticmethod

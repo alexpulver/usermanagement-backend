@@ -4,7 +4,7 @@ Amazon API Gateway, AWS Lambda and Amazon DynamoDB to provide basic
 CRUD operations for managing users. The project also includes a toolchain 
 with continuous deployment pipeline and pull request validation build.
 
-![diagram](https://user-images.githubusercontent.com/4362270/197012024-d3b9e347-e1ba-4d60-81b1-5ff66561d94b.png)
+![diagram](https://user-images.githubusercontent.com/4362270/198886342-b7588b32-1087-4e20-914c-4c8f9d20b42d.png)
 \* Diagram generated using https://github.com/pistazie/cdk-dia
 
 ## Create a new repository from usermanagement-backend
@@ -69,26 +69,13 @@ allows to store your AWS applications, their associated resource collections, an
 application attribute groups. Application attribute groups define the context of 
 your applications and resources.
 
-The [app.py](app.py) module defines the AppRegistry application. The 
-[operations.py](operations.py) module uses [Aspects](https://docs.aws.amazon.com/cdk/v2/guide/aspects.html)
-for adding operations capabilities to each stack. The `Metadata` class in `operations.py` 
-module defines an AppRegistry [attribute group](https://docs.aws.amazon.com/servicecatalog/latest/arguide/overview-appreg.html#attr-groups). 
-The `Metadata` class needs the AppRegistry application ARN to associate the attribute 
-group with the application. Hence, you should deploy the AppRegistry application first, 
-then store the application ARN value in the source code per instructions below.
-
+**Prerequisites**
 - Update the AppRegistry application environment in [app.py](app.py)
 - Commit and push the changes: `git commit -a -m 'Update AppRegistry application environment' && git push`
 
 ```bash
 npx cdk deploy ApplicationAssociatorStack
-aws cloudformation describe-stacks \
-  --stack-name UserManagementBackendApplication \
-  --query 'Stacks[*].Outputs[?OutputKey==`AppRegistryApplicationArn`].OutputValue' \
-  --output text
 ```
-- Update the `APPREGISTRY_APPLICATION_ARN` constant in [operations.py](operations.py)
-- Commit and push the changes: `git commit -a -m 'Update AppRegistry application ARN' && git push`
 
 ## Deploy the backend sandbox stack
 The `UserManagementBackendSandbox` stack uses your default AWS account and region. 

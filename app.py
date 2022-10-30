@@ -5,8 +5,8 @@ import aws_cdk.aws_dynamodb as dynamodb
 import aws_cdk.aws_servicecatalogappregistry_alpha as appregistry_alpha
 
 import constants
-import operations
 from backend.component import Backend
+from operations import Operations
 from toolchain import Toolchain
 
 APPREGISTRY_APPLICATION_ACCOUNT = "807650736403"
@@ -20,13 +20,8 @@ def main() -> None:
 
     # AppRegistry application stack and application associator aspect
     appregistry_application_associator = create_appregistry_application_associator(app)
-
     # Backend sandbox stack
-    backend_sandbox = create_backend_sandbox(app)
-    # Operations aspects for backend sandbox stack
-    cdk.Aspects.of(backend_sandbox).add(operations.Metadata())
-    cdk.Aspects.of(backend_sandbox).add(operations.Monitoring())
-
+    create_backend_sandbox(app)
     # Toolchain stack (continuous deployment pipeline)
     create_toolchain(app, appregistry_application_associator)
 
@@ -41,20 +36,12 @@ def create_appregistry_application_associator(
         "AppRegistryApplicationAssociator",
         application_name=constants.APP_NAME,
         stack_props=cdk.StackProps(
-            stack_name=constants.APP_NAME + "Application",
+            stack_name=constants.APP_NAME + "AppRegistryApplication",
             env=cdk.Environment(
                 account=APPREGISTRY_APPLICATION_ACCOUNT,
                 region=APPREGISTRY_APPLICATION_REGION,
             ),
         ),
-    )
-    appregistry_app_stack = (
-        appregistry_application_associator.app_registry_application.stack
-    )
-    cdk.CfnOutput(
-        appregistry_app_stack,
-        "AppRegistryApplicationArn",
-        value=appregistry_application_associator.app_registry_application.application_arn,
     )
     return appregistry_application_associator
 
@@ -70,6 +57,7 @@ def create_backend_sandbox(app: cdk.App) -> Backend:
         api_lambda_reserved_concurrency=1,
         database_dynamodb_billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
     )
+    cdk.Aspects.of(backend).add(Operations())
     return backend
 
 

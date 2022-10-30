@@ -1,50 +1,57 @@
-from typing import cast
-
 import aws_cdk as cdk
 import aws_cdk.aws_cloudwatch as cloudwatch
-import aws_cdk.aws_servicecatalogappregistry_alpha as appregistry_alpha
+import aws_cdk.aws_servicecatalogappregistry as appregistry
 import jsii
 from constructs import Construct
 from constructs import IConstruct
 
+import constants
 from backend.component import Backend
-
-# pylint: disable=line-too-long
-APPREGISTRY_APPLICATION_ARN = "arn:aws:servicecatalog:eu-west-1:807650736403:/applications/088rctd1yghw2b738o03p1e08w"  # noqa
 
 
 # pylint: disable=too-few-public-methods
 @jsii.implements(cdk.IAspect)
-class Metadata:
+class Operations:
     def visit(self, node: IConstruct) -> None:  # noqa
-        if not cdk.Stack.is_stack(node) and not isinstance(node, Backend):
+        if not isinstance(node, Backend):
             return
-        backend = cast(Backend, node)
-        metadata = Construct(backend, "Metadata")
+        Metadata(node, "Metadata", backend=node)
+        Monitoring(node, "Monitoring", backend=node)
+
+
+class Metadata(Construct):
+    def __init__(self, scope: Construct, id_: str, *, backend: Backend) -> None:
+        super().__init__(scope, id_)
         attributes = {
             "api_endpoint": backend.api.api_gateway_http_api.url,
             "api_runtime_asset": backend.api.lambda_function_asset,
         }
-        attribute_group = appregistry_alpha.AttributeGroup(
-            metadata,
+        appregistry_attribute_group = appregistry.CfnAttributeGroup(
+            self,
             "AppRegistryAttributeGroup",
-            attribute_group_name=cdk.Names.unique_resource_name(metadata),
             attributes=attributes,
+            name=backend.stack_name,
         )
-        appregistry_app = appregistry_alpha.Application.from_application_arn(
-            metadata, "AppRegistryApplication", APPREGISTRY_APPLICATION_ARN
+        appregistry_attribute_group_association = (
+            appregistry.CfnAttributeGroupAssociation(
+                self,
+                "AppRegistryAttributeGroupAssociation",
+                application=constants.APP_NAME,
+                attribute_group=appregistry_attribute_group.name,
+            )
         )
-        appregistry_app.associate_attribute_group(attribute_group)
+        # Need explicit dependency because attribute group name is known
+        # at synth time. CloudFormation would deploy the attribute group and the
+        # attribute group association in parallel, and fail. Using attribute group ID
+        # would work, but would not be explicit.
+        appregistry_attribute_group_association.add_depends_on(
+            appregistry_attribute_group
+        )
 
 
-# pylint: disable=too-few-public-methods
-@jsii.implements(cdk.IAspect)
-class Monitoring:
-    def visit(self, node: IConstruct) -> None:  # noqa
-        if not cdk.Stack.is_stack(node) and not isinstance(node, Backend):
-            return
-        backend = cast(Backend, node)
-        monitoring = Construct(backend, "Monitoring")
+class Monitoring(Construct):
+    def __init__(self, scope: Construct, id_: str, *, backend: Backend) -> None:
+        super().__init__(scope, id_)
         widgets = [
             cloudwatch.SingleValueWidget(
                 metrics=[backend.api.api_gateway_http_api.metric_count()]
@@ -55,4 +62,4 @@ class Monitoring:
                 ]
             ),
         ]
-        cloudwatch.Dashboard(monitoring, "CloudWatchDashboard", widgets=[widgets])
+        cloudwatch.Dashboard(self, "CloudWatchDashboard", widgets=[widgets])
