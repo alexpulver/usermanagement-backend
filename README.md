@@ -74,7 +74,7 @@ your applications and resources.
 - Commit and push the changes: `git commit -a -m 'Update AppRegistry application environment' && git push`
 
 ```bash
-npx cdk deploy ApplicationAssociatorStack
+npx cdk deploy AppRegistryApplicationAssociator/UserManagementBackendAppRegistryApplication
 ```
 
 ## Deploy the backend sandbox stack

@@ -18,7 +18,7 @@ flake8 --config .flake8 "${targets[@]}"
 isort --settings-path .isort.cfg --check --diff "${targets[@]}"
 
 # Static type checker (https://mypy.readthedocs.io)
-mypy --config-file .mypy.ini "${targets[@]}"
+mypy --config-file .mypy.ini --explicit-package-bases "${targets[@]}"
 
 # Check for errors, enforce a coding standard, look for code smells (http://pylint.pycqa.org)
 pylint --rcfile .pylintrc "${targets[@]}"

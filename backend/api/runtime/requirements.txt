@@ -4,24 +4,18 @@
 #
 #    pip-compile backend/api/runtime/requirements.in
 #
-aws-lambda-powertools==1.31.0
+aws-lambda-powertools==2.3.0
     # via -r backend/api/runtime/requirements.in
-aws-xray-sdk==2.10.0
-    # via aws-lambda-powertools
-boto3==1.24.89
+boto3==1.26.12
     # via
     #   -r backend/api/runtime/requirements.in
-    #   aws-lambda-powertools
     #   codeguru-profiler-agent
-botocore==1.27.89
+botocore==1.29.12
     # via
-    #   aws-xray-sdk
     #   boto3
     #   s3transfer
 codeguru-profiler-agent==1.2.4
     # via -r backend/api/runtime/requirements.in
-fastjsonschema==2.16.2
-    # via aws-lambda-powertools
 jmespath==1.0.1
     # via
     #   boto3
@@ -32,7 +26,7 @@ s3transfer==0.6.0
     # via boto3
 six==1.16.0
     # via python-dateutil
+typing-extensions==4.4.0
+    # via aws-lambda-powertools
 urllib3==1.26.12
     # via botocore
-wrapt==1.14.1
-    # via aws-xray-sdk

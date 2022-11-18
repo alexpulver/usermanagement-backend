@@ -31,17 +31,17 @@ def main() -> None:
 def create_appregistry_application_associator(
     app: cdk.App,
 ) -> appregistry_alpha.ApplicationAssociator:
-    appregistry_application_associator = appregistry_alpha.ApplicationAssociator(
-        app,
-        "AppRegistryApplicationAssociator",
+    application = appregistry_alpha.TargetApplication.create_application_stack(
         application_name=constants.APP_NAME,
-        stack_props=cdk.StackProps(
-            stack_name=constants.APP_NAME + "AppRegistryApplication",
-            env=cdk.Environment(
-                account=APPREGISTRY_APPLICATION_ACCOUNT,
-                region=APPREGISTRY_APPLICATION_REGION,
-            ),
+        stack_id=constants.APP_NAME + "AppRegistryApplication",
+        stack_name=constants.APP_NAME + "AppRegistryApplication",
+        env=cdk.Environment(
+            account=APPREGISTRY_APPLICATION_ACCOUNT,
+            region=APPREGISTRY_APPLICATION_REGION,
         ),
+    )
+    appregistry_application_associator = appregistry_alpha.ApplicationAssociator(
+        app, "AppRegistryApplicationAssociator", applications=[application]
     )
     return appregistry_application_associator
 
