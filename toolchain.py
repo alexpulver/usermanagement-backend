@@ -12,7 +12,6 @@ from constructs import Construct
 
 import constants
 from backend.component import Backend
-from operations import Operations
 
 BackendEnvironment = namedtuple("BackendEnvironment", ["name", "account", "region"])
 
@@ -131,7 +130,6 @@ class ContinuousDeployment(Construct):
             api_lambda_reserved_concurrency=10,
             database_dynamodb_billing_mode=dynamodb.BillingMode.PROVISIONED,
         )
-        cdk.Aspects.of(backend).add(Operations())
         return backend
 
     @staticmethod

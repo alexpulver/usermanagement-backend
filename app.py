@@ -6,13 +6,12 @@ import aws_cdk.aws_servicecatalogappregistry_alpha as appregistry_alpha
 
 import constants
 from backend.component import Backend
-from operations import Operations
 from toolchain import Toolchain
 
-APPREGISTRY_APPLICATION_ACCOUNT = "807650736403"
-APPREGISTRY_APPLICATION_REGION = "eu-west-1"
-TOOLCHAIN_ACCOUNT = "807650736403"
-TOOLCHAIN_REGION = "eu-west-1"
+APPREGISTRY_APPLICATION_ENVIRONMENT = cdk.Environment(
+    account="807650736403", region="eu-west-1"
+)
+TOOLCHAIN_ENVIRONMENT = cdk.Environment(account="807650736403", region="eu-west-1")
 
 
 def main() -> None:
@@ -33,12 +32,10 @@ def create_appregistry_application_associator(
 ) -> appregistry_alpha.ApplicationAssociator:
     application = appregistry_alpha.TargetApplication.create_application_stack(
         application_name=constants.APP_NAME,
+        application_description=constants.APP_DESCRIPTION,
         stack_id=constants.APP_NAME + "AppRegistryApplication",
         stack_name=constants.APP_NAME + "AppRegistryApplication",
-        env=cdk.Environment(
-            account=APPREGISTRY_APPLICATION_ACCOUNT,
-            region=APPREGISTRY_APPLICATION_REGION,
-        ),
+        env=APPREGISTRY_APPLICATION_ENVIRONMENT,
     )
     appregistry_application_associator = appregistry_alpha.ApplicationAssociator(
         app, "AppRegistryApplicationAssociator", applications=[application]
@@ -57,7 +54,6 @@ def create_backend_sandbox(app: cdk.App) -> Backend:
         api_lambda_reserved_concurrency=1,
         database_dynamodb_billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
     )
-    cdk.Aspects.of(backend).add(Operations())
     return backend
 
 
@@ -69,7 +65,7 @@ def create_toolchain(
         app,
         constants.APP_NAME + "Toolchain",
         appregistry_application_associator=appregistry_application_associator,
-        env=cdk.Environment(account=TOOLCHAIN_ACCOUNT, region=TOOLCHAIN_REGION),
+        env=TOOLCHAIN_ENVIRONMENT,
     )
 
 

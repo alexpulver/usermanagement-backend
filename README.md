@@ -4,7 +4,7 @@ Amazon API Gateway, AWS Lambda and Amazon DynamoDB to provide basic
 CRUD operations for managing users. The project also includes a toolchain 
 with continuous deployment pipeline and pull request validation build.
 
-![diagram](https://user-images.githubusercontent.com/4362270/198886342-b7588b32-1087-4e20-914c-4c8f9d20b42d.png)
+![diagram](https://user-images.githubusercontent.com/4362270/203933003-6e9ffafc-4bac-49b5-a71d-00f78752f1d3.png)
 \* Diagram generated using https://github.com/pistazie/cdk-dia
 
 ## Create a new repository from usermanagement-backend
@@ -70,7 +70,7 @@ application attribute groups. Application attribute groups define the context of
 your applications and resources.
 
 **Prerequisites**
-- Update the AppRegistry application environment in [app.py](app.py)
+- Update the `APPREGISTRY_APPLICATION_ENVIRONMENT` constant in [app.py](app.py)
 - Commit and push the changes: `git commit -a -m 'Update AppRegistry application environment' && git push`
 
 ```bash
@@ -103,8 +103,9 @@ UserManagementBackendSandbox.APIEndpoint = https://bsc9goldsa.execute-api.eu-wes
   - Select GitHub as Source provider
   - Choose **Connect using OAuth**
   - Authorize access and cancel the project creation
-- Update the toolchain environment in [app.py](app.py) 
-- Update the toolchain configuration in [toolchain.py](toolchain.py)
+- Update the `TOOLCHAIN_ENVIRONMENT` constant in [app.py](app.py)
+- Update the `GITHUB_CONNECTION_ARN`, `GITHUB_OWNER`, `GITHUB_REPO`, `GITHUB_TRUNK_BRANCH`,
+  `BACKEND_ENVIRONMENTS` constants in [toolchain.py](toolchain.py)
 - Commit and push the changes: `git commit -a -m 'Update toolchain environment and configuration' && git push`
 
 ```bash
