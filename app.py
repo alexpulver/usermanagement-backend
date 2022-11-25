@@ -33,8 +33,8 @@ def create_appregistry_application_associator(
     application = appregistry_alpha.TargetApplication.create_application_stack(
         application_name=constants.APP_NAME,
         application_description=constants.APP_DESCRIPTION,
-        stack_id=constants.APP_NAME + "AppRegistryApplication",
-        stack_name=constants.APP_NAME + "AppRegistryApplication",
+        stack_id=constants.APP_NAME + "Application",
+        stack_name=constants.APP_NAME + "Application",
         env=APPREGISTRY_APPLICATION_ENVIRONMENT,
     )
     appregistry_application_associator = appregistry_alpha.ApplicationAssociator(
