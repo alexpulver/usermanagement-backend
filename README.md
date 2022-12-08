@@ -74,7 +74,7 @@ your applications and resources.
 - Commit and push the changes: `git commit -a -m 'Update AppRegistry application environment' && git push`
 
 ```bash
-npx cdk deploy AppRegistryApplicationAssociator/UserManagementBackendApplication
+npx cdk deploy UserManagementBackendApplication
 ```
 
 ## Deploy the backend sandbox stack
@@ -115,10 +115,10 @@ npx cdk deploy UserManagementBackendToolchain
 ## Delete all stacks
 **Do not forget to delete the stacks to avoid unexpected charges**
 ```bash
-npx cdk destroy UserManagementBackendSandbox
 npx cdk destroy UserManagementBackendToolchain
-npx cdk destroy UserManagementBackendToolchain/ContinuousDeployment/Pipeline/Production/UserManagementBackendProduction
-npx cdk destroy AppRegistryApplicationAssociator/UserManagementBackendApplication
+npx cdk destroy UserManagementBackendProduction
+npx cdk destroy UserManagementBackendSandbox
+npx cdk destroy UserManagementBackendApplication
 ```
 
 Delete the AWS CodeStar Connections connection if it is no longer needed. Follow the instructions
