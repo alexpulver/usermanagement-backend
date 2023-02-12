@@ -4,36 +4,36 @@
 #
 #    pip-compile requirements.in
 #
-attrs==22.1.0
+attrs==22.2.0
     # via
     #   cattrs
     #   jsii
-aws-cdk-lib==2.54.0
+aws-cdk-lib==2.64.0
     # via
     #   -r requirements.in
     #   aws-cdk.aws-apigatewayv2-alpha
     #   aws-cdk.aws-apigatewayv2-integrations-alpha
     #   aws-cdk.aws-lambda-python-alpha
     #   aws-cdk.aws-servicecatalogappregistry-alpha
-aws-cdk.asset-awscli-v1==2.2.30
+aws-cdk.asset-awscli-v1==2.2.65
     # via aws-cdk-lib
 aws-cdk.asset-kubectl-v20==2.1.1
     # via aws-cdk-lib
-aws-cdk.asset-node-proxy-agent-v5==2.0.36
+aws-cdk.asset-node-proxy-agent-v5==2.0.54
     # via aws-cdk-lib
-aws-cdk.aws-apigatewayv2-alpha==2.54.0.a0
+aws-cdk.aws-apigatewayv2-alpha==2.64.0.a0
     # via
     #   -r requirements.in
     #   aws-cdk.aws-apigatewayv2-integrations-alpha
-aws-cdk.aws-apigatewayv2-integrations-alpha==2.54.0a0
+aws-cdk.aws-apigatewayv2-integrations-alpha==2.64.0a0
     # via -r requirements.in
-aws-cdk.aws-lambda-python-alpha==2.54.0a0
+aws-cdk.aws-lambda-python-alpha==2.64.0a0
     # via -r requirements.in
-aws-cdk.aws-servicecatalogappregistry-alpha==2.54.0a0
+aws-cdk.aws-servicecatalogappregistry-alpha==2.64.0a0
     # via -r requirements.in
 cattrs==22.2.0
     # via jsii
-constructs==10.1.183
+constructs==10.1.248
     # via
     #   -r requirements.in
     #   aws-cdk-lib
@@ -41,9 +41,9 @@ constructs==10.1.183
     #   aws-cdk.aws-apigatewayv2-integrations-alpha
     #   aws-cdk.aws-lambda-python-alpha
     #   aws-cdk.aws-servicecatalogappregistry-alpha
-exceptiongroup==1.0.4
+exceptiongroup==1.1.0
     # via cattrs
-jsii==1.72.0
+jsii==1.74.0
     # via
     #   aws-cdk-lib
     #   aws-cdk.asset-awscli-v1
