@@ -61,11 +61,11 @@ exceptiongroup==1.0.4
     #   cattrs
 flake8==5.0.4
     # via -r requirements-dev.in
-future==0.18.2
+future==0.18.3
     # via radon
 gitdb==4.0.10
     # via gitpython
-gitpython==3.1.29
+gitpython==3.1.30
     # via bandit
 idna==3.4
     # via requests
