@@ -66,7 +66,7 @@ class Metadata(Construct):
         # at synth time. CloudFormation would deploy the attribute group and the
         # attribute group association in parallel, and fail. Using attribute group ID
         # would work, but would not be explicit.
-        appregistry_attribute_group_association.add_depends_on(
+        appregistry_attribute_group_association.add_dependency(
             appregistry_attribute_group
         )
 
