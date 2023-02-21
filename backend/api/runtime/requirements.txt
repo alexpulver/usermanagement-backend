@@ -4,13 +4,13 @@
 #
 #    pip-compile backend/api/runtime/requirements.in
 #
-aws-lambda-powertools==2.8.0
+aws-lambda-powertools==2.9.0
     # via -r backend/api/runtime/requirements.in
-boto3==1.26.69
+boto3==1.26.76
     # via
     #   -r backend/api/runtime/requirements.in
     #   codeguru-profiler-agent
-botocore==1.29.69
+botocore==1.29.76
     # via
     #   boto3
     #   s3transfer
@@ -26,7 +26,7 @@ s3transfer==0.6.0
     # via boto3
 six==1.16.0
     # via python-dateutil
-typing-extensions==4.4.0
+typing-extensions==4.5.0
     # via aws-lambda-powertools
 urllib3==1.26.14
     # via botocore
