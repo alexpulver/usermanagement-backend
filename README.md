@@ -25,7 +25,7 @@ cd usermanagement-backend
 
 ### Create Python virtual environment and install the dependencies
 ```bash
-python3.7 -m venv .venv
+python3.9 -m venv .venv
 source .venv/bin/activate
 
 # [Optional] Needed to upgrade dependencies and cleanup unused packages

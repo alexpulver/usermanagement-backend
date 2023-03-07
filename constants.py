@@ -5,3 +5,4 @@ APP_DESCRIPTION = (
     "Ongoing project to build realistic end-to-end component "
     "software development life cycle using the AWS CDK"
 )
+PYTHON_VERSION = "3.9"

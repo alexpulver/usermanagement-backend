@@ -7,6 +7,8 @@ import aws_cdk.aws_lambda as lambda_
 import aws_cdk.aws_lambda_python_alpha as lambda_python_alpha
 from constructs import Construct
 
+import constants
+
 
 class API(Construct):
     def __init__(
@@ -22,13 +24,14 @@ class API(Construct):
         self.lambda_function = lambda_python_alpha.PythonFunction(
             self,
             "LambdaFunction",
-            runtime=lambda_.Runtime.PYTHON_3_7,
+            runtime=lambda_.Runtime(
+                f"python{constants.PYTHON_VERSION}", family=lambda_.RuntimeFamily.PYTHON
+            ),
             environment={"DYNAMODB_TABLE_NAME": dynamodb_table_name},
             reserved_concurrent_executions=lambda_reserved_concurrency,
             entry=str(pathlib.Path(__file__).parent.joinpath("runtime").resolve()),
             index="lambda_function.py",
             handler="lambda_handler",
-            profiling=True,
         )
         cfn_lambda_function = cast(
             lambda_.CfnFunction, self.lambda_function.node.default_child

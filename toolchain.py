@@ -21,7 +21,7 @@ GITHUB_OWNER = "alexpulver"
 GITHUB_REPO = "usermanagement-backend"
 GITHUB_TRUNK_BRANCH = "main"
 CODEBUILD_BUILD_ENVIRONMENT = codebuild.BuildEnvironment(
-    build_image=codebuild.LinuxBuildImage.STANDARD_6_0,
+    build_image=codebuild.LinuxBuildImage.STANDARD_5_0,
     privileged=True,
 )
 BACKEND_ENVIRONMENTS = [
@@ -44,7 +44,7 @@ class Toolchain(cdk.Stack):
             {
                 "phases": {
                     "install": {
-                        "runtime-versions": {"python": "3.7"},
+                        "runtime-versions": {"python": constants.PYTHON_VERSION},
                         "commands": ["env", "./scripts/install-deps.sh"],
                     },
                     "build": {"commands": ["./scripts/run-tests.sh", "npx cdk synth"]},
