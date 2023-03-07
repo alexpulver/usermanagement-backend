@@ -20,6 +20,10 @@ GITHUB_CONNECTION_ARN = "arn:aws:codestar-connections:eu-west-1:807650736403:con
 GITHUB_OWNER = "alexpulver"
 GITHUB_REPO = "usermanagement-backend"
 GITHUB_TRUNK_BRANCH = "main"
+CODEBUILD_BUILD_ENVIRONMENT = codebuild.BuildEnvironment(
+    build_image=codebuild.LinuxBuildImage.STANDARD_6_0,
+    privileged=True,
+)
 BACKEND_ENVIRONMENTS = [
     BackendEnvironment(name="Production", account="807650736403", region="eu-west-1"),
 ]
@@ -84,9 +88,11 @@ class ContinuousDeployment(Construct):
         pipeline = pipelines.CodePipeline(
             self,
             "Pipeline",
+            code_build_defaults=pipelines.CodeBuildOptions(
+                build_environment=CODEBUILD_BUILD_ENVIRONMENT,
+            ),
             cli_version=ContinuousDeployment._get_cdk_cli_version(),
             cross_account_keys=True,
-            docker_enabled_for_synth=True,
             publish_assets_in_parallel=False,
             synth=synth,
         )
@@ -168,5 +174,5 @@ class PullRequestValidation(Construct):
             "CodeBuildProject",
             source=source,
             build_spec=build_spec,
-            environment=codebuild.BuildEnvironment(privileged=True),
+            environment=CODEBUILD_BUILD_ENVIRONMENT,
         )
