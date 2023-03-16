@@ -7,15 +7,15 @@
 aws-lambda-powertools==2.9.1
     # via -r backend/api/runtime/requirements.in
 boto3==1.26.87
-    # via
-    #   -r backend/api/runtime/requirements.in
-    #   codeguru-profiler-agent
+    # via -r backend/api/runtime/requirements.in
+boto3-stubs==1.26.93
+    # via -r backend/api/runtime/requirements.in
 botocore==1.29.87
     # via
     #   boto3
     #   s3transfer
-codeguru-profiler-agent==1.2.4
-    # via -r backend/api/runtime/requirements.in
+botocore-stubs==1.29.93
+    # via boto3-stubs
 jmespath==1.0.1
     # via
     #   boto3
@@ -26,7 +26,15 @@ s3transfer==0.6.0
     # via boto3
 six==1.16.0
     # via python-dateutil
+types-awscrt==0.16.12
+    # via
+    #   botocore-stubs
+    #   types-s3transfer
+types-s3transfer==0.6.0.post6
+    # via boto3-stubs
 typing-extensions==4.5.0
-    # via aws-lambda-powertools
+    # via
+    #   aws-lambda-powertools
+    #   boto3-stubs
 urllib3==1.26.14
     # via botocore
