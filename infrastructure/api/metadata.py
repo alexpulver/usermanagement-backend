@@ -1,28 +1,25 @@
 import aws_cdk as cdk
-import aws_cdk.aws_cloudwatch as cloudwatch
 import aws_cdk.aws_servicecatalogappregistry as appregistry
 from constructs import Construct
 
+import api.compute
+import api.network
 import constants
-from backend.api.infrastructure import API
-from backend.database.infrastructure import Database
-
-
-class Operations(Construct):
-    def __init__(
-        self, scope: Construct, id_: str, *, api: API, database: Database
-    ) -> None:
-        super().__init__(scope, id_)
-        Metadata(self, "Metadata", api=api)
-        Monitoring(self, "Monitoring", api=api, database=database)
 
 
 class Metadata(Construct):
-    def __init__(self, scope: Construct, id_: str, *, api: API) -> None:
+    def __init__(
+        self,
+        scope: Construct,
+        id_: str,
+        *,
+        compute: api.compute.Compute,
+        network: api.network.Network
+    ) -> None:
         super().__init__(scope, id_)
         attributes = {
-            "api_endpoint": api.api_gateway_http_api.url,
-            "api_runtime_asset": api.lambda_function_asset,
+            "api_endpoint": network.api_gateway_http_api.url,
+            "api_runtime_code": compute.lambda_function_code,
         }
         # Setting attribute group name to a value that doesn't depend on construct path
         # will prevent refactoring the construct path down to the attribute group
@@ -41,10 +38,10 @@ class Metadata(Construct):
         # CloudFormation deployment due to attribute group name collision.
         #
         # Example of attribute group name that would lead to failure:
-        # "UserManagementBackendSandbox"
+        # "UserManagementComponentsSandbox"
         #
         # Example of attribute group name based on construct path that would succeed:
-        # "UserManagementBackendSandboxOperationsMetadataAppRegistryAttributeGroup5C997743"
+        # "UserManagementComponentsSandboxAPIMetadataAppRegistryAttributeGroup35DABB43"
         appregistry_attribute_group = appregistry.CfnAttributeGroup(
             self,
             "AppRegistryAttributeGroup",
@@ -69,19 +66,3 @@ class Metadata(Construct):
         appregistry_attribute_group_association.add_dependency(
             appregistry_attribute_group
         )
-
-
-class Monitoring(Construct):
-    def __init__(
-        self, scope: Construct, id_: str, *, api: API, database: Database
-    ) -> None:
-        super().__init__(scope, id_)
-        widgets = [
-            cloudwatch.SingleValueWidget(
-                metrics=[api.api_gateway_http_api.metric_count()]
-            ),
-            cloudwatch.SingleValueWidget(
-                metrics=[database.dynamodb_table.metric_consumed_read_capacity_units()]
-            ),
-        ]
-        cloudwatch.Dashboard(self, "CloudWatchDashboard", widgets=[widgets])

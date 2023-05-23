@@ -1,8 +1,6 @@
 import pathlib
 from typing import cast
 
-import aws_cdk.aws_apigatewayv2_alpha as apigatewayv2_alpha
-import aws_cdk.aws_apigatewayv2_integrations_alpha as apigatewayv2_integrations_alpha
 import aws_cdk.aws_lambda as lambda_
 import aws_cdk.aws_lambda_python_alpha as lambda_python_alpha
 from constructs import Construct
@@ -10,14 +8,14 @@ from constructs import Construct
 import constants
 
 
-class API(Construct):
+class Compute(Construct):
     def __init__(
         self,
         scope: Construct,
         id_: str,
         *,
-        dynamodb_table_name: str,
         lambda_reserved_concurrency: int,
+        dynamodb_table_name: str,
     ):
         super().__init__(scope, id_)
 
@@ -29,23 +27,16 @@ class API(Construct):
             ),
             environment={"DYNAMODB_TABLE_NAME": dynamodb_table_name},
             reserved_concurrent_executions=lambda_reserved_concurrency,
-            entry=str(pathlib.Path(__file__).parent.joinpath("runtime").resolve()),
-            index="lambda_function.py",
+            entry=str(
+                pathlib.Path(__file__)
+                .parent.parent.parent.joinpath("runtime/api")
+                .resolve()
+            ),
+            index="app.py",
             handler="lambda_handler",
         )
         cfn_lambda_function = cast(
             lambda_.CfnFunction, self.lambda_function.node.default_child
         )
         code = cast(lambda_.CfnFunction.CodeProperty, cfn_lambda_function.code)
-        self.lambda_function_asset = f"s3://{code.s3_bucket}/{code.s3_key}"
-
-        api_gateway_http_lambda_integration = (
-            apigatewayv2_integrations_alpha.HttpLambdaIntegration(
-                "APIGatewayHTTPLambdaIntegration", handler=self.lambda_function
-            )
-        )
-        self.api_gateway_http_api = apigatewayv2_alpha.HttpApi(
-            self,
-            "APIGatewayHTTPAPI",
-            default_integration=api_gateway_http_lambda_integration,
-        )
+        self.lambda_function_code = f"s3://{code.s3_bucket}/{code.s3_key}"

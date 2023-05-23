@@ -1,5 +1,2 @@
-[MAIN]
-init-hook='import sys; sys.path.append("backend/api/runtime")'
-
 [MESSAGES CONTROL]
 disable = C0111

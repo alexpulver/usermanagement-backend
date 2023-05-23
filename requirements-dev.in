@@ -1,6 +1,5 @@
--c backend/api/runtime/requirements.txt
--c requirements.txt
-aws-cdk-lib
+-c infrastructure/requirements.txt
+-c runtime/api/requirements.txt
 bandit
 black==22.12.0  # resolve conflict with safety over packaging
 coverage

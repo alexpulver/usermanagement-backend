@@ -1,6 +1,5 @@
 import json
 import pathlib
-from collections import namedtuple
 from typing import Any
 
 import aws_cdk as cdk
@@ -11,22 +10,7 @@ from aws_cdk import pipelines
 from constructs import Construct
 
 import constants
-from backend.component import Backend
-
-BackendEnvironment = namedtuple("BackendEnvironment", ["name", "account", "region"])
-
-# pylint: disable=line-too-long
-GITHUB_CONNECTION_ARN = "arn:aws:codestar-connections:eu-west-1:807650736403:connection/1f244295-871f-411f-afb1-e6ca987858b6"
-GITHUB_OWNER = "alexpulver"
-GITHUB_REPO = "usermanagement-backend"
-GITHUB_TRUNK_BRANCH = "main"
-CODEBUILD_BUILD_ENVIRONMENT = codebuild.BuildEnvironment(
-    build_image=codebuild.LinuxBuildImage.STANDARD_5_0,
-    privileged=True,
-)
-BACKEND_ENVIRONMENTS = [
-    BackendEnvironment(name="Production", account="807650736403", region="eu-west-1"),
-]
+from components import Components
 
 
 class Toolchain(cdk.Stack):
@@ -73,9 +57,9 @@ class ContinuousDeployment(Construct):
         super().__init__(scope, id_)
 
         source = pipelines.CodePipelineSource.connection(
-            GITHUB_OWNER + "/" + GITHUB_REPO,
-            GITHUB_TRUNK_BRANCH,
-            connection_arn=GITHUB_CONNECTION_ARN,
+            constants.GITHUB_OWNER + "/" + constants.GITHUB_REPO,
+            constants.GITHUB_TRUNK_BRANCH,
+            connection_arn=constants.GITHUB_CONNECTION_ARN,
         )
         synth = pipelines.CodeBuildStep(
             "Synth",
@@ -89,7 +73,7 @@ class ContinuousDeployment(Construct):
             self,
             "Pipeline",
             code_build_defaults=pipelines.CodeBuildOptions(
-                build_environment=CODEBUILD_BUILD_ENVIRONMENT,
+                build_environment=constants.CODEBUILD_BUILD_ENVIRONMENT,
             ),
             cli_version=ContinuousDeployment._get_cdk_cli_version(),
             cross_account_keys=True,
@@ -101,7 +85,7 @@ class ContinuousDeployment(Construct):
     @staticmethod
     def _get_cdk_cli_version() -> str:
         package_json_path = (
-            pathlib.Path(__file__).parent.joinpath("package.json").resolve()
+            pathlib.Path(__file__).parent.parent.joinpath("package.json").resolve()
         )
         with open(package_json_path, encoding="utf_8") as package_json_file:
             package_json = json.load(package_json_file)
@@ -113,40 +97,38 @@ class ContinuousDeployment(Construct):
         pipeline: pipelines.CodePipeline,
         appregistry_application_associator: appregistry_alpha.ApplicationAssociator,
     ) -> None:
-        for backend_environment in BACKEND_ENVIRONMENTS:
+        for components_environment in constants.COMPONENTS_ENVIRONMENTS:
             stage = cdk.Stage(
                 pipeline,
-                backend_environment.name,
+                components_environment.name,
                 env=cdk.Environment(
-                    account=backend_environment.account,
-                    region=backend_environment.region,
+                    account=components_environment.account,
+                    region=components_environment.region,
                 ),
             )
             appregistry_application_associator.associate_stage(stage)
-            backend = ContinuousDeployment._create_backend(stage)
-            smoke_test = ContinuousDeployment._create_smoke_test(backend)
+            components = ContinuousDeployment._create_components(stage)
+            smoke_test = ContinuousDeployment._create_smoke_test(components)
             pipeline.add_stage(stage, post=[smoke_test])
 
     @staticmethod
-    def _create_backend(stage: cdk.Stage) -> Backend:
-        backend = Backend(
+    def _create_components(stage: cdk.Stage) -> Components:
+        components = Components(
             stage,
-            constants.APP_NAME + stage.stage_name,
-            stack_name=constants.APP_NAME + stage.stage_name,
-            api_lambda_reserved_concurrency=10,
-            database_dynamodb_billing_mode=dynamodb.BillingMode.PROVISIONED,
+            f"{constants.APP_NAME}-Components-{stage.stage_name}",
+            stack_name=f"{constants.APP_NAME}-Components-{stage.stage_name}",
+            api_compute_lambda_reserved_concurrency=10,
+            api_database_dynamodb_billing_mode=dynamodb.BillingMode.PROVISIONED,
         )
-        return backend
+        return components
 
     @staticmethod
-    def _create_smoke_test(backend: Backend) -> pipelines.ShellStep:
+    def _create_smoke_test(components: Components) -> pipelines.ShellStep:
         api_endpoint_env_var_name = constants.APP_NAME.upper() + "_API_ENDPOINT"
         smoke_test_commands = [f"curl ${api_endpoint_env_var_name}"]
         smoke_test = pipelines.ShellStep(
             "SmokeTest",
-            env_from_cfn_outputs={
-                api_endpoint_env_var_name: backend.api_endpoint_cfn_output
-            },
+            env_from_cfn_outputs={api_endpoint_env_var_name: components.api_endpoint},
             commands=smoke_test_commands,
         )
         return smoke_test
@@ -159,14 +141,14 @@ class PullRequestValidation(Construct):
         webhook_filters = [
             codebuild.FilterGroup.in_event_of(
                 codebuild.EventAction.PULL_REQUEST_CREATED
-            ).and_base_branch_is(GITHUB_TRUNK_BRANCH),
+            ).and_base_branch_is(constants.GITHUB_TRUNK_BRANCH),
             codebuild.FilterGroup.in_event_of(
                 codebuild.EventAction.PULL_REQUEST_UPDATED
-            ).and_base_branch_is(GITHUB_TRUNK_BRANCH),
+            ).and_base_branch_is(constants.GITHUB_TRUNK_BRANCH),
         ]
         source = codebuild.Source.git_hub(
-            owner=GITHUB_OWNER,
-            repo=GITHUB_REPO,
+            owner=constants.GITHUB_OWNER,
+            repo=constants.GITHUB_REPO,
             webhook_filters=webhook_filters,
         )
         codebuild.Project(
@@ -174,5 +156,5 @@ class PullRequestValidation(Construct):
             "CodeBuildProject",
             source=source,
             build_spec=build_spec,
-            environment=CODEBUILD_BUILD_ENVIRONMENT,
+            environment=constants.CODEBUILD_BUILD_ENVIRONMENT,
         )
