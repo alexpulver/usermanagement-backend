@@ -149,7 +149,7 @@ curl \
 curl \
     -H "Content-Type: application/json" \
     -X PUT \
-    -d '{"country":"US", "state":"WA"}' \
+    -d '{"username":"john", "country":"US", "state":"WA"}' \
     "${api_endpoint}/users/john"
 
 curl \
