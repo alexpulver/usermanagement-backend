@@ -15,7 +15,7 @@ def main() -> None:
     application = appregistry_alpha.TargetApplication.create_application_stack(
         application_name=constants.APP_NAME,
         application_description=constants.APP_DESCRIPTION,
-        stack_name=constants.APP_NAME + "-Application-Management",
+        stack_name=f"{constants.APP_NAME}-Application-Management",
         env=cdk.Environment(
             account=constants.APPLICATION_ENVIRONMENT.account,
             region=constants.APPLICATION_ENVIRONMENT.region,
@@ -27,7 +27,7 @@ def main() -> None:
 
     ServiceStack(
         app,
-        constants.APP_NAME + "-Service-Sandbox",
+        f"{constants.APP_NAME}-Service-Sandbox",
         env=cdk.Environment(
             account=os.environ["CDK_DEFAULT_ACCOUNT"],
             region=os.environ["CDK_DEFAULT_REGION"],
@@ -38,7 +38,7 @@ def main() -> None:
 
     ToolchainStack(
         app,
-        constants.APP_NAME + "-Toolchain-Management",
+        f"{constants.APP_NAME}-Toolchain-Management",
         application_associator=application_associator,
         env=cdk.Environment(
             account=constants.TOOLCHAIN_ENVIRONMENT.account,
