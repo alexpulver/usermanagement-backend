@@ -1,4 +1,4 @@
-# User management service
+# User management backend
 The project implements a *user management backend* service that uses Amazon API Gateway, 
 AWS Lambda and Amazon DynamoDB to provide a CRUD API for managing users. The project 
 also includes a toolchain with deployment pipeline and pull request build.
