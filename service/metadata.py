@@ -2,9 +2,9 @@ import aws_cdk as cdk
 import aws_cdk.aws_servicecatalogappregistry as appregistry
 from constructs import Construct
 
-import api.compute
-import api.network
 import constants
+from service.compute import Compute
+from service.ingress import Ingress
 
 
 class Metadata(Construct):
@@ -13,13 +13,13 @@ class Metadata(Construct):
         scope: Construct,
         id_: str,
         *,
-        compute: api.compute.Compute,
-        network: api.network.Network
+        compute: Compute,
+        network: Ingress,
     ) -> None:
         super().__init__(scope, id_)
         attributes = {
             "api_endpoint": network.api_gateway_http_api.url,
-            "api_runtime_code": compute.lambda_function_code,
+            "api_code": compute.lambda_function_code,
         }
         # Setting attribute group name to a value that doesn't depend on construct path
         # will prevent refactoring the construct path down to the attribute group

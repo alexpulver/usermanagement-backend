@@ -27,11 +27,7 @@ class Compute(Construct):
             ),
             environment={"DYNAMODB_TABLE_NAME": dynamodb_table_name},
             reserved_concurrent_executions=lambda_reserved_concurrency,
-            entry=str(
-                pathlib.Path(__file__)
-                .parent.parent.parent.joinpath("runtime/api")
-                .resolve()
-            ),
+            entry=str(pathlib.Path(__file__).parent.joinpath("api").resolve()),
             index="app.py",
             handler="lambda_handler",
         )

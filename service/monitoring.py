@@ -1,8 +1,8 @@
 import aws_cdk.aws_cloudwatch as cloudwatch
 from constructs import Construct
 
-import api.database
-import api.network
+from service.database import Database
+from service.ingress import Ingress
 
 
 class Monitoring(Construct):
@@ -11,8 +11,8 @@ class Monitoring(Construct):
         scope: Construct,
         id_: str,
         *,
-        database: api.database.Database,
-        network: api.network.Network,
+        database: Database,
+        network: Ingress,
     ) -> None:
         super().__init__(scope, id_)
         widgets = [

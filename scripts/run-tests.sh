@@ -3,7 +3,7 @@
 set -o errexit
 set -o verbose
 
-targets=("${PWD}/infrastructure" "${PWD}/runtime")
+targets=("service" "tests" "toolchain" "app.py" "constants.py")
 
 # Find common security issues (https://bandit.readthedocs.io)
 bandit --recursive "${targets[@]}"
@@ -25,18 +25,18 @@ xenon --max-absolute A --max-modules A --max-average A "${targets[@]}"
 
 # Check dependencies for security issues (https://pyup.io/safety)
 safety check \
-  -r "${PWD}/infrastructure/requirements.txt" \
-  -r "${PWD}/runtime/api/requirements.txt" \
+  -r "${PWD}/service/api/requirements.txt" \
+  -r "${PWD}/requirements.txt" \
   -r "${PWD}/requirements-dev.txt"
 
 # Static type checker (https://mypy.readthedocs.io)
-MYPYPATH="${PWD}/infrastructure" mypy --config-file .mypy.ini "${PWD}/infrastructure"
-MYPYPATH="${PWD}/runtime/api" mypy --config-file .mypy.ini "${PWD}/runtime"
+MYPYPATH="${PWD}" mypy --config-file .mypy.ini --exclude service/api "${targets[@]}"
+MYPYPATH="${PWD}/service/api" mypy --config-file .mypy.ini --explicit-package-bases "${PWD}/service/api"
 
 # Check for errors, enforce a coding standard, look for code smells (http://pylint.pycqa.org)
-PYTHONPATH="${PWD}/infrastructure" pylint --rcfile .pylintrc "${PWD}/infrastructure"
-PYTHONPATH="${PWD}/runtime/api" pylint --rcfile .pylintrc "${PWD}/runtime"
+PYTHONPATH="${PWD}" pylint --rcfile .pylintrc --ignore service/api "${targets[@]}"
+PYTHONPATH="${PWD}/service/api" pylint --rcfile .pylintrc "${PWD}/service/api"
 
 # Run tests and measure code coverage (https://coverage.readthedocs.io)
-PYTHONPATH="${PWD}/infrastructure" coverage run -m unittest discover -v -s "${PWD}/infrastructure/tests"
-PYTHONPATH="${PWD}/runtime/api" coverage run -m unittest discover -v -s "${PWD}/runtime/api/tests"
+coverage run -m unittest discover -s "${PWD}/tests"
+(cd "${PWD}/service/api"; coverage run -m unittest discover -s "${PWD}/tests")

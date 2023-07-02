@@ -1,5 +1,5 @@
 {
-  "app": "python infrastructure/app.py",
+  "app": "python app.py",
   "context": {
     "@aws-cdk/aws-iam:minimizePolicies": true
   }

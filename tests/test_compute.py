@@ -4,19 +4,19 @@ import aws_cdk as cdk
 import aws_cdk.aws_dynamodb as dynamodb
 from aws_cdk import assertions
 
-import api.compute
-import api.database
+from service.compute import Compute
+from service.database import Database
 
 
 class LambdaTestCase(unittest.TestCase):
     def test_bundling(self) -> None:
         stack = cdk.Stack()
-        database = api.database.Database(
+        database = Database(
             stack,
             "Database",
             dynamodb_billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
         )
-        api.compute.Compute(
+        Compute(
             stack,
             "Compute",
             dynamodb_table_name=database.dynamodb_table.table_name,

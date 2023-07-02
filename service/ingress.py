@@ -4,7 +4,7 @@ import aws_cdk.aws_lambda_python_alpha as lambda_python_alpha
 from constructs import Construct
 
 
-class Network(Construct):
+class Ingress(Construct):
     def __init__(
         self,
         scope: Construct,
