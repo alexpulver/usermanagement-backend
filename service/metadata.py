@@ -17,39 +17,14 @@ class Metadata(Construct):
         network: Ingress,
     ) -> None:
         super().__init__(scope, id_)
-        attributes = {
-            "api_endpoint": network.api_gateway_http_api.url,
-            "api_code": compute.lambda_function_code,
-        }
-        # Setting attribute group name to a value that doesn't depend on construct path
-        # will prevent refactoring the construct path down to the attribute group
-        # definition, including its own construct ID. AWS CloudFormation will try
-        # to create a new attribute group with the same name, which will fail.
-        #
-        # To enable the refactoring, I set the attribute group name to a "PLACEHOLDER"
-        # value to instantiate the attribute group construct. I later replace the
-        # placeholder value with the attribute group construct unique resource name.
-        #
-        # Now when refactoring the construct path down to the attribute group, the
-        # attribute group name will change. This will allow CloudFormation to perform
-        # the update.
-        #
-        # The trade-off is longer attribute group name, but no risk of failing
-        # CloudFormation deployment due to attribute group name collision.
-        #
-        # Example of attribute group name that would lead to failure:
-        # "UserManagementComponentsSandbox"
-        #
-        # Example of attribute group name based on construct path that would succeed:
-        # "UserManagementComponentsSandboxAPIMetadataAppRegistryAttributeGroup35DABB43"
         appregistry_attribute_group = appregistry.CfnAttributeGroup(
             self,
             "AppRegistryAttributeGroup",
-            attributes=attributes,
-            name="PLACEHOLDER",
-        )
-        appregistry_attribute_group.name = cdk.Names.unique_resource_name(
-            appregistry_attribute_group
+            name=cdk.Stack.of(self).stack_name,
+            attributes={
+                "api_code": compute.lambda_function_code,
+                "api_endpoint": network.api_gateway_http_api.url,
+            },
         )
         appregistry_attribute_group_association = (
             appregistry.CfnAttributeGroupAssociation(
@@ -59,10 +34,6 @@ class Metadata(Construct):
                 attribute_group=appregistry_attribute_group.name,
             )
         )
-        # Need explicit dependency because attribute group name is known
-        # at synth time. CloudFormation would deploy the attribute group and the
-        # attribute group association in parallel, and fail. Using attribute group ID
-        # would work, but would not be explicit.
         appregistry_attribute_group_association.add_dependency(
             appregistry_attribute_group
         )
