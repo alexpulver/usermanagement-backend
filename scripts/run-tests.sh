@@ -24,19 +24,16 @@ radon mi "${targets[@]}"
 xenon --max-absolute A --max-modules A --max-average A "${targets[@]}"
 
 # Check dependencies for security issues (https://pyup.io/safety)
-safety check \
-  -r "${PWD}/service/api/requirements.txt" \
-  -r "${PWD}/requirements.txt" \
-  -r "${PWD}/requirements-dev.txt"
+safety check -r service/api/requirements.txt -r requirements.txt -r requirements-dev.txt
 
 # Static type checker (https://mypy.readthedocs.io)
 MYPYPATH="${PWD}" mypy --config-file .mypy.ini --exclude service/api "${targets[@]}"
-MYPYPATH="${PWD}/service/api" mypy --config-file .mypy.ini --explicit-package-bases "${PWD}/service/api"
+MYPYPATH="${PWD}/service/api" mypy --config-file .mypy.ini --explicit-package-bases service/api
 
 # Check for errors, enforce a coding standard, look for code smells (http://pylint.pycqa.org)
 PYTHONPATH="${PWD}" pylint --rcfile .pylintrc --ignore service/api "${targets[@]}"
-PYTHONPATH="${PWD}/service/api" pylint --rcfile .pylintrc "${PWD}/service/api"
+PYTHONPATH="${PWD}/service/api" pylint --rcfile .pylintrc service/api
 
 # Run tests and measure code coverage (https://coverage.readthedocs.io)
-coverage run -m unittest discover -s "${PWD}/tests"
-(cd "${PWD}/service/api"; coverage run -m unittest discover -s "${PWD}/tests")
+coverage run -m unittest discover -s tests
+(cd "${PWD}/service/api"; coverage run -m unittest discover -s tests)
