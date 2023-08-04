@@ -1,11 +1,25 @@
-from collections import namedtuple
+from dataclasses import dataclass
 
 import aws_cdk.aws_codebuild as codebuild
 import aws_cdk.aws_dynamodb as dynamodb
 
+
+@dataclass(kw_only=True)
+class Environment:
+    name: str
+    account: str | None = None
+    region: str | None = None
+
+
+@dataclass(kw_only=True)
+class ServiceEnvironment(Environment):
+    compute_lambda_reserved_concurrency: int
+    database_dynamodb_billing_mode: dynamodb.BillingMode
+
+
 APP_NAME = "UserManagementBackend"
 APP_DESCRIPTION = "Ongoing project to build realistic application SDLC using AWS CDK"
-PYTHON_VERSION = "3.9"
+PYTHON_VERSION = "3.11"
 
 # pylint: disable=line-too-long
 GITHUB_CONNECTION_ARN = "arn:aws:codestar-connections:eu-west-1:807650736403:connection/1f244295-871f-411f-afb1-e6ca987858b6"
@@ -18,26 +32,11 @@ CODEBUILD_BUILD_ENVIRONMENT = codebuild.BuildEnvironment(
     privileged=True,
 )
 
-ApplicationEnvironment = namedtuple(
-    "ApplicationEnvironment", ["name", "account", "region"]
-)
-APPLICATION_MANAGEMENT_ENVIRONMENT = ApplicationEnvironment(
+APPLICATION_MANAGEMENT_ENVIRONMENT = Environment(
     name="Management", account="807650736403", region="eu-west-1"
 )
-ToolchainEnvironment = namedtuple("ToolchainEnvironment", ["name", "account", "region"])
-TOOLCHAIN_MANAGEMENT_ENVIRONMENT = ToolchainEnvironment(
+TOOLCHAIN_MANAGEMENT_ENVIRONMENT = Environment(
     name="Management", account="807650736403", region="eu-west-1"
-)
-ServiceEnvironment = namedtuple(
-    "ServiceEnvironment",
-    [
-        "name",
-        "account",
-        "region",
-        "compute_lambda_reserved_concurrency",
-        "database_dynamodb_billing_mode",
-    ],
-    defaults=["111111111111", "eu-west-1", 1, dynamodb.BillingMode.PAY_PER_REQUEST],
 )
 # The application uses caller's account and Region.
 SERVICE_SANDBOX_ENVIRONMENT = ServiceEnvironment(

@@ -24,7 +24,7 @@ git remote set-url origin <your fork URL>
 
 ## Configure local environment
 ```bash
-python3.9 -m venv .venv
+python3.11 -m venv .venv
 source .venv/bin/activate
 
 # [Optional] Needed to upgrade dependencies and cleanup unused packages
@@ -67,8 +67,8 @@ The service uses [AWS Service Catalog AppRegistry](https://docs.aws.amazon.com/s
 to manage application metadata.
 
 **Prerequisites**
-- Update the account for `APPLICATION_ENVIRONMENT` constant in [constants.py](constants.py)
-- Commit and push the changes: `git commit -a -m 'Application environment' && git push`
+- Update the account for `APPLICATION_MANAGEMENT_ENVIRONMENT` constant in [constants.py](constants.py)
+- Commit and push the changes: `git commit -a -m 'Environment configuration' && git push`
 
 ```bash
 npx cdk deploy UserManagementBackend-Application-Management
@@ -101,8 +101,8 @@ UserManagementBackend-Service-Sandbox.APIEndpoint = https://bsc9goldsa.execute-a
   - Choose **Connect using OAuth**
   - Authorize access and cancel the project creation
 - Update the `GITHUB_CONNECTION_ARN`, `GITHUB_OWNER`, `GITHUB_REPO`, `GITHUB_TRUNK_BRANCH`,
-  `SERVICE_ENVIRONMENTS` constants in [constants.py](constants.py)
-- Commit and push the changes: `git commit -a -m 'Source configuration and service environments' && git push`
+  `TOOLCHAIN_MANAGEMENT_ENVIRONMENT`, `SERVICE_SHARED_ENVIRONMENTS` constants in [constants.py](constants.py)
+- Commit and push the changes: `git commit -a -m 'Source and environments configuration' && git push`
 
 ```bash
 npx cdk deploy UserManagementBackend-Toolchain-Management
