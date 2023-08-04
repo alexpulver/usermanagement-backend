@@ -85,8 +85,8 @@ class DeploymentPipeline(Construct):
     ) -> ServiceStack:
         service_stack = ServiceStack(
             stage,
-            f"{constants.APP_NAME}-Service-{service_environment.name}",
-            stack_name=f"{constants.APP_NAME}-Service-{service_environment.name}",
+            f"{constants.SERVICE_STACK_BASE_NAME}-{service_environment.name}",
+            stack_name=f"{constants.SERVICE_STACK_BASE_NAME}-{service_environment.name}",
             # pylint: disable=line-too-long
             compute_lambda_reserved_concurrency=service_environment.compute_lambda_reserved_concurrency,
             database_dynamodb_billing_mode=service_environment.database_dynamodb_billing_mode,

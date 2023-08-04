@@ -32,13 +32,16 @@ CODEBUILD_BUILD_ENVIRONMENT = codebuild.BuildEnvironment(
     privileged=True,
 )
 
+APPLICATION_STACK_BASE_NAME = f"{APP_NAME}-Application"
 APPLICATION_MANAGEMENT_ENVIRONMENT = Environment(
     name="Management", account="807650736403", region="eu-west-1"
 )
+TOOLCHAIN_STACK_BASE_NAME = f"{APP_NAME}-Toolchain"
 TOOLCHAIN_MANAGEMENT_ENVIRONMENT = Environment(
     name="Management", account="807650736403", region="eu-west-1"
 )
-# The application uses caller's account and Region.
+SERVICE_STACK_BASE_NAME = f"{APP_NAME}-Service"
+# The application uses caller's account and Region for the sandbox environment.
 SERVICE_SANDBOX_ENVIRONMENT = ServiceEnvironment(
     name="Sandbox",
     compute_lambda_reserved_concurrency=1,

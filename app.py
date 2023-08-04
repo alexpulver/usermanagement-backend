@@ -14,7 +14,8 @@ def main() -> None:
     application = appregistry_alpha.TargetApplication.create_application_stack(
         application_name=constants.APP_NAME,
         application_description=constants.APP_DESCRIPTION,
-        stack_name=f"{constants.APP_NAME}-Application-Management",
+        # pylint: disable=line-too-long
+        stack_name=f"{constants.APPLICATION_STACK_BASE_NAME}-{constants.APPLICATION_MANAGEMENT_ENVIRONMENT.name}",
         env=cdk.Environment(
             account=constants.APPLICATION_MANAGEMENT_ENVIRONMENT.account,
             region=constants.APPLICATION_MANAGEMENT_ENVIRONMENT.region,
@@ -26,7 +27,7 @@ def main() -> None:
 
     ServiceStack(
         app,
-        f"{constants.APP_NAME}-Service-{constants.SERVICE_SANDBOX_ENVIRONMENT.name}",
+        f"{constants.SERVICE_STACK_BASE_NAME}-{constants.SERVICE_SANDBOX_ENVIRONMENT.name}",
         env=cdk.Environment(
             account=os.environ["CDK_DEFAULT_ACCOUNT"],
             region=os.environ["CDK_DEFAULT_REGION"],
@@ -39,7 +40,7 @@ def main() -> None:
 
     ToolchainStack(
         app,
-        f"{constants.APP_NAME}-Toolchain-Management",
+        f"{constants.TOOLCHAIN_STACK_BASE_NAME}-{constants.TOOLCHAIN_MANAGEMENT_ENVIRONMENT.name}",
         application_associator=application_associator,
         env=cdk.Environment(
             account=constants.TOOLCHAIN_MANAGEMENT_ENVIRONMENT.account,
