@@ -3,7 +3,6 @@ import pathlib
 
 import aws_cdk as cdk
 import aws_cdk.aws_codebuild as codebuild
-import aws_cdk.aws_dynamodb as dynamodb
 import aws_cdk.aws_servicecatalogappregistry_alpha as appregistry_alpha
 from aws_cdk import pipelines
 from constructs import Construct
@@ -64,7 +63,7 @@ class DeploymentPipeline(Construct):
         pipeline: pipelines.CodePipeline,
         application_associator: appregistry_alpha.ApplicationAssociator,
     ) -> None:
-        for service_environment in constants.SERVICE_ENVIRONMENTS:
+        for service_environment in constants.SERVICE_SHARED_ENVIRONMENTS:
             stage = cdk.Stage(
                 pipeline,
                 service_environment.name,
@@ -74,18 +73,23 @@ class DeploymentPipeline(Construct):
                 ),
             )
             application_associator.associate_stage(stage)
-            service_stack = DeploymentPipeline._create_service_stack(stage)
+            service_stack = DeploymentPipeline._create_service_stack(
+                stage, service_environment
+            )
             smoke_test = DeploymentPipeline._create_smoke_test(service_stack)
             pipeline.add_stage(stage, post=[smoke_test])
 
     @staticmethod
-    def _create_service_stack(stage: cdk.Stage) -> ServiceStack:
+    def _create_service_stack(
+        stage: cdk.Stage, service_environment: constants.ServiceEnvironment
+    ) -> ServiceStack:
         service_stack = ServiceStack(
             stage,
-            f"{constants.APP_NAME}-Service-{stage.stage_name}",
-            stack_name=f"{constants.APP_NAME}-Service-{stage.stage_name}",
-            compute_lambda_reserved_concurrency=10,
-            database_dynamodb_billing_mode=dynamodb.BillingMode.PROVISIONED,
+            f"{constants.APP_NAME}-Service-{service_environment.name}",
+            stack_name=f"{constants.APP_NAME}-Service-{service_environment.name}",
+            # pylint: disable=line-too-long
+            compute_lambda_reserved_concurrency=service_environment.compute_lambda_reserved_concurrency,
+            database_dynamodb_billing_mode=service_environment.database_dynamodb_billing_mode,
         )
         return service_stack
 
