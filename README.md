@@ -27,7 +27,7 @@ git remote set-url origin <your fork URL>
 python3.11 -m venv .venv
 source .venv/bin/activate
 
-# [Optional] Needed to upgrade dependencies and cleanup unused packages
+# [Optional] Use pip-tools to upgrade dependencies
 # Pinning pip-tools to 6.4.0 and pip to 21.3.1 due to
 # https://github.com/jazzband/pip-tools/issues/1576
 pip install pip-tools==6.4.0
@@ -44,6 +44,7 @@ for more details.
 
 ```bash
 vi package.json  # Update the "aws-cdk" package version
+
 ./scripts/install-deps.sh
 ./scripts/run-tests.sh
 ```
@@ -56,9 +57,8 @@ when upgrading AWS CDK packages version.
 pip-compile --upgrade service/api/requirements.in
 pip-compile --upgrade requirements.in
 pip-compile --upgrade requirements-dev.in
+
 ./scripts/install-deps.sh
-# [Optional] Cleanup unused packages
-pip-sync service/api/requirements.txt requirements.txt requirements-dev.txt
 ./scripts/run-tests.sh
 ```
 

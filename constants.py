@@ -28,7 +28,7 @@ GITHUB_REPO = "usermanagement-backend"
 GITHUB_TRUNK_BRANCH = "main"
 
 CODEBUILD_BUILD_ENVIRONMENT = codebuild.BuildEnvironment(
-    build_image=codebuild.LinuxBuildImage.STANDARD_5_0,
+    build_image=codebuild.LinuxBuildImage.AMAZON_LINUX_2_5,
     privileged=True,
 )
 
