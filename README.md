@@ -63,7 +63,7 @@ pip-sync service/api/requirements.txt requirements.txt requirements-dev.txt
 ```
 
 ## Deploy application stack
-The service uses [AWS Service Catalog AppRegistry](https://docs.aws.amazon.com/servicecatalog/latest/arguide/intro-app-registry.html) 
+The application uses [AWS Service Catalog AppRegistry](https://docs.aws.amazon.com/servicecatalog/latest/arguide/intro-app-registry.html) 
 to manage application metadata.
 
 **Prerequisites**
