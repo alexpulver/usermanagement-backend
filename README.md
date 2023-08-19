@@ -39,7 +39,7 @@ pip install pip==21.3.1
 
 ## [Optional] Upgrade AWS CDK Toolkit version
 **Note:** If you are planning to upgrade dependencies, first push the upgraded AWS CDK Toolkit version.
-See [(pipelines): Fail synth if pinned CDK CLI version is older than CDK library version](https://github.com/aws/aws-cdk/issues/15519) 
+See [This CDK CLI is not compatible with the CDK library used by your application](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.pipelines-readme.html#this-cdk-cli-is-not-compatible-with-the-cdk-library-used-by-your-application) 
 for more details.
 
 ```bash
