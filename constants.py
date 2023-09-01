@@ -33,12 +33,12 @@ CODEBUILD_BUILD_ENVIRONMENT = codebuild.BuildEnvironment(
 )
 
 APPLICATION_STACK_BASE_NAME = f"{APP_NAME}-Application"
-APPLICATION_MANAGEMENT_ENVIRONMENT = Environment(
-    name="Management", account="807650736403", region="eu-west-1"
+APPLICATION_PRODUCTION_ENVIRONMENT = Environment(
+    name="Production", account="807650736403", region="eu-west-1"
 )
 TOOLCHAIN_STACK_BASE_NAME = f"{APP_NAME}-Toolchain"
-TOOLCHAIN_MANAGEMENT_ENVIRONMENT = Environment(
-    name="Management", account="807650736403", region="eu-west-1"
+TOOLCHAIN_PRODUCTION_ENVIRONMENT = Environment(
+    name="Production", account="807650736403", region="eu-west-1"
 )
 SERVICE_STACK_BASE_NAME = f"{APP_NAME}-Service"
 # The application uses caller's account and Region for the sandbox environment.

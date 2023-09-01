@@ -1,7 +1,7 @@
 # User management backend
 The application implements a *user management backend* service that uses Amazon API Gateway, AWS Lambda and Amazon DynamoDB to provide a CRUD API for managing users. The application also includes a toolchain with deployment pipeline and pull request build.
 
-![diagram](https://github.com/alexpulver/usermanagement-backend/assets/4362270/c0f22c39-aee9-4479-95e4-fdcbc72b4a4b)
+![diagram](https://github.com/alexpulver/usermanagement-backend/assets/4362270/774430b7-5315-44b0-9083-8d90d1a130a1)
 \* Diagram generated using https://github.com/pistazie/cdk-dia
 
 ## Create development environment
@@ -67,11 +67,11 @@ The application uses [AWS Service Catalog AppRegistry](https://docs.aws.amazon.c
 to manage application metadata.
 
 **Prerequisites**
-- Update the account for `APPLICATION_MANAGEMENT_ENVIRONMENT` constant in [constants.py](constants.py)
+- Update the account for `APPLICATION_PRODUCTION_ENVIRONMENT` constant in [constants.py](constants.py)
 - Commit and push the changes: `git commit -a -m 'Environment configuration' && git push`
 
 ```bash
-npx cdk deploy UserManagementBackend-Application-Management
+npx cdk deploy UserManagementBackend-Application-Production
 ```
 
 ## Deploy service stack
@@ -101,20 +101,20 @@ UserManagementBackend-Service-Sandbox.APIEndpoint = https://bsc9goldsa.execute-a
   - Choose **Connect using OAuth**
   - Authorize access and cancel the project creation
 - Update the `GITHUB_CONNECTION_ARN`, `GITHUB_OWNER`, `GITHUB_REPO`, `GITHUB_TRUNK_BRANCH`,
-  `TOOLCHAIN_MANAGEMENT_ENVIRONMENT`, `SERVICE_SHARED_ENVIRONMENTS` constants in [constants.py](constants.py)
+  `TOOLCHAIN_PRODUCTION_ENVIRONMENT`, `SERVICE_SHARED_ENVIRONMENTS` constants in [constants.py](constants.py)
 - Commit and push the changes: `git commit -a -m 'Source and environments configuration' && git push`
 
 ```bash
-npx cdk deploy UserManagementBackend-Toolchain-Management
+npx cdk deploy UserManagementBackend-Toolchain-Production
 ```
 
 ## Delete all stacks
 **Do not forget to delete the stacks to avoid unexpected charges**
 ```bash
-npx cdk destroy UserManagementBackend-Toolchain-Management
+npx cdk destroy UserManagementBackend-Toolchain-Production
 npx cdk destroy UserManagementBackend-Service-Production
 npx cdk destroy UserManagementBackend-Service-Sandbox
-npx cdk destroy UserManagementBackend-Application-Management
+npx cdk destroy UserManagementBackend-Application-Production
 ```
 
 Delete the AWS CodeStar Connections connection if it is no longer needed. Follow the instructions

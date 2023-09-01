@@ -15,10 +15,10 @@ def main() -> None:
         application_name=constants.APP_NAME,
         application_description=constants.APP_DESCRIPTION,
         # pylint: disable=line-too-long
-        stack_name=f"{constants.APPLICATION_STACK_BASE_NAME}-{constants.APPLICATION_MANAGEMENT_ENVIRONMENT.name}",
+        stack_name=f"{constants.APPLICATION_STACK_BASE_NAME}-{constants.APPLICATION_PRODUCTION_ENVIRONMENT.name}",
         env=cdk.Environment(
-            account=constants.APPLICATION_MANAGEMENT_ENVIRONMENT.account,
-            region=constants.APPLICATION_MANAGEMENT_ENVIRONMENT.region,
+            account=constants.APPLICATION_PRODUCTION_ENVIRONMENT.account,
+            region=constants.APPLICATION_PRODUCTION_ENVIRONMENT.region,
         ),
     )
     application_associator = appregistry_alpha.ApplicationAssociator(
@@ -40,11 +40,11 @@ def main() -> None:
 
     ToolchainStack(
         app,
-        f"{constants.TOOLCHAIN_STACK_BASE_NAME}-{constants.TOOLCHAIN_MANAGEMENT_ENVIRONMENT.name}",
+        f"{constants.TOOLCHAIN_STACK_BASE_NAME}-{constants.TOOLCHAIN_PRODUCTION_ENVIRONMENT.name}",
         application_associator=application_associator,
         env=cdk.Environment(
-            account=constants.TOOLCHAIN_MANAGEMENT_ENVIRONMENT.account,
-            region=constants.TOOLCHAIN_MANAGEMENT_ENVIRONMENT.region,
+            account=constants.TOOLCHAIN_PRODUCTION_ENVIRONMENT.account,
+            region=constants.TOOLCHAIN_PRODUCTION_ENVIRONMENT.region,
         ),
     )
 
