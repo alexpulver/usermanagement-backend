@@ -4,6 +4,8 @@ import aws_cdk.aws_codebuild as codebuild
 import aws_cdk.aws_dynamodb as dynamodb
 
 
+# Use `kw_only=True` to support inheritance with default values.
+# See https://stackoverflow.com/a/69822584/1658138 for details.
 @dataclass(kw_only=True)
 class Environment:
     name: str
