@@ -4,7 +4,7 @@
 #
 #    pip-compile requirements-dev.in
 #
-astroid==2.15.6
+astroid==3.0.1
     # via pylint
 bandit==1.7.5
     # via -r requirements-dev.in
@@ -12,15 +12,15 @@ black==22.12.0
     # via -r requirements-dev.in
 certifi==2023.7.22
     # via requests
-charset-normalizer==3.2.0
+charset-normalizer==3.3.1
     # via requests
-click==8.1.6
+click==8.1.7
     # via
     #   black
     #   safety
 colorama==0.4.6
     # via radon
-coverage==7.2.7
+coverage==7.3.2
     # via -r requirements-dev.in
 dill==0.3.7
     # via pylint
@@ -28,9 +28,7 @@ dparse==0.6.3
     # via safety
 flake8==6.1.0
     # via -r requirements-dev.in
-future==0.18.3
-    # via radon
-gitdb==4.0.10
+gitdb==4.0.11
     # via gitpython
 gitpython==3.1.40
     # via bandit
@@ -40,9 +38,7 @@ isort==5.12.0
     # via
     #   -r requirements-dev.in
     #   pylint
-lazy-object-proxy==1.9.0
-    # via astroid
-mando==0.6.4
+mando==0.7.1
     # via radon
 markdown-it-py==3.0.0
     # via rich
@@ -52,7 +48,7 @@ mccabe==0.7.0
     #   pylint
 mdurl==0.1.2
     # via markdown-it-py
-mypy==1.4.1
+mypy==1.6.1
     # via -r requirements-dev.in
 mypy-extensions==1.0.0
     # via
@@ -66,17 +62,17 @@ pathspec==0.11.2
     # via black
 pbr==5.11.1
     # via stevedore
-platformdirs==3.10.0
+platformdirs==3.11.0
     # via
     #   black
     #   pylint
-pycodestyle==2.11.0
+pycodestyle==2.11.1
     # via flake8
 pyflakes==3.1.0
     # via flake8
-pygments==2.15.1
+pygments==2.16.1
     # via rich
-pylint==2.17.5
+pylint==3.0.2
     # via -r requirements-dev.in
 pyparsing==3.1.1
     # via packaging
@@ -84,7 +80,7 @@ pyyaml==6.0.1
     # via
     #   bandit
     #   xenon
-radon==5.1.0
+radon==6.0.1
     # via
     #   -r requirements-dev.in
     #   xenon
@@ -92,11 +88,11 @@ requests==2.31.0
     # via
     #   safety
     #   xenon
-rich==13.5.2
+rich==13.6.0
     # via bandit
-ruamel.yaml==0.17.32
+ruamel.yaml==0.18.3
     # via safety
-ruamel.yaml.clib==0.2.7
+ruamel.yaml.clib==0.2.8
     # via ruamel.yaml
 safety==2.3.5
     # via -r requirements-dev.in
@@ -105,24 +101,22 @@ six==1.16.0
     #   -c requirements.txt
     #   -c service/api/requirements.txt
     #   mando
-smmap==5.0.0
+smmap==5.0.1
     # via gitdb
 stevedore==5.1.0
     # via bandit
 tomlkit==0.12.1
     # via pylint
-typing-extensions==4.7.1
+typing-extensions==4.8.0
     # via
     #   -c requirements.txt
     #   -c service/api/requirements.txt
     #   mypy
-urllib3==1.26.18
+urllib3==2.0.7
     # via
     #   -c service/api/requirements.txt
     #   requests
-wrapt==1.15.0
-    # via astroid
-xenon==0.9.0
+xenon==0.9.1
     # via -r requirements-dev.in
 
 # The following packages are considered to be unsafe in a requirements file:
