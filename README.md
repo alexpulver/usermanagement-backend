@@ -44,7 +44,8 @@ for more details.
 
 ```bash
 vi package.json  # Update the "aws-cdk" package version
-
+```
+```bash
 ./scripts/install-deps.sh
 ./scripts/run-tests.sh
 ```
@@ -57,7 +58,8 @@ when upgrading AWS CDK packages version.
 pip-compile --upgrade service/api/requirements.in
 pip-compile --upgrade requirements.in
 pip-compile --upgrade requirements-dev.in
-
+```
+```bash
 ./scripts/install-deps.sh
 ./scripts/run-tests.sh
 ```
