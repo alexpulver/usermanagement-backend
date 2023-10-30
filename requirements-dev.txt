@@ -32,7 +32,7 @@ future==0.18.3
     # via radon
 gitdb==4.0.10
     # via gitpython
-gitpython==3.1.32
+gitpython==3.1.40
     # via bandit
 idna==3.4
     # via requests
@@ -116,7 +116,7 @@ typing-extensions==4.7.1
     #   -c requirements.txt
     #   -c service/api/requirements.txt
     #   mypy
-urllib3==1.26.16
+urllib3==1.26.18
     # via
     #   -c service/api/requirements.txt
     #   requests
