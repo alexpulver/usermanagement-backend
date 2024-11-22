@@ -37,13 +37,17 @@ pip install pip==21.3.1
 ./scripts/run-tests.sh
 ```
 
-## [Optional] Upgrade AWS CDK Toolkit version
-**Note:** If you are planning to upgrade dependencies, first push the upgraded AWS CDK Toolkit version.
+## [Optional] Upgrade AWS CDK CLI version
+**Note:** If you are planning to upgrade dependencies, first push the upgraded AWS CDK CLI version.
 See [This CDK CLI is not compatible with the CDK library used by your application](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.pipelines-readme.html#this-cdk-cli-is-not-compatible-with-the-cdk-library-used-by-your-application) 
 for more details.
 
+**Note:** The AWS CDK CLI is installed with the Node Package Manager (npm). The application uses [npx](https://docs.npmjs.com/cli/v10/commands/npx) command and `package.json` configuration file to version control the AWS CDK CLI version.
+
+To find the latest AWS CDK CLI version: `npm view aws-cdk-lib version`
+
 ```bash
-vi package.json  # Update the "aws-cdk" package version
+vi package.json  # Update the "aws-cdk-lib" package version
 ```
 ```bash
 ./scripts/install-deps.sh
@@ -51,7 +55,7 @@ vi package.json  # Update the "aws-cdk" package version
 ```
 
 ## [Optional] Upgrade dependencies (ordered by constraints)
-Consider [AWS CDK Toolkit (CLI)](https://docs.aws.amazon.com/cdk/latest/guide/reference.html#versioning) compatibility 
+Consider [AWS CDK CLI](https://docs.aws.amazon.com/cdk/latest/guide/reference.html#versioning) compatibility 
 when upgrading AWS CDK packages version.
 
 ```bash
