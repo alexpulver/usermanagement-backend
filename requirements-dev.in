@@ -1,7 +1,7 @@
 -c service/api/requirements.txt
 -c requirements.txt
 bandit
-black==22.12.0  # resolve conflict with safety over packaging
+black
 coverage
 flake8
 isort

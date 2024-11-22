@@ -24,7 +24,8 @@ radon mi "${targets[@]}"
 xenon --max-absolute A --max-modules A --max-average A "${targets[@]}"
 
 # Check dependencies for security issues (https://pyup.io/safety)
-safety check -r service/api/requirements.txt -r requirements.txt -r requirements-dev.txt
+# See https://data.safetycli.com/v/70612/97c/ for 70612 ignore reason.
+safety check -i 70612 -r service/api/requirements.txt -r requirements.txt -r requirements-dev.txt
 
 # Static type checker (https://mypy.readthedocs.io)
 MYPYPATH="${PWD}" mypy --config-file .mypy.ini --exclude service/api "${targets[@]}"
