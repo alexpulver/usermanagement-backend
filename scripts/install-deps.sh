@@ -3,7 +3,7 @@
 set -o errexit
 set -o verbose
 
-# Install AWS CDK Toolkit locally
+# Install AWS CDK CLI locally
 npm install
 
 # Install project dependencies
