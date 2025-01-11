@@ -3,7 +3,7 @@ import aws_cdk.aws_servicecatalogappregistry as appregistry
 from constructs import Construct
 
 import constants
-from service.compute import Compute
+from service.api.compute import Compute
 from service.ingress import Ingress
 
 

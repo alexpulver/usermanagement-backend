@@ -1,4 +1,4 @@
--c service/api/requirements.txt
+-c service/api/app/requirements.txt
 -c requirements.txt
 bandit
 black

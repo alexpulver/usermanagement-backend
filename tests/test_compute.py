@@ -4,7 +4,7 @@ import aws_cdk as cdk
 import aws_cdk.aws_dynamodb as dynamodb
 from aws_cdk import assertions
 
-from service.compute import Compute
+from service.api.compute import Compute
 from service.database import Database
 
 

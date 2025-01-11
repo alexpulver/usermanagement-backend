@@ -27,8 +27,8 @@ class Compute(Construct):
             ),
             environment={"DYNAMODB_TABLE_NAME": dynamodb_table_name},
             reserved_concurrent_executions=lambda_reserved_concurrency,
-            entry=str(pathlib.Path(__file__).parent.joinpath("api").resolve()),
-            index="app.py",
+            entry=str(pathlib.Path(__file__).parent.joinpath("app").resolve()),
+            index="main.py",
             handler="lambda_handler",
         )
         cfn_lambda_function = cast(

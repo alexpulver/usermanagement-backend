@@ -7,4 +7,4 @@ set -o verbose
 npm install
 
 # Install project dependencies
-pip install -r service/api/requirements.txt -r requirements.txt -r requirements-dev.txt
+pip install -r service/api/app/requirements.txt -r requirements.txt -r requirements-dev.txt

@@ -59,7 +59,7 @@ Consider [AWS CDK CLI](https://docs.aws.amazon.com/cdk/latest/guide/reference.ht
 when upgrading AWS CDK packages version.
 
 ```bash
-pip-compile --upgrade service/api/requirements.in
+pip-compile --upgrade service/api/app/requirements.in
 pip-compile --upgrade requirements.in
 pip-compile --upgrade requirements-dev.in
 ```

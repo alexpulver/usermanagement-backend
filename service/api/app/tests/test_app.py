@@ -2,7 +2,7 @@ import json
 import unittest
 from unittest import mock
 
-import app
+import main
 
 
 class CRUDTestCase(unittest.TestCase):
@@ -22,7 +22,7 @@ class CRUDTestCase(unittest.TestCase):
                 "stage": "$default",
             },
         }
-        response = app.lambda_handler(apigatewayv2_proxy_event, None)
+        response = main.lambda_handler(apigatewayv2_proxy_event, None)
         self.assertEqual(json.loads(response["body"]), user)
 
 
