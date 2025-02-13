@@ -1,6 +1,9 @@
 import json
 import unittest
+from typing import cast
 from unittest import mock
+
+from aws_lambda_powertools.utilities.typing.lambda_context import LambdaContext
 
 import main
 
@@ -22,7 +25,9 @@ class CRUDTestCase(unittest.TestCase):
                 "stage": "$default",
             },
         }
-        response = main.lambda_handler(apigatewayv2_proxy_event, None)
+        response = main.lambda_handler(
+            apigatewayv2_proxy_event, cast(LambdaContext, {})
+        )
         self.assertEqual(json.loads(response["body"]), user)
 
 

@@ -1,12 +1,11 @@
 # User management backend
-A CRUD API to manage users. Main components are the toolchain and the service. The application implements [Application Design Framework (ADF)](https://applicationdesignframework.com/) recommendations to organize resources configuration and business logic code.
+A CRUD API to manage users. Main components are the toolchain and the service. The application implements [Application Design Framework (ADF)](https://applicationdesignframework.com/) guidelines for organizing resources configuration and business logic code.
 
 ![diagram](https://github.com/alexpulver/usermanagement-backend/assets/4362270/774430b7-5315-44b0-9083-8d90d1a130a1)
 \* Diagram generated using https://github.com/pistazie/cdk-dia
 
 ## Create development environment
-See [Getting Started With the AWS CDK](https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html)
-for additional details and prerequisites
+See [Getting Started With the AWS CDK](https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html) for additional details and prerequisites.
 
 ## Clone the code
 ```bash
@@ -15,8 +14,7 @@ cd usermanagement-backend
 ```
 
 ## Fork the repository
-This is **optional** for deploying the service to sandbox environment, but 
-**required** for deploying the toolchain.
+This is **optional** for deploying the service to sandbox environment, but **required** for deploying the toolchain.
 
 ```bash
 git remote set-url origin <your fork URL>
@@ -33,30 +31,25 @@ source .venv/bin/activate
 pip install pip-tools==6.4.0
 pip install pip==21.3.1
 
-./scripts/install-deps.sh
-./scripts/run-tests.sh
+toolchain/install-deps.sh
+toolchain/run-tests.sh
 ```
 
 ## [Optional] Upgrade AWS CDK CLI version
-**Note:** If you are planning to upgrade dependencies, first push the upgraded AWS CDK CLI version.
-See [This CDK CLI is not compatible with the CDK library used by your application](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.pipelines-readme.html#this-cdk-cli-is-not-compatible-with-the-cdk-library-used-by-your-application) 
-for more details.
+If you are planning to upgrade dependencies, first push the upgraded AWS CDK CLI version. See [This CDK CLI is not compatible with the CDK library used by your application](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.pipelines-readme.html#this-cdk-cli-is-not-compatible-with-the-cdk-library-used-by-your-application) for more details.
 
-**Note:** The AWS CDK CLI is installed with the Node Package Manager (npm). The application uses [npx](https://docs.npmjs.com/cli/v10/commands/npx) command and `package.json` configuration file to version control the AWS CDK CLI version.
-
-To find the latest AWS CDK CLI version: `npm view aws-cdk-lib version`
+The application uses Node Package Manager (npm) and `package.json` configuration file to install AWS CDK CLI locally. To find the latest AWS CDK CLI version: `npm view aws-cdk-lib version`.
 
 ```bash
 vi package.json  # Update the "aws-cdk-lib" package version
 ```
 ```bash
-./scripts/install-deps.sh
-./scripts/run-tests.sh
+toolchain/install-deps.sh
+toolchain/run-tests.sh
 ```
 
 ## [Optional] Upgrade dependencies (ordered by constraints)
-Consider [AWS CDK CLI](https://docs.aws.amazon.com/cdk/latest/guide/reference.html#versioning) compatibility 
-when upgrading AWS CDK packages version.
+Consider [AWS CDK CLI](https://docs.aws.amazon.com/cdk/latest/guide/reference.html#versioning) compatibility when upgrading AWS CDK packages version.
 
 ```bash
 pip-compile --upgrade service/api/app/requirements.in
@@ -64,13 +57,12 @@ pip-compile --upgrade requirements.in
 pip-compile --upgrade requirements-dev.in
 ```
 ```bash
-./scripts/install-deps.sh
-./scripts/run-tests.sh
+toolchain/install-deps.sh
+toolchain/run-tests.sh
 ```
 
 ## Deploy application stack
-The application uses [AWS Service Catalog AppRegistry](https://docs.aws.amazon.com/servicecatalog/latest/arguide/intro-app-registry.html) 
-to manage application metadata.
+The application uses [AWS Service Catalog AppRegistry](https://docs.aws.amazon.com/servicecatalog/latest/arguide/intro-app-registry.html) to manage application metadata.
 
 **Prerequisites**
 - Update the account for `APPLICATION_PRODUCTION_ENVIRONMENT` constant in [constants.py](constants.py)
