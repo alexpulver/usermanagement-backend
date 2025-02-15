@@ -7,7 +7,6 @@ from constructs import Construct
 from service.api.compute import Compute
 from service.database import Database
 from service.ingress import Ingress
-from service.metadata import Metadata
 from service.monitoring import Monitoring
 
 
@@ -35,7 +34,6 @@ class ServiceStack(cdk.Stack):
             dynamodb_table_name=database.dynamodb_table.table_name,
         )
         ingress = Ingress(self, "Ingress", lambda_function=compute.lambda_function)
-        Metadata(self, "Metadata", compute=compute, network=ingress)
         Monitoring(self, "Monitoring", database=database, network=ingress)
 
         database.dynamodb_table.grant_read_write_data(compute.lambda_function)

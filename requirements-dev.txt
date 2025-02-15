@@ -49,6 +49,8 @@ isort==6.0.0
     #   pylint
 jinja2==3.1.5
     # via safety
+levenshtein==0.26.1
+    # via python-levenshtein
 mando==0.7.1
     # via radon
 markdown-it-py==3.0.0
@@ -102,6 +104,8 @@ pygments==2.19.1
     # via rich
 pylint==3.3.4
     # via -r requirements-dev.in
+python-levenshtein==0.26.1
+    # via safety
 pyyaml==6.0.2
     # via
     #   bandit
@@ -110,6 +114,8 @@ radon==6.0.1
     # via
     #   -r requirements-dev.in
     #   xenon
+rapidfuzz==3.12.1
+    # via levenshtein
 requests==2.32.3
     # via
     #   safety
@@ -117,19 +123,16 @@ requests==2.32.3
 rich==13.9.4
     # via
     #   bandit
-    #   safety
     #   typer
 ruamel-yaml==0.18.10
-    # via safety-schemas
-ruamel.yaml==0.18.10
-    # via safety
-ruamel.yaml.clib==0.2.12
     # via
-    #   ruamel-yaml
-    #   ruamel.yaml
-safety==3.2.14
+    #   safety
+    #   safety-schemas
+ruamel.yaml.clib==0.2.12
+    # via ruamel-yaml
+safety==3.3.0
     # via -r requirements-dev.in
-safety_schemas==0.0.10
+safety-schemas==0.0.10
     # via safety
 shellingham==1.5.4
     # via typer
@@ -158,7 +161,6 @@ urllib3==2.3.0
     # via
     #   -c service/api/app/requirements.txt
     #   requests
-    #   safety
 xenon==0.9.3
     # via -r requirements-dev.in
 

@@ -3,7 +3,6 @@ import pathlib
 
 import aws_cdk as cdk
 import aws_cdk.aws_codebuild as codebuild
-import aws_cdk.aws_servicecatalogappregistry_alpha as appregistry_alpha
 from aws_cdk import pipelines
 from constructs import Construct
 
@@ -17,7 +16,6 @@ class DeploymentPipeline(Construct):
         scope: Construct,
         id_: str,
         *,
-        application_associator: appregistry_alpha.ApplicationAssociator,
         build_spec: codebuild.BuildSpec,
     ):
         super().__init__(scope, id_)
@@ -46,7 +44,7 @@ class DeploymentPipeline(Construct):
             publish_assets_in_parallel=False,
             synth=synth,
         )
-        DeploymentPipeline._add_stages(pipeline, application_associator)
+        DeploymentPipeline._add_production_stage(pipeline)
 
     @staticmethod
     def _get_cdk_cli_version() -> str:
@@ -59,25 +57,21 @@ class DeploymentPipeline(Construct):
         return cdk_cli_version
 
     @staticmethod
-    def _add_stages(
-        pipeline: pipelines.CodePipeline,
-        application_associator: appregistry_alpha.ApplicationAssociator,
-    ) -> None:
-        for service_environment in constants.SERVICE_SHARED_ENVIRONMENTS:
-            stage = cdk.Stage(
-                pipeline,
-                service_environment.name,
-                env=cdk.Environment(
-                    account=service_environment.account,
-                    region=service_environment.region,
-                ),
-            )
-            application_associator.associate_stage(stage)
-            service_stack = DeploymentPipeline._create_service_stack(
-                stage, service_environment
-            )
-            smoke_test = DeploymentPipeline._create_smoke_test(service_stack)
-            pipeline.add_stage(stage, post=[smoke_test])
+    def _add_production_stage(pipeline: pipelines.CodePipeline) -> None:
+        production_environment = constants.SERVICE_PRODUCTION_ENVIRONMENT
+        stage = cdk.Stage(
+            pipeline,
+            production_environment.name,
+            env=cdk.Environment(
+                account=production_environment.account,
+                region=production_environment.region,
+            ),
+        )
+        service_stack = DeploymentPipeline._create_service_stack(
+            stage, production_environment
+        )
+        smoke_test = DeploymentPipeline._create_smoke_test(service_stack)
+        pipeline.add_stage(stage, post=[smoke_test])
 
     @staticmethod
     def _create_service_stack(

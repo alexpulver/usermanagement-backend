@@ -34,10 +34,6 @@ CODEBUILD_BUILD_ENVIRONMENT = codebuild.BuildEnvironment(
     privileged=True,
 )
 
-APPLICATION_STACK_BASE_NAME = f"{APP_NAME}-Application"
-APPLICATION_PRODUCTION_ENVIRONMENT = Environment(
-    name="Production", account="807650736403", region="eu-west-1"
-)
 TOOLCHAIN_STACK_BASE_NAME = f"{APP_NAME}-Toolchain"
 TOOLCHAIN_PRODUCTION_ENVIRONMENT = Environment(
     name="Production", account="807650736403", region="eu-west-1"
@@ -49,12 +45,10 @@ SERVICE_SANDBOX_ENVIRONMENT = ServiceEnvironment(
     compute_lambda_reserved_concurrency=1,
     database_dynamodb_billing_mode=dynamodb.BillingMode.PAY_PER_REQUEST,
 )
-SERVICE_SHARED_ENVIRONMENTS = [
-    ServiceEnvironment(
-        name="Production",
-        account="807650736403",
-        region="eu-west-1",
-        compute_lambda_reserved_concurrency=10,
-        database_dynamodb_billing_mode=dynamodb.BillingMode.PROVISIONED,
-    ),
-]
+SERVICE_PRODUCTION_ENVIRONMENT = ServiceEnvironment(
+    name="Production",
+    account="807650736403",
+    region="eu-west-1",
+    compute_lambda_reserved_concurrency=10,
+    database_dynamodb_billing_mode=dynamodb.BillingMode.PROVISIONED,
+)

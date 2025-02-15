@@ -12,7 +12,6 @@ aws-cdk-lib==2.178.2
     # via
     #   -r requirements.in
     #   aws-cdk.aws-lambda-python-alpha
-    #   aws-cdk.aws-servicecatalogappregistry-alpha
 aws-cdk.asset-awscli-v1==2.2.223
     # via aws-cdk-lib
 aws-cdk.asset-kubectl-v20==2.1.4
@@ -20,8 +19,6 @@ aws-cdk.asset-kubectl-v20==2.1.4
 aws-cdk.asset-node-proxy-agent-v6==2.1.0
     # via aws-cdk-lib
 aws-cdk.aws-lambda-python-alpha==2.178.2a0
-    # via -r requirements.in
-aws-cdk.aws-servicecatalogappregistry-alpha==2.178.2a0
     # via -r requirements.in
 aws-cdk.cloud-assembly-schema==39.2.20
     # via aws-cdk-lib
@@ -32,7 +29,6 @@ constructs==10.4.2
     #   -r requirements.in
     #   aws-cdk-lib
     #   aws-cdk.aws-lambda-python-alpha
-    #   aws-cdk.aws-servicecatalogappregistry-alpha
 importlib-resources==6.5.2
     # via jsii
 jsii==1.106.0
@@ -42,7 +38,6 @@ jsii==1.106.0
     #   aws-cdk.asset-kubectl-v20
     #   aws-cdk.asset-node-proxy-agent-v6
     #   aws-cdk.aws-lambda-python-alpha
-    #   aws-cdk.aws-servicecatalogappregistry-alpha
     #   aws-cdk.cloud-assembly-schema
     #   constructs
 publication==0.0.3
@@ -52,7 +47,6 @@ publication==0.0.3
     #   aws-cdk.asset-kubectl-v20
     #   aws-cdk.asset-node-proxy-agent-v6
     #   aws-cdk.aws-lambda-python-alpha
-    #   aws-cdk.aws-servicecatalogappregistry-alpha
     #   aws-cdk.cloud-assembly-schema
     #   constructs
     #   jsii
@@ -67,7 +61,6 @@ typeguard==2.13.3
     #   aws-cdk.asset-kubectl-v20
     #   aws-cdk.asset-node-proxy-agent-v6
     #   aws-cdk.aws-lambda-python-alpha
-    #   aws-cdk.aws-servicecatalogappregistry-alpha
     #   aws-cdk.cloud-assembly-schema
     #   constructs
     #   jsii

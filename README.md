@@ -1,26 +1,23 @@
 # User management backend
 A CRUD API to manage users. Main components are the toolchain and the service. The application implements [Application Design Framework (ADF)](https://applicationdesignframework.com/) guidelines for organizing resources configuration and business logic code.
 
-![diagram](https://github.com/alexpulver/usermanagement-backend/assets/4362270/774430b7-5315-44b0-9083-8d90d1a130a1)
+![](architecture.png)
 \* Diagram generated using https://github.com/pistazie/cdk-dia
 
-## Create development environment
-See [Getting Started With the AWS CDK](https://docs.aws.amazon.com/cdk/latest/guide/getting_started.html) for additional details and prerequisites.
-
-## Clone the code
+## Clone code
 ```bash
 git clone https://github.com/alexpulver/usermanagement-backend
 cd usermanagement-backend
 ```
 
-## Fork the repository
+## Fork repository
 This is **optional** for deploying the service to sandbox environment, but **required** for deploying the toolchain.
 
 ```bash
 git remote set-url origin <your fork URL>
 ```
 
-## Configure local environment
+## Configure development environment
 ```bash
 python3.11 -m venv .venv
 source .venv/bin/activate
@@ -31,8 +28,8 @@ source .venv/bin/activate
 pip install pip-tools==6.4.0
 pip install pip==21.3.1
 
-toolchain/install-deps.sh
-toolchain/run-tests.sh
+toolchain/scripts/install-deps.sh
+toolchain/scripts/run-tests.sh
 ```
 
 ## [Optional] Upgrade AWS CDK CLI version
@@ -43,9 +40,10 @@ The application uses Node Package Manager (npm) and `package.json` configuration
 ```bash
 vi package.json  # Update the "aws-cdk-lib" package version
 ```
+
 ```bash
-toolchain/install-deps.sh
-toolchain/run-tests.sh
+toolchain/scripts/install-deps.sh
+toolchain/scripts/run-tests.sh
 ```
 
 ## [Optional] Upgrade dependencies (ordered by constraints)
@@ -56,20 +54,15 @@ pip-compile --upgrade service/api/app/requirements.in
 pip-compile --upgrade requirements.in
 pip-compile --upgrade requirements-dev.in
 ```
+
 ```bash
-toolchain/install-deps.sh
-toolchain/run-tests.sh
+toolchain/scripts/install-deps.sh
+toolchain/scripts/run-tests.sh
 ```
 
-## Deploy application stack
-The application uses [AWS Service Catalog AppRegistry](https://docs.aws.amazon.com/servicecatalog/latest/arguide/intro-app-registry.html) to manage application metadata.
-
-**Prerequisites**
-- Update the account for `APPLICATION_PRODUCTION_ENVIRONMENT` constant in [constants.py](constants.py)
-- Commit and push the changes: `git commit -a -m 'Environment configuration' && git push`
-
+## [Optional] Cleanup unused packages
 ```bash
-npx cdk deploy UserManagementBackend-Application-Production
+pip-sync service/api/app/requirements.txt requirements.txt requirements-dev.txt
 ```
 
 ## Deploy service stack
@@ -91,7 +84,7 @@ UserManagementBackend-Service-Sandbox.APIEndpoint = https://bsc9goldsa.execute-a
 
 **Prerequisites**
 - Fork the repository, if you haven't done this already
-- Create AWS CodeStar Connections [connection](https://docs.aws.amazon.com/dtconsole/latest/userguide/welcome-connections.html)
+- Create AWS CodeConnections [connection](https://docs.aws.amazon.com/dtconsole/latest/userguide/welcome-connections.html)
   for the deployment pipeline
 - Authorize AWS CodeBuild access for the pull request build
   - Start creating a new project manually
@@ -99,7 +92,7 @@ UserManagementBackend-Service-Sandbox.APIEndpoint = https://bsc9goldsa.execute-a
   - Choose **Connect using OAuth**
   - Authorize access and cancel the project creation
 - Update the `GITHUB_CONNECTION_ARN`, `GITHUB_OWNER`, `GITHUB_REPO`, `GITHUB_TRUNK_BRANCH`,
-  `TOOLCHAIN_PRODUCTION_ENVIRONMENT`, `SERVICE_SHARED_ENVIRONMENTS` constants in [constants.py](constants.py)
+  `TOOLCHAIN_PRODUCTION_ENVIRONMENT`, `SERVICE_PRODUCTION_ENVIRONMENT` constants in [constants.py](constants.py)
 - Commit and push the changes: `git commit -a -m 'Source and environments configuration' && git push`
 
 ```bash
@@ -112,10 +105,9 @@ npx cdk deploy UserManagementBackend-Toolchain-Production
 npx cdk destroy UserManagementBackend-Toolchain-Production
 npx cdk destroy UserManagementBackend-Service-Production
 npx cdk destroy UserManagementBackend-Service-Sandbox
-npx cdk destroy UserManagementBackend-Application-Production
 ```
 
-Delete the AWS CodeStar Connections connection if it is no longer needed. Follow the instructions
+Delete the AWS CodeConnections connection if it is no longer needed. Follow the instructions
 in [Delete a connection](https://docs.aws.amazon.com/dtconsole/latest/userguide/connections-delete.html).
 
 ## Testing

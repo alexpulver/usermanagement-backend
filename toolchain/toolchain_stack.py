@@ -2,7 +2,6 @@ from typing import Any
 
 import aws_cdk as cdk
 import aws_cdk.aws_codebuild as codebuild
-import aws_cdk.aws_servicecatalogappregistry_alpha as appregistry_alpha
 from constructs import Construct
 
 import constants
@@ -15,8 +14,6 @@ class ToolchainStack(cdk.Stack):
         self,
         scope: Construct,
         id_: str,
-        *,
-        application_associator: appregistry_alpha.ApplicationAssociator,
         **kwargs: Any,
     ):
         super().__init__(scope, id_, **kwargs)
@@ -26,9 +23,11 @@ class ToolchainStack(cdk.Stack):
                 "phases": {
                     "install": {
                         "runtime-versions": {"python": constants.PYTHON_VERSION},
-                        "commands": ["env", "toolchain/install-deps.sh"],
+                        "commands": ["env", "toolchain/scripts/install-deps.sh"],
                     },
-                    "build": {"commands": ["toolchain/run-tests.sh", "npx cdk synth"]},
+                    "build": {
+                        "commands": ["toolchain/scripts/run-tests.sh", "npx cdk synth"]
+                    },
                 },
                 "version": "0.2",
             }
@@ -36,7 +35,6 @@ class ToolchainStack(cdk.Stack):
         DeploymentPipeline(
             self,
             "DeploymentPipeline",
-            application_associator=application_associator,
             build_spec=build_spec,
         )
         PullRequestBuild(self, "PullRequestBuild", build_spec=build_spec)
