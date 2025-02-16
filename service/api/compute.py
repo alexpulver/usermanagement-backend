@@ -22,17 +22,12 @@ class Compute(Construct):
         self.lambda_function = lambda_python_alpha.PythonFunction(
             self,
             "LambdaFunction",
+            entry=str(pathlib.Path(__file__).parent.joinpath("app").resolve()),
+            environment={"DYNAMODB_TABLE_NAME": dynamodb_table_name},
+            handler="lambda_handler",
+            index="main.py",
+            reserved_concurrent_executions=lambda_reserved_concurrency,
             runtime=lambda_.Runtime(
                 f"python{constants.PYTHON_VERSION}", family=lambda_.RuntimeFamily.PYTHON
             ),
-            environment={"DYNAMODB_TABLE_NAME": dynamodb_table_name},
-            reserved_concurrent_executions=lambda_reserved_concurrency,
-            entry=str(pathlib.Path(__file__).parent.joinpath("app").resolve()),
-            index="main.py",
-            handler="lambda_handler",
         )
-        cfn_lambda_function = cast(
-            lambda_.CfnFunction, self.lambda_function.node.default_child
-        )
-        code = cast(lambda_.CfnFunction.CodeProperty, cfn_lambda_function.code)
-        self.lambda_function_code = f"s3://{code.s3_bucket}/{code.s3_key}"
