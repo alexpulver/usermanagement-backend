@@ -35,7 +35,7 @@ toolchain/scripts/run-tests.sh
 ## [Optional] Upgrade AWS CDK CLI version
 If you are planning to upgrade dependencies, first push the upgraded AWS CDK CLI version. See [This CDK CLI is not compatible with the CDK library used by your application](https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.pipelines-readme.html#this-cdk-cli-is-not-compatible-with-the-cdk-library-used-by-your-application) for more details.
 
-The application uses Node Package Manager (npm) and `package.json` configuration file to install AWS CDK CLI locally. To find the latest AWS CDK CLI version: `npm view aws-cdk-lib version`.
+The application uses Node Package Manager (npm) and `package.json` configuration file to install AWS CDK CLI locally. To find the latest AWS CDK CLI version: `npm view aws-cdk version`.
 
 ```bash
 vi package.json  # Update the "aws-cdk-lib" package version

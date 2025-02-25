@@ -1,6 +1,7 @@
 import pathlib
 from typing import cast
 
+import aws_cdk.aws_iam as iam
 import aws_cdk.aws_lambda as lambda_
 import aws_cdk.aws_lambda_python_alpha as lambda_python_alpha
 from constructs import Construct
@@ -30,4 +31,10 @@ class Compute(Construct):
             runtime=lambda_.Runtime(
                 f"python{constants.PYTHON_VERSION}", family=lambda_.RuntimeFamily.PYTHON
             ),
+            tracing=lambda_.Tracing.ACTIVE,
+        )
+        # PythonFunction creates the IAM role automatically.
+        lambda_function_role = cast(iam.Role, self.lambda_function.role)
+        lambda_function_role.add_managed_policy(
+            iam.ManagedPolicy.from_aws_managed_policy_name("AWSXRayDaemonWriteAccess")
         )

@@ -10,7 +10,7 @@ astroid==3.3.8
     # via pylint
 authlib==1.4.1
     # via safety
-bandit==1.8.2
+bandit==1.8.3
     # via -r requirements-dev.in
 black==25.1.0
     # via -r requirements-dev.in
@@ -39,7 +39,7 @@ dparse==0.6.4
     #   safety-schemas
 filelock==3.16.1
     # via safety
-flake8==7.1.1
+flake8==7.1.2
     # via -r requirements-dev.in
 idna==3.10
     # via requests

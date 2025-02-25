@@ -8,17 +8,15 @@ attrs==24.3.0
     # via
     #   cattrs
     #   jsii
-aws-cdk-lib==2.178.2
+aws-cdk-lib==2.179.0
     # via
     #   -r requirements.in
     #   aws-cdk.aws-lambda-python-alpha
-aws-cdk.asset-awscli-v1==2.2.223
-    # via aws-cdk-lib
-aws-cdk.asset-kubectl-v20==2.1.4
+aws-cdk.asset-awscli-v1==2.2.224
     # via aws-cdk-lib
 aws-cdk.asset-node-proxy-agent-v6==2.1.0
     # via aws-cdk-lib
-aws-cdk.aws-lambda-python-alpha==2.178.2a0
+aws-cdk.aws-lambda-python-alpha==2.179.0a0
     # via -r requirements.in
 aws-cdk.cloud-assembly-schema==39.2.20
     # via aws-cdk-lib
@@ -35,7 +33,6 @@ jsii==1.106.0
     # via
     #   aws-cdk-lib
     #   aws-cdk.asset-awscli-v1
-    #   aws-cdk.asset-kubectl-v20
     #   aws-cdk.asset-node-proxy-agent-v6
     #   aws-cdk.aws-lambda-python-alpha
     #   aws-cdk.cloud-assembly-schema
@@ -44,7 +41,6 @@ publication==0.0.3
     # via
     #   aws-cdk-lib
     #   aws-cdk.asset-awscli-v1
-    #   aws-cdk.asset-kubectl-v20
     #   aws-cdk.asset-node-proxy-agent-v6
     #   aws-cdk.aws-lambda-python-alpha
     #   aws-cdk.cloud-assembly-schema
@@ -58,7 +54,6 @@ typeguard==2.13.3
     # via
     #   aws-cdk-lib
     #   aws-cdk.asset-awscli-v1
-    #   aws-cdk.asset-kubectl-v20
     #   aws-cdk.asset-node-proxy-agent-v6
     #   aws-cdk.aws-lambda-python-alpha
     #   aws-cdk.cloud-assembly-schema

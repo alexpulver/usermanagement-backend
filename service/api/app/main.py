@@ -1,5 +1,6 @@
 from typing import Any, Optional
 
+from aws_lambda_powertools import Tracer
 from aws_lambda_powertools.event_handler import api_gateway
 from aws_lambda_powertools.utilities.typing.lambda_context import LambdaContext
 
@@ -8,8 +9,10 @@ from helpers import init_users_repository
 app = api_gateway.ApiGatewayResolver(
     proxy_type=api_gateway.ProxyEventType.APIGatewayProxyEventV2
 )
+tracer = Tracer()
 
 
+@tracer.capture_lambda_handler
 def lambda_handler(event: dict[str, Any], context: LambdaContext) -> dict[str, Any]:
     return app.resolve(event, context)
 
