@@ -4,32 +4,32 @@
 #
 #    pip-compile requirements.in
 #
-attrs==24.3.0
+attrs==25.4.0
     # via
     #   cattrs
     #   jsii
-aws-cdk-lib==2.179.0
+aws-cdk-lib==2.243.0
     # via
     #   -r requirements.in
     #   aws-cdk.aws-lambda-python-alpha
-aws-cdk.asset-awscli-v1==2.2.224
+aws-cdk.asset-awscli-v1==2.2.263
     # via aws-cdk-lib
-aws-cdk.asset-node-proxy-agent-v6==2.1.0
+aws-cdk.asset-node-proxy-agent-v6==2.1.1
     # via aws-cdk-lib
-aws-cdk.aws-lambda-python-alpha==2.179.0a0
+aws-cdk.aws-lambda-python-alpha==2.243.0a0
     # via -r requirements.in
-aws-cdk.cloud-assembly-schema==39.2.20
+aws-cdk.cloud-assembly-schema==52.2.0
     # via aws-cdk-lib
-cattrs==24.1.2
+cattrs==25.3.0
     # via jsii
-constructs==10.4.2
+constructs==10.5.1
     # via
     #   -r requirements.in
     #   aws-cdk-lib
     #   aws-cdk.aws-lambda-python-alpha
 importlib-resources==6.5.2
     # via jsii
-jsii==1.106.0
+jsii==1.127.0
     # via
     #   aws-cdk-lib
     #   aws-cdk.asset-awscli-v1
@@ -59,5 +59,7 @@ typeguard==2.13.3
     #   aws-cdk.cloud-assembly-schema
     #   constructs
     #   jsii
-typing-extensions==4.12.2
-    # via jsii
+typing-extensions==4.15.0
+    # via
+    #   cattrs
+    #   jsii

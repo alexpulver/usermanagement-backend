@@ -4,41 +4,41 @@
 #
 #    pip-compile service/api/app/requirements.in
 #
-aws-lambda-powertools[tracer]==3.6.0
+aws-lambda-powertools[tracer]==3.25.0
     # via -r service/api/app/requirements.in
-aws-xray-sdk==2.14.0
+aws-xray-sdk==2.15.0
     # via aws-lambda-powertools
-boto3==1.36.23
+boto3==1.42.70
     # via -r service/api/app/requirements.in
-boto3-stubs==1.36.23
+boto3-stubs==1.42.70
     # via -r service/api/app/requirements.in
-botocore==1.36.23
+botocore==1.42.70
     # via
     #   aws-xray-sdk
     #   boto3
     #   s3transfer
-botocore-stubs==1.36.23
+botocore-stubs==1.42.41
     # via boto3-stubs
-jmespath==1.0.1
+jmespath==1.1.0
     # via
     #   aws-lambda-powertools
     #   boto3
     #   botocore
 python-dateutil==2.9.0.post0
     # via botocore
-s3transfer==0.11.2
+s3transfer==0.16.0
     # via boto3
 six==1.17.0
     # via python-dateutil
-types-awscrt==0.23.10
+types-awscrt==0.31.3
     # via botocore-stubs
-types-s3transfer==0.11.2
+types-s3transfer==0.16.0
     # via boto3-stubs
-typing-extensions==4.12.2
+typing-extensions==4.15.0
     # via
     #   aws-lambda-powertools
     #   boto3-stubs
-urllib3==2.3.0
+urllib3==2.6.3
     # via botocore
-wrapt==1.17.2
+wrapt==2.1.2
     # via aws-xray-sdk

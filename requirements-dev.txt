@@ -4,60 +4,79 @@
 #
 #    pip-compile requirements-dev.in
 #
+annotated-doc==0.0.4
+    # via typer
 annotated-types==0.7.0
     # via pydantic
-astroid==3.3.8
+anyio==4.12.1
+    # via httpx
+astroid==4.0.4
     # via pylint
-authlib==1.4.1
+authlib==1.6.9
     # via safety
-bandit==1.8.3
+bandit==1.9.4
     # via -r requirements-dev.in
-black==25.1.0
+black==26.3.1
     # via -r requirements-dev.in
-certifi==2025.1.31
-    # via requests
-cffi==1.17.1
+certifi==2026.2.25
+    # via
+    #   httpcore
+    #   httpx
+    #   requests
+cffi==2.0.0
     # via cryptography
-charset-normalizer==3.4.1
+charset-normalizer==3.4.6
     # via requests
-click==8.1.8
+click==8.3.1
     # via
     #   black
+    #   nltk
     #   safety
     #   typer
 colorama==0.4.6
     # via radon
-coverage==7.6.12
+coverage==7.13.5
     # via -r requirements-dev.in
-cryptography==44.0.1
+cryptography==46.0.5
     # via authlib
-dill==0.3.9
+dill==0.4.1
     # via pylint
 dparse==0.6.4
     # via
     #   safety
     #   safety-schemas
-filelock==3.16.1
+filelock==3.25.2
     # via safety
-flake8==7.1.2
+flake8==7.3.0
     # via -r requirements-dev.in
-idna==3.10
-    # via requests
-isort==6.0.0
+h11==0.16.0
+    # via httpcore
+httpcore==1.0.9
+    # via httpx
+httpx==0.28.1
+    # via safety
+idna==3.11
+    # via
+    #   anyio
+    #   httpx
+    #   requests
+isort==8.0.1
     # via
     #   -r requirements-dev.in
     #   pylint
-jinja2==3.1.5
+jinja2==3.1.6
     # via safety
-levenshtein==0.26.1
-    # via python-levenshtein
+joblib==1.5.3
+    # via nltk
+librt==0.8.1
+    # via mypy
 mando==0.7.1
     # via radon
-markdown-it-py==3.0.0
+markdown-it-py==4.0.0
     # via rich
-markupsafe==3.0.2
+markupsafe==3.0.3
     # via jinja2
-marshmallow==3.26.1
+marshmallow==4.2.2
     # via safety
 mccabe==0.7.0
     # via
@@ -65,48 +84,47 @@ mccabe==0.7.0
     #   pylint
 mdurl==0.1.2
     # via markdown-it-py
-mypy==1.15.0
+mypy==1.19.1
     # via -r requirements-dev.in
-mypy-extensions==1.0.0
+mypy-extensions==1.1.0
     # via
     #   black
     #   mypy
-packaging==24.2
+nltk==3.9.3
+    # via safety
+packaging==26.0
     # via
     #   black
     #   dparse
-    #   marshmallow
     #   safety
     #   safety-schemas
-pathspec==0.12.1
-    # via black
-pbr==6.1.1
-    # via stevedore
-platformdirs==4.3.6
+pathspec==1.0.4
+    # via
+    #   black
+    #   mypy
+platformdirs==4.9.4
     # via
     #   black
     #   pylint
-psutil==6.1.1
-    # via safety
-pycodestyle==2.12.1
+pycodestyle==2.14.0
     # via flake8
-pycparser==2.22
+pycparser==3.0
     # via cffi
-pydantic==2.9.2
+pydantic==2.12.5
     # via
     #   safety
     #   safety-schemas
-pydantic-core==2.23.4
+pydantic-core==2.41.5
     # via pydantic
-pyflakes==3.2.0
+pyflakes==3.4.0
     # via flake8
-pygments==2.19.1
+pygments==2.19.2
     # via rich
-pylint==3.3.4
+pylint==4.0.5
     # via -r requirements-dev.in
-python-levenshtein==0.26.1
-    # via safety
-pyyaml==6.0.2
+pytokens==0.4.1
+    # via black
+pyyaml==6.0.3
     # via
     #   bandit
     #   xenon
@@ -114,25 +132,23 @@ radon==6.0.1
     # via
     #   -r requirements-dev.in
     #   xenon
-rapidfuzz==3.12.1
-    # via levenshtein
-requests==2.32.3
+regex==2026.2.28
+    # via nltk
+requests==2.32.5
     # via
     #   safety
     #   xenon
-rich==13.9.4
+rich==14.3.3
     # via
     #   bandit
     #   typer
-ruamel-yaml==0.18.10
+ruamel-yaml==0.19.1
     # via
     #   safety
     #   safety-schemas
-ruamel.yaml.clib==0.2.12
-    # via ruamel-yaml
-safety==3.3.0
+safety==3.7.0
     # via -r requirements-dev.in
-safety-schemas==0.0.10
+safety-schemas==0.0.16
     # via safety
 shellingham==1.5.4
     # via typer
@@ -141,28 +157,34 @@ six==1.17.0
     #   -c requirements.txt
     #   -c service/api/app/requirements.txt
     #   mando
-stevedore==5.4.0
+stevedore==5.7.0
     # via bandit
-tomlkit==0.13.2
-    # via pylint
-typer==0.15.1
+tenacity==9.1.4
     # via safety
-typing-extensions==4.12.2
+tomlkit==0.14.0
+    # via
+    #   pylint
+    #   safety
+tqdm==4.67.3
+    # via nltk
+typer==0.24.1
+    # via safety
+typing-extensions==4.15.0
     # via
     #   -c requirements.txt
     #   -c service/api/app/requirements.txt
+    #   anyio
     #   mypy
     #   pydantic
     #   pydantic-core
     #   safety
     #   safety-schemas
-    #   typer
-urllib3==2.3.0
+    #   typing-inspection
+typing-inspection==0.4.2
+    # via pydantic
+urllib3==2.6.3
     # via
     #   -c service/api/app/requirements.txt
     #   requests
 xenon==0.9.3
     # via -r requirements-dev.in
-
-# The following packages are considered to be unsafe in a requirements file:
-# setuptools
